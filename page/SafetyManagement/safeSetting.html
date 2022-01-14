@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>安全设置</title>
+		<link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+		<link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+		<link rel="stylesheet" href="../../assets/css/common_likui.css?v=314" />
+		<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style>
+			.safe-left {
+            width: calc((100% - 20px) * 0.4);
+            height: 750px;
+            background-color: #fff;
+            margin-right: 20px;
+            float: left;
+            padding: 15px 20px;
+            box-sizing: border-box;
+        }
+        .safe-right {
+            width: calc((100% - 20px) * 0.6);
+            height: 750px;
+            background-color: #fff;
+            float: left;
+            box-sizing: border-box;
+        }
+        .table-0 .layui-table-view {
+            margin: 0;
+        }
+        #erweimaImg {
+        	width: 140px;
+        	height: 140px;
+        	border: 1px solid #eee;
+        	margin: 0 auto;
+        }
+    </style>
+	</head>
+	<body>
+
+		<!-- 页面加载loading -->
+		<div class="page-loading">
+			<div class="ball-loader">
+				<span></span><span></span><span></span><span></span>
+			</div>
+		</div>
+
+		<!-- 正文开始 -->
+		<div class="layui-fluid clear">
+			<div class="safe-left">
+				<div class="layui-form">
+					<div class="layui-form-item" style="margin-bottom: 0;">
+						<div class="layui-inline" style="width: 120px;">
+							<div class="layui-input-inline" style="width: 120px;">
+								<select name="queryType" id="queryType">
+									<option value="wz">位置</option>
+									<option value="lb">类别</option>
+									<option value="glr">关联人</option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-inline">
+							<div class="layui-input-inline" style="width: 170px;margin-right: 0px;">
+								<input type="text" name="key" id="key" class="layui-input" placeholder="请输入">
+							</div>
+						</div>
+						<div class="layui-inline" style="padding-top: 4px;">
+							<button id="btnSearch" class="layui-btn layui-btn-green3">查询</button>
+						</div>
+					</div>
+					<div class="layui-form-item text-right" style="margin: 10px 0 0 0;">
+						<button class="layui-btn layui-btn-green1" id="delete">批量删除</button>
+						<button class="layui-btn layui-btn-red1" id="setLine">设置路线</button>
+					</div>
+					<div class="layui-form-item safe-table-left">
+						<table class="layui-table" id="tableSafe1" lay-filter="tableSafe1" style="margin: 0"></table>
+					</div>
+				</div>
+			</div>
+			<div class="safe-right">
+				<form id="modelSafe2Form" lay-filter="modelSafe2Form" class="layui-form model-form">
+					<input type="hidden" id="guid" name="guid" value="" />
+					<div class="layui-form-item">
+						<label class="layui-form-label">站点</label>
+						<div class="layui-input-block">
+							<div class="layui-inline">
+								<input type="text" name="zhandian" id="zhandian" class="layui-input" readonly="readonly" />
+							</div>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">类别</label>
+						<div class="layui-input-block">
+							<input name="aqsz_type" type="radio" value="xf" title="消防" checked />
+							<input name="aqsz_type" type="radio" value="xy" title="巡夜" />
+							<input name="aqsz_type" type="radio" value="rc" title="日常" />
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">位置</label>
+						<div class="layui-input-block">
+							<div class="layui-inline">
+								<input type="text" name="wz" id="wz" class="layui-input" placeholder="请输入位置" />
+							</div>
+							-
+							<div class="layui-inline">
+								<input type="text" name="code" id="code" class="layui-input" placeholder="请输入编号" />
+							</div>
+							<div class="layui-inline">
+								<button class="layui-btn layui-btn-green1" id="erweima" type="button">生成二维码</button>
+							</div>
+						</div>
+					</div>
+					<div class="table-0">
+						<label class="layui-form-label">标准</label>
+						<div class="layui-input-block">
+							<div class="text-right">
+								<a href="javascript:;" id="addItem"><i class="layui-icon" style="font-size: 22px;font-weight: bolder;color: #FD0000;">&#xe608;</i></a>
+							</div>
+							<table class="layui-table" id="tableSafe2" lay-filter="tableSafe2" style="margin: 0;"></table>
+						</div>
+					</div>
+					<div style="font-weight: bold;padding: 10px 0;"><span style="min-width: 110px;text-align: right;display: inline-block;line-height: 30px;box-sizing: border-box;padding-right: 15px;">上传设置</span></div>
+					<div class="layui-row">
+						<div class="layui-col-md4">
+							<label class="layui-form-label">图片</label>
+							<div class="layui-input-block">
+								<input name="imageCount" id="imageCount" placeholder="图片数量" type="text" class="layui-input" />
+							</div>
+						</div>
+						<div class="layui-col-md4">
+							<label class="layui-form-label">音频</label>
+							<div class="layui-input-block">
+								<input name="audioCount" id="audioCount" placeholder="音频数量" type="text" class="layui-input" />
+							</div>
+						</div>
+						<div class="layui-col-md4">
+							<label class="layui-form-label">视频</label>
+							<div class="layui-input-block">
+								<input name="videoCount" id="videoCount" placeholder="视频数量" type="text" class="layui-input" />
+							</div>
+						</div>
+					</div>
+					<div class="layui-form-item text-right text-center mt-20">
+						<button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
+						<button class="layui-btn" id="btnSubmit" type="button">保存</button>
+						<button class="layui-btn" id="addNewBtn" type="button">新增</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<script type="text/html" id="setLineModal">
+			<div class="p-20">
+		    	<table class="layui-table" id="tableSetLine" lay-filter="tableSetLine" style="margin: 0"></table>
+		    	<div class="text-center">
+		    		<button class="layui-btn" id="btnSubmit" type="button" lay-filter="modelSubmitLine" lay-submit>确认</button>
+		    		<button class="layui-btn layui-btn-primary" type="button" id="resetLine">重置</button>
+		    		<button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
+		    	</div>
+		    </div>
+		</script>
+		<script type="text/html" id="erweimaModal">
+			<div style="padding: 50px;">
+		    	<div id="erweimaImg"></div>
+		    	<div class="text-center mt-10">
+		    		<button id="downloadImg" class="layui-btn layui-btn-green3">保存</button>
+		    		<button id="printImg" class="layui-btn layui-btn-green3">打印</button>
+		    	</div>
+		    </div>
+		</script>
+		<script type="text/html" id="selectUsers">
+			<div class="p-20">
+				<table class="layui-table" id="tableUser" lay-filter="tableUser" style="margin: 0"></table>
+			</div>
+		</script>
+		<!-- 表格操作列 -->
+		<script type="text/html" id="tableBarSetLine">
+			<!-- <a class="layui-btn layui-btn-xs table-btn" lay-event="reset">查看</a> -->
+		    <a class="layui-btn layui-btn-xs table-btn" lay-event="up" style="color: #F66060;">↑</a>
+		    <a class="layui-btn layui-btn-xs table-btn" lay-event="down" style="margin: 0;">↓</a>
+		</script>
+		<!-- js部分 -->
+		<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+		<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+		<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jquery.qrcode.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jQuery.print.min.js"></script>
+		<script>
+			layui.use(['layer', 'form', 'table', 'util', 'admin', 'element'], function() {
+				var $ = layui.jquery;
+				var layer = layui.layer;
+				var form = layui.form;
+				var table = layui.table;
+				var util = layui.util;
+				var admin = layui.admin;
+				var element = layui.element;
+				var zhandianid = localStorage.getItem("station_id");
+				let dataList = [];
+				let dataList1 = [];
+				let currentList = [];
+				//左侧table
+				
+				var insTb = table.render({
+					elem: '#tableSafe1',
+					page: true,
+					url: url + '/safeSetting/getAqszList',
+					height: 473,
+					cols: [
+						[{
+								type: 'checkbox',
+								align: 'center',
+								title: '选框',
+								field:'aqsz_id'
+							},
+							{
+								field: 'wz',
+								align: 'center',
+								title: '位置'
+							},
+							{
+								field: 'xm',
+								align: 'center',
+								title: '项目'
+							},
+							{
+								field: 'leibie',
+								align: 'center',
+								title: '类别'
+							},
+							{
+								align: 'center',
+								title: '频率(生常量/时间)',
+								templet:function(d){
+									return d.scl+"/"+d.sj
+								}
+							},
+							{
+								field: 'glrname',
+								align: 'center',
+								title: '关联人'
+							},
+							{
+								field: 'issettxt',
+								align: 'center',
+								title: '是否设置路线'
+							}
+						]
+					],
+					request: {
+						pageName: 'currentIndex', //页码的参数名称，默认：page
+						limitName: 'pageSize' //每页数据量的参数名，默认：limit
+					},
+					response: {
+						countName: 'totalCount', //数据总数的字段名称，默认：count
+						dataName: 'list' //数据列表的字段名称，默认：data
+					},
+					where:{
+						zhandianid:zhandianid
+					},
+					done: (res) => {
+						currentList = res.list
+						res.list.map(val => {
+							dataList.map(item => {
+								if (val.aqsz_id === item.aqsz_id) {
+									var index = val['LAY_TABLE_INDEX'];
+									$('.safe-table-left tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
+									$('.safe-table-left tr[data-index=' + index + '] input[type="checkbox"]').next().addClass(
+										'layui-form-checked');
+								}
+							})
+						})
+					}
+				});
+
+				$("#btnSearch").on("click", function() {
+					insTb.reload({
+						where: {
+							queryType: $('#queryType').val(),
+							key: $('#key').val()
+						},
+						page: {
+							curr: 1
+						}
+					});
+				})
+
+				var list1 = [{
+					xm: '',
+					bz: '',
+					xlr: '',
+					xlrId: '',
+					zrr: '',
+					zrrId: '',
+					scl: '',
+					sj: ''
+				}]
+
+				//绑定站点
+				$("#zhandian").val(localStorage.getItem("station"))
+				$("#zhandian").attr("idzhandian", localStorage.getItem("station_id"));
+
+
+				var insTb1 = table.render({
+					elem: '#tableSafe2',
+					data: list1,
+					page: true,
+					height: 340,
+					cellMinWidth: 50,
+					cols: [
+						[{
+								type: 'numbers',
+								align: 'center',
+								title: '序号',
+								rowspan: 2
+							},
+							{
+								field: 'xm',
+								align: 'center',
+								title: '项目',
+								rowspan: 2,
+								edit: 'text'
+							},
+							{
+								field: 'bz',
+								align: 'center',
+								title: '标准',
+								rowspan: 2,
+								edit: 'text'
+							},
+							{
+								field: 'xlr',
+								align: 'center',
+								title: '巡逻人',
+								rowspan: 2,
+								event: 'setXlr',
+							},
+							{
+								field: 'zrr',
+								align: 'center',
+								title: '责任人',
+								rowspan: 2,
+								event: 'setZrr',
+							},
+							{
+								align: 'center',
+								title: '频率',
+								colspan: 2
+							},
+						],
+						[{
+								field: 'scl',
+								align: 'center',
+								title: '生产量',
+								minWidth: 100,
+								edit: 'text'
+							},
+							{
+								field: 'sj',
+								align: 'center',
+								title: '时间(小时)',
+								minWidth: 100,
+								edit: 'text'
+							},
+						]
+					],
+					request: {
+						pageName: 'currentIndex', //页码的参数名称，默认：page
+						limitName: 'pageSize' //每页数据量的参数名，默认：limit
+					},
+					response: {
+						countName: 'totalCount', //数据总数的字段名称，默认：count
+						dataName: 'list' //数据列表的字段名称，默认：data
+					}
+				});
+
+				table.on('rowDouble(tableSafe1)', function(obj) {
+					$.get(url + '/safeSetting/getAqszDetail', {
+						guid: obj.data.guid
+					}, function(res) {
+						if (res.code === 0) {
+							var data = res.data;
+							form.val('modelSafe2Form', data);
+							$("#guid").val(data.guid);
+							$("#zhandian").val(data.zhandianName);
+							$("#zhandian").attr("idzhandian", data.idzhandian);
+							list1 = [];
+							$.each(data.aqszBzParams,function(i,item){
+								var item={
+									bz:item.bz,
+									scl:item.scl,
+									sj:item.sj,
+									xlr:item.xlrName,
+									xlrId:item.xlr,
+									xm:item.xm,
+									zrr:item.zrrName,
+									zrrId:item.zrr
+								}
+								list1.push(item);
+							})
+							insTb1.reload({
+								data: list1
+							});
+						} else {
+							layer.msg(res.msg, {
+								icon: 2
+							});
+						}
+					});
+				});
+
+				$('#addItem').on('click', () => {
+					list1.push({
+						xm: '',
+						bz: '',
+						xlr: '',
+						xlrId: '',
+						zrr: '',
+						zrrId: '',
+						scl: '',
+						sj: ''
+					});
+					insTb1.reload({
+						data: list1
+					})
+				})
+				table.on('edit(tableSafe2)', function(obj) {
+					list1[obj.tr[0].rowIndex] = obj.data;
+					console.log(list1);
+					console.log(obj.data);
+					insTb1.reload({
+						data: list1
+					})
+				});
+				table.on('tool(tableSafe2)', function(obj) {
+					if(obj.event === 'setXlr') {
+						admin.open({
+							type: 1,
+							area: '600px',
+							title: '选择用户',
+							content: $('#selectUsers').html(),
+							success: function(layero, dIndex) {
+								var insUserTab = table.render({
+									elem: '#tableUser',
+									page: true,
+									height: 340,
+									url:url+"/sysuser/getUserListByZd",
+									cellMinWidth: 50,
+									where:{zhandianid:localStorage.getItem("station_id")},
+									cols: [
+										[
+											{
+												type: 'numbers',
+												align: 'center',
+												title: '序号'
+											},
+											{
+												field: 'userId',
+												align: 'center',
+												title: 'ID'
+											},
+											{
+												field: 'realName',
+												align: 'center',
+												title: '姓名'
+											}
+										]
+									],
+									request: {
+										pageName: 'currentIndex', //页码的参数名称，默认：page
+										limitName: 'pageSize' //每页数据量的参数名，默认：limit
+									},
+									response: {
+										countName: 'totalCount', //数据总数的字段名称，默认：count
+										dataName: 'list' //数据列表的字段名称，默认：data
+									}
+								});
+								table.on('row(tableUser)', function(obj1) {
+									// obj.update({
+									// 	xlr: obj1.data.userName,
+									// 	xlrId: obj1.data.userId
+									// });
+									list1[obj.tr[0].rowIndex].xlr = obj1.data.realName;
+									list1[obj.tr[0].rowIndex].xlrId = obj1.data.userId;
+									insTb1.reload({
+										data: list1
+									});
+									console.log(list1);
+									layer.close(dIndex);
+								});
+
+							}
+						});
+					} else if (obj.event === 'setZrr') {
+						admin.open({
+							type: 1,
+							area: '600px',
+							title: '选择用户',
+							content: $('#selectUsers').html(),
+							success: function(layero, dIndex) {
+								var insUserTab = table.render({
+									elem: '#tableUser',
+									page: true,
+									height: 340,
+									url:url+"/sysuser/getUserListByZd",
+									cellMinWidth: 50,
+									where:{zhandianid:localStorage.getItem("station_id")},
+									cols: [
+										[
+											{
+												type: 'numbers',
+												align: 'center',
+												title: '序号'
+											},
+											{
+												field: 'userId',
+												align: 'center',
+												title: 'ID'
+											},
+											{
+												field: 'realName',
+												align: 'center',
+												title: '姓名'
+											}
+										]
+									],
+									request: {
+										pageName: 'currentIndex', //页码的参数名称，默认：page
+										limitName: 'pageSize' //每页数据量的参数名，默认：limit
+									},
+									response: {
+										countName: 'totalCount', //数据总数的字段名称，默认：count
+										dataName: 'list' //数据列表的字段名称，默认：data
+									}
+								});
+								table.on('row(tableUser)', function(obj1) {
+									// obj.update({
+									// 	zrr: obj1.data.userName,
+									// 	zrrId: obj1.data.userId
+									// });
+									list1[obj.tr[0].rowIndex].zrr = obj1.data.realName;
+									list1[obj.tr[0].rowIndex].zrrId = obj1.data.userId;
+									insTb1.reload({
+										data: list1
+									});
+									console.log(list1)
+									layer.close(dIndex);
+								});
+
+							}
+						});
+					}
+					
+				});
+				$('#delete').on('click',()=>{
+					layer.load(2);
+					// dataList是存的选中的数据
+					console.log(dataList);
+					var ids=[];
+					$.each(dataList,function(i,item){
+						ids.push(item.aqsz_id);
+					});
+					
+					$.ajax({
+						type: "post",
+						url: url + '/safeSetting/deleteAqsz',
+						data: JSON.stringify(ids),
+						contentType: 'application/json;utf-8',
+						dataType: "json",
+						success: function(res) {
+							layer.closeAll('loading');
+							if (res.code == 0) {
+								layer.msg(res.msg, {
+									icon: 1
+								});
+								insTb.reload({
+									where: {
+										queryType: $('#queryType').val(),
+										key: $('#key').val()
+									},
+									page: {
+										curr: 1
+									}
+								});
+							} else {
+								layer.msg(res.msg, {
+									icon: 2
+								});
+							}
+						}
+					})
+				});
+				// 生成二维码
+				$('#erweima').on('click',()=>{
+					admin.open({
+						type: 1,
+						area: '300px',
+						title: '',
+						content: $('#erweimaModal').html(),
+						success: function(layero, dIndex) {
+							var wz123=toUtf8($("#wz").val());
+							var code123=toUtf8($("#code").val());
+							// 生成二维码
+							//var obj="{\"type\":\"xj\",\"wz\":'\"+toUtf8($("#wz").val())+\"',\"code\":'\"+toUtf8($("#code").val())+\"'}";
+							var obj= {type:'xj',wz:wz123,code:code123}
+							var qrcode = $('#erweimaImg').qrcode({
+								width: 140,
+								height: 140,
+								text:JSON.stringify(obj)
+							});
+							var canvas = qrcode.find('canvas').get(0);
+							var img = canvas.toDataURL('image/jpg');
+							var imgHtml = `<img src='${img}' width='100%' height='100%'>`;
+							$('#erweimaImg').html(imgHtml);
+							$('#downloadImg').on('click', () => {
+								saveImage();
+							});
+							$('#printImg').on('click', () => {
+								$('#erweimaImg').print({
+									title: ''
+								});
+							});
+							function saveImage () {
+								var a = document.createElement('a');
+								a.href = canvas.toDataURL('image/jpg');
+								a.download = '二维码.jpg';
+								a.click();
+							}
+							function toUtf8(str) {
+							            var out, i, len, c;
+							            out = "";
+							            len = str.length;
+							            for (i = 0; i < len; i++) {
+							                c = str.charCodeAt(i);
+							                if ((c >= 0x0001) && (c <= 0x007F)) {
+							                    out += str.charAt(i);
+							                } else if (c > 0x07FF) {
+							                    out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+							                    out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+							                    out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+							                } else {
+							                    out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+							                    out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+							                }
+							            }
+							            return out;
+							        }
+						}
+					});
+				});
+				
+				$('#setLine').on('click', () => {
+					var isset=false;
+					var upitem=null;
+					$.each(dataList,function(i,item){
+						if(item.isset===1)
+						{
+							layer.msg('项目已设置路线，不能重复设置！', {
+								icon: 2
+							});
+							isset=true;
+							return;
+						}
+						if(upitem!=null)
+						{
+							if(upitem.leibie!=item.leibie)
+							{
+								layer.msg('类别不同，不能进行设置！', {
+									icon: 2
+								});
+								isset=true;
+								return;
+							}
+							if(upitem.sj!=item.sj || upitem.scl!=item.scl)
+							{
+								layer.msg('频率不同，不能进行设置！', {
+									icon: 2
+								});
+								isset=true;
+								return;
+							}
+						}
+						upitem=item;
+					})
+					if(isset)
+					{
+						return;
+					}
+					admin.open({
+						type: 1,
+						area: '685px',
+						title: '路线设置',
+						content: $('#setLineModal').html(),
+						success: function(layero, dIndex) {
+							dataList1 = [...dataList];
+							var setLineinsTb = table.render({
+								elem: '#tableSetLine',
+								data: dataList,
+								cols: [
+									[{
+											type: 'numbers',
+											align: 'center',
+											title: '序号'
+										},
+										{
+											field: 'wz',
+											align: 'center',
+											title: '位置'
+										},
+										{
+											field: 'xm',
+											align: 'center',
+											title: '项目'
+										},
+										{
+											field: 'leibie',
+											align: 'center',
+											title: '类别'
+										},
+										{
+											align: 'center',
+											title: '频率(生常量/时间)',
+											templet:function(d){
+												return d.scl+"/"+d.sj
+											}
+										},
+										{
+											field: 'glr',
+											align: 'center',
+											title: '关联人'
+										},
+										{
+											align: 'center',
+											toolbar: '#tableBarSetLine',
+											title: '操作',
+											minWidth: 100
+										}
+									]
+								],
+								request: {
+									pageName: 'currentIndex', //页码的参数名称，默认：page
+									limitName: 'pageSize' //每页数据量的参数名，默认：limit
+								},
+								response: {
+									countName: 'totalCount', //数据总数的字段名称，默认：count
+									dataName: 'list' //数据列表的字段名称，默认：data
+								}
+							});
+							$('#resetLine').on('click', () => {
+								dataList = [...dataList1];
+								table.reload('tableSetLine', {
+									data: dataList
+								});
+							});
+							// 表单提交事件
+							form.on('submit(modelSubmitLine)', function(data) {
+								layer.load(2);
+								var data = [];
+								$.each(dataList, function(i, item) {
+									data[i] = item.aqsz_id;
+								});
+								$.ajax({
+									type: "post",
+									url: url + '/safeSetting/setLx',
+									data: JSON.stringify(data),
+									contentType: 'application/json;utf-8',
+									dataType: "json",
+									success: function(res) {
+										layer.closeAll('loading');
+										if (res.code === 0) {
+											layer.close(dIndex);
+											layer.msg(res.msg, {
+												icon: 1
+											});
+											insTb.reload({
+												where: {
+													queryType: $('#queryType').val(),
+													key: $('#key').val()
+												},
+												page: {
+													curr: 1
+												}
+											});
+										} else {
+											layer.msg(res.msg, {
+												icon: 2
+											});
+										}
+									}
+								})
+								return false;
+							});
+						}
+					});
+				});
+				table.on('checkbox(tableSafe1)', (obj) => {
+					var flag = true;
+					var indexNum = '';
+					if (obj.type === 'one') {
+						dataList.map((val, index) => {
+							if (val.aqsz_id === obj.data.aqsz_id) {
+								flag = false;
+								indexNum = index;
+							}
+						});
+						if (flag) {
+							dataList.push(obj.data);
+						} else {
+							dataList.splice(indexNum, 1)
+						}
+					} else if (obj.type === 'all' && obj.checked === true) {
+						currentList.map(item => {
+							let flag1 = true
+							dataList.map(item1 => {
+								if (item.aqsz_id === item1.aqsz_id) {
+									flag1 = false;
+								}
+							})
+							if (flag1) {
+								dataList.push(item);
+							}
+						})
+					} else if (obj.type === 'all' && obj.checked === false) {
+						var indexNum1 = '';
+						currentList.map(item => {
+							let flag1 = true
+							dataList.map((item1, index) => {
+								if (item.aqsz_id === item1.aqsz_id) {
+									flag1 = false;
+									indexNum1 = index;
+								}
+							})
+							if (!flag1) {
+								dataList.splice(indexNum1, 1);
+							}
+						})
+					}
+					
+					console.log(dataList);
+				});
+				// 工具条点击事件 => 排序
+				table.on('tool(tableSetLine)', function(obj, i) {
+					var data = obj.data;
+					var layEvent = obj.event;
+					if (layEvent === 'up' && obj.tr[0].rowIndex > 0) { // 上升
+						let data = dataList[obj.tr[0].rowIndex];
+						dataList[obj.tr[0].rowIndex] = dataList[obj.tr[0].rowIndex - 1];
+						dataList[obj.tr[0].rowIndex - 1] = data;
+						table.reload('tableSetLine', {
+							data: dataList
+						})
+					} else if (layEvent === 'down' && obj.tr[0].rowIndex < dataList.length - 1) { // 下降
+						let data = dataList[obj.tr[0].rowIndex];
+						dataList[obj.tr[0].rowIndex] = dataList[obj.tr[0].rowIndex + 1];
+						dataList[obj.tr[0].rowIndex + 1] = data;
+						table.reload('tableSetLine', {
+							data: dataList
+						})
+					}
+				});
+				$("#btnSubmit").on("click", function() {
+					
+					if($("#wz").val()=="")
+					{
+						layer.msg("位置不能为空！", {
+							icon: 2
+						});
+						return false;
+					}
+					if($("#code").val()=="")
+					{
+						layer.msg("编号不能为空！", {
+							icon: 2
+						});
+						return false;
+					}
+					var aqszBzParams = [];
+					if(list1.length==0)
+					{
+						layer.msg("请填写标准！", {
+							icon: 2
+						});
+						return false;
+					}
+					var stop=false;
+					$.each(list1, function(i, item) {
+						// debugger;
+						if(item.xm==="")
+						{
+							layer.msg("项目不能为空！", {
+								icon: 2
+							});
+							stop=true;
+							return;
+						}
+						if(item.bz==="")
+						{
+							layer.msg("标准不能为空！", {
+								icon: 2
+							});
+							stop=true;
+							return;
+						}
+						if(item.xlrId==="")
+						{
+							layer.msg("巡逻人不能为空！", {
+								icon: 2
+							});
+							stop=true;
+							return;
+						}
+						if(item.zrrId==="")
+						{
+							layer.msg("责任人不能为空！", {
+								icon: 2
+							});
+							stop=true;
+							return;
+						}
+						if(item.scl==="" && item.sj==="")
+						{
+							layer.msg("生产力和时间必须填写其中一个！", {
+								icon: 2
+							});
+							stop=true;
+							return;
+						}
+						aqszBzParams.push({
+							xm: item.xm,
+							bz: item.bz,
+							xlr: item.xlrId,
+							zrr: item.zrrId,
+							scl: item.scl,
+							sj: item.sj
+						});
+					});
+					console.log(1, aqszBzParams);
+					if(stop)
+						return false;
+					if($("#imageCount").val()=="")
+					{
+						layer.msg("图片数量不能为空！", {
+							icon: 2
+						});
+						return;
+					}
+					if($("#audioCount").val()=="")
+					{
+						layer.msg("音频数量不能为空！", {
+							icon: 2
+						});
+						return;
+					}
+					if($("#videoCount").val()=="")
+					{
+						layer.msg("视频数量不能为空！", {
+							icon: 2
+						});
+						return;
+					}
+					var data = {
+						aqszBzParams: aqszBzParams,
+						guid: $("#guid").val(),
+						aqsz_type: $("[name='aqsz_type']:checked").val(),
+						code: $("#code").val(),
+						idzhandian: localStorage.getItem("station_id"),
+						wz: $("#wz").val(),
+						imageCount:$("#imageCount").val(),
+						videoCount:$("#videoCount").val(),
+						audioCount:$("#audioCount").val()
+					}
+					layer.load(2);
+					$.ajax({
+						type: "post",
+						url: url + '/safeSetting/addAqsz',
+						data: JSON.stringify(data),
+						contentType: 'application/json;utf-8',
+						dataType: "json",
+						success: function(res) {
+							layer.closeAll('loading');
+							if (res.code == 0) {
+								layer.msg(res.msg, {
+									icon: 1
+								});
+								insTb.reload({
+									where: {
+										queryType: $('#queryType').val(),
+										key: $('#key').val()
+									},
+									page: {
+										curr: 1
+									}
+								});
+							} else {
+								layer.msg(res.msg, {
+									icon: 2
+								});
+							}
+						}
+					})
+				});
+				
+				$("#addNewBtn").on("click",function(){
+					var data={aqsz_type:"xf"};
+					form.val('modelSafe2Form', data);
+					$("#aqsz_id").val("");
+					$("#code").val("");
+					$("#wz").val("");
+					$("#guid").val("");
+					list1=[{
+						xm: '',
+						bz: '',
+						xlr: '',
+						xlrId: '',
+						zrr: '',
+						zrrId: '',
+						scl: '',
+						sj: ''
+					}];
+					insTb1.reload({
+						data: list1
+					})
+				})
+			});
+		</script>
+
+	</body>
+</html>

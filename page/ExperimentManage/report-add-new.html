@@ -1,0 +1,704 @@
+<!--
+ * @Author: huyanhai
+ * @since: 2020-02-22 16:38:11
+ * @LastAuthor: huyanhai
+ * @lastTime: 2020-10-23 12:37:21
+ * @FilePath: /web/page/ExperimentManage/report-add-new.html
+ * @Description: 新增报告
+ -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>新增报告</title>
+  <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+  <link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+  <link rel="stylesheet" href="../../assets/css/common_likui.css?v=314" />
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <style>
+    .search-container {
+      padding: 25px 0 30px 20px;
+      box-sizing: border-box;
+    }
+
+    .layui-btn.layui-btn-green {
+      border-radius: 15px;
+      height: 30px;
+      line-height: 30px;
+      color: #fff;
+      padding: 0 25px;
+    }
+
+    .mt-20 {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+
+    .mt-20 .layui-inline {
+      flex: 1 0 auto;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .layui-form-label {
+      width: 120px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 页面加载loading -->
+  <div class="page-loading">
+    <div class="ball-loader"><span></span><span></span><span></span><span></span></div>
+  </div>
+
+  <!-- 正文开始 -->
+  <div class="layui-fluid">
+    <div class="layui-card" style="background: none; border: 0; box-shadow: none">
+      <div class="layui-card-body">
+        <div class="layui-form toolbar" lay-filter="modelPropertyForm">
+          <div class="layui-form-item">
+            <div class="search-container bg-white">
+              <div class="mt-20">
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">工程名称：</label>
+                  <div class="layui-input-inline">
+                    <select name="status" id="project"></select>
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">报告编号：</label>
+                  <div class="layui-input-inline">
+                    <input id="sdNumber" type="text" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">报告名称：</label>
+                  <div class="layui-input-inline">
+                    <select name="status" id="reportName">
+                      <option value="">请选择</option>
+                      <option value="沥青混凝土用粗集料试验报告">沥青混凝土用粗集料试验报告</option>
+                      <option value="沥青混凝土用细集料试验报告">沥青混凝土用细集料试验报告</option>
+                      <option value="沥青混凝土用矿粉试验报告">沥青混凝土用矿粉试验报告</option>
+                      <option value="沥青混合料稳定度试验报告">沥青混合料稳定度试验报告</option>
+                      <option value="乳化沥青实验报告">乳化沥青实验报告</option>
+                      <option value="沥青实验报告">沥青实验报告</option>
+                      <option value="配合比报告">配合比报告</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-20">
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">报告目的：</label>
+                  <div class="layui-input-inline">
+                    <select id="reportGoal" name="type">
+                      <option value="">请选择</option>
+                      <option value="日常试验">日常试验</option>
+                      <option value="原材抽检">原材抽检</option>
+                      <option value="生产抽检">生产抽检</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">样品及试验编号：</label>
+                  <div class="layui-input-inline" id="ypNumberBox">
+                    <input id="ypNumber" type="text" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">样品状态：</label>
+                  <div class="layui-input-inline">
+                    <input id="ypStatus" type="text" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+              </div>
+              <div class="mt-20">
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">材料名称：</label>
+                  <div class="layui-input-inline">
+                    <input id="clName" type="text" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">委托编号：</label>
+                  <div class="layui-input-inline">
+                    <input id="wtNumber" type="text" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">委托单位：</label>
+                  <div class="layui-input-inline">
+                    <input id="wtUnit" type="text" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+              </div>
+              <div class="mt-20">
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">检测依据：</label>
+                  <div class="layui-input-inline">
+                    <input id="jcyj" type="text" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">试验结果：</label>
+                  <div class="layui-input-inline">
+                    <select id="syResult" name="type">
+                      <option value="">请选择</option>
+                      <option value="合格">合格</option>
+                      <option value="不合格">不合格</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">试验日期：</label>
+                  <div class="layui-input-inline">
+                    <input id="syTime" type="text" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">报告日期：</label>
+                  <div class="layui-input-inline">
+                    <input id="bgTime" type="text" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+              </div>
+              <div class="mt-20">
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto"></label>
+                  <div class="layui-input-inline">
+                    <!-- <input id="jcyj" type="text" class="layui-input" placeholder="请输入关键字" /> -->
+                  </div>
+                </div>
+                <div class="layui-inline" style="display: none">
+                  <label class="layui-form-label w-auto">实验编号：</label>
+                  <div class="layui-input-inline">
+                    <input id="syNumber" type="text" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+              </div>
+              <div class="mt-20">
+                <div class="layui-form-item layui-row m-b-5">
+                  <div class="layui-col-md12" id="uploadFj">
+                    <label class="layui-form-label">上传附件：</label>
+                    <button type="button" class="layui-btn" id="test1"><i class="layui-icon">&#xe67c;</i>上传文件</button>
+                    <i class="filename"></i>
+                    <input type="text" name="file" style="display: none" id="filed" />
+                  </div>
+                  <div class="layui-col-md12" style="margin-top: 10px;" id="downFj">
+                    <label class="layui-form-label">下载附件：</label>
+                    <button type="button" class="layui-btn" id="test1"><i class="layui-icon">&#xe62d;</i>下载附件</button>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-20">
+                <div class="layui-inline">
+                  <a id="goBack" class="layui-btn layui-btn-green">返回</a>
+                  <button id="submitData" class="layui-btn layui-btn-green3">保存</button>
+                  <button id="editData" class="layui-btn layui-btn-green3">保存</button>
+                  <!-- <a id="previewData" class="layui-btn layui-btn-red">预览</a> -->
+                  <!-- <a id="addData" class="layui-btn layui-btn-green">添加</a> -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- 弹窗-->
+  <script type="text/html" id="modelProperty">
+      <div id="modelPropertyForm" lay-filter="modelPropertyForm" class="layui-form model-form">
+        <div class="row">
+          <div class="layui-inline">
+            <label class="layui-form-label w-auto" style="width:auto">关键字：</label>
+            <div class="layui-input-inline">
+              <input id="param" type="text" class="layui-input" placeholder="请输入关键字" />
+            </div>
+          </div>
+          <div class="layui-inline">
+            <button id="dialogSearch" class="layui-btn layui-btn-green3">查询</button>
+          </div>
+        </div>
+        <div class="layui-form-item text-center mt-20" style="padding: 0 10px;box-sizing:border-box">
+          <table class="layui-table" id="tableProject" lay-filter="tableProject"></table>
+        </div>
+        <div class="layui-form-item text-center p-30">
+          <div class="layui-inline">
+            <button id="confirm" class="layui-btn layui-btn-green3">确定</button>
+          </div>
+          <div class="layui-inline">
+            <button id="back" class="layui-btn layui-btn-green3">返回</button>
+          </div>
+        </div>
+      </div>
+    </script>
+  <!-- js部分 -->
+  <script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+  <script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+  <script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="../../assets/js/server.js"></script>
+  <script>
+    var zdId = localStorage.getItem("station");
+    var api_url = getServerUrl(zdId);
+    var fileName;
+    var carList = [];
+    // url = "http://test.zgdrkj.cn:8081/CjManager/"
+    // api_url = "https://test.zgdrkj.cn/xinfeng";
+    var form;
+    function getQueryVariable(variable) {
+      var query = window.location.search.substring(1);
+      var vars = query.split("&");
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] == variable) {
+          return pair[1];
+        }
+      }
+      return false;
+    }
+
+    // 渲染表单
+    function renderFrom(reportNumber) {
+      $.get(
+        api_url + `/api/data/getReportInfo`,
+        {
+          reportNumber: reportNumber,
+        },
+        function (res) {
+          if (res.code === 200) {
+            let data = res.data;
+            $("#reportName").val(data.reportName);
+            $("#reportGoal").val(data.reportGoal);
+            $("#syResult").val(data.syResult);
+            $("#ypNumber").val(data.ypNumber);
+            $("#syTime").val(data.syTime);
+            $("#clName").val(data.clName);
+            $("#wtNumber").val(data.wtNumber);
+            $("#wtUnit").val(data.wtUnit);
+            $("#projectName").val(data.projectName);
+            $("#ypStatus").val(data.reportState);
+            $("#syNumber").val(data.syNumber);
+            $("#bgTime").val(data.bgTime);
+            $("#jcyj").val(data.jcyj);
+            $("#syResult").val(data.syResult);
+            $("#sdNumber").val(data.sdNumber);
+            fileName = data.file
+            form.render("select");
+            var select1 = "dd[lay-value=" + data["projectName"] + "]";
+            console.log($("#project").siblings("div.layui-form-select").find("dl"));
+            $("#project").siblings("div.layui-form-select").find("dl").find(select1).click(); //项目
+          } else {
+            layer.msg(res.msg);
+          }
+        },
+        "json"
+      );
+    }
+
+    layui.use(["layer", "form", "table", "util", "laydate", "admin", "element", "upload"], function () {
+      var $ = layui.jquery;
+      var layer = layui.layer;
+      form = layui.form;
+      var table = layui.table;
+      var util = layui.util;
+      var laydate = layui.laydate;
+      var admin = layui.admin;
+      var upload = layui.upload;
+      var element = layui.element;
+      var dialogTable, dialogModel;
+      var filedata = "";
+      var pageType = getQueryVariable("pageType");
+      var reportNumber = getQueryVariable("reportNumber") || 0;
+
+      projData1(url + "production/getProjectList", "#project");
+
+      function projData1(lurl, dom) {
+        $.ajax({
+          url: lurl,
+          type: "get",
+          data: { "idzhandian": localStorage.getItem("station_id") },
+          success: function (res) {
+            var data = res;
+            var html = '<option value="">请选择</option>';
+            data.forEach(function (item) {
+              html += `<option value="${item.project_name}">${item.project_name}</option>`;
+            });
+            $(dom).html(html);
+            console.log($(dom))
+            layui.form.render("select");
+            projData2(url + '/materialInspection/getInspectionSiteList', "#project")
+          },
+        });
+      }
+
+      function projData2(lurl, dom) {
+        $.ajax({
+          url: lurl,
+          type: "get",
+          data: { "idzhandian": localStorage.getItem("station_id"), "type": 0, "currentIndex": 1, "pageSize": 10 },
+          success: function (res) {
+            var data = res.list || [];
+            carList = res.list
+            var html = '';
+            data.forEach(function (item) {
+              html += `<option value="${item.bus_number}">${item.bus_number}</option>`;
+            });
+            $(dom).append(html)
+            layui.form.render("select");
+          },
+        });
+      }
+
+      if (pageType === "edit") {
+        // $("#goBack").show();
+        // $("#addData").hide();
+        $("#submitData").hide();
+        $("#reportName").prop("disabled", true);
+        $("#reportGoal").prop("disabled", true);
+        // $("#uploadFj").hide()
+        $("#downFj").show()
+        renderFrom(reportNumber);
+        form.render("select");
+      } else {
+        $("#uploadFj").show()
+        $("#downFj").hide()
+        // $("#goBack").hide();
+        // $("#addData").show();
+        $("#editData").hide();
+      }
+
+      //日期
+      laydate.render({
+        elem: "#syTime",
+        trigger: "click",
+        format: "yyyy-MM-dd",
+        done: function (value, date, endDate) {
+          $("#syTime").val(value);
+        },
+      });
+      laydate.render({
+        elem: "#bgTime",
+        trigger: "click",
+        format: "yyyy-MM-dd",
+        done: function (value, date, endDate) {
+          $("#bgTime").val(value);
+        },
+      });
+      upload.render({
+        elem: "#test1",
+        accept: "file",
+        method: "POST",
+        // exts: "xlsx|xls",
+        url: api_url + "/api/data/fileUpload",
+        choose: function (obj) {
+          //将每次选择的文件追加到文件队列
+          // var files = obj.pushFile();
+          obj.preview(function (index, file, result) {
+            console.log(file.name); //得到文件对象
+            $(".filename").html(file.name);
+          });
+        },
+        done: function (res, index, upload) {
+          //假设code=0代表上传成功
+          if (res.code == 200) {
+            layer.msg("上传成功");
+            filedata = res.data;
+          } else {
+            layer.msg("上传失败");
+          }
+        },
+      });
+      // 获取项目选择
+      function projData(lurl, dom) {
+        $.ajax({
+          url: lurl,
+          type: "get",
+          data: { "idzhandian": localStorage.getItem("station_id") },
+          success: function (res) {
+            var data = res;
+            var html = '<option value="">请选择</option>';
+            data.forEach(function (item) {
+              html += '<option value="' + item.project_name + '">' + item.project_name + "</option>";
+            });
+            $(dom).html(html);
+            layui.form.render("select");
+          },
+        });
+      }
+
+      // 下载附件
+      $("body").on("click", "#downFj", function () {
+        console.log(`${api_url}/api/data/downloadBgFile/${fileName}`)
+        window.location.href = `${api_url}/api/data/downloadBgFile/${fileName}`;
+      })
+      // 显示表单弹窗
+      function showEditModel(mUser) {
+        dialogModel = admin.open({
+          type: 1,
+          area: "900px",
+          title: mUser ? mUser : "弹窗",
+          content: $("#modelProperty").html(),
+          success: function (layero, dIndex) {
+            dialogTable = table.render({
+              elem: "#tableProject",
+              url: api_url + `/api/data/getSyList`,
+              page: false,
+              cols: [
+                [
+                  {
+                    type: "checkbox",
+                    fixed: "left",
+                    title: "勾选",
+                  },
+                  {
+                    field: "ypNumber",
+                    align: "center",
+                    title: "样品编号",
+                  },
+                  {
+                    field: "ypName",
+                    align: "center",
+                    title: "样品名称",
+                  },
+                  {
+                    field: "danwei",
+                    align: "center",
+                    title: "送样单位",
+                  },
+                  {
+                    field: "project",
+                    align: "center",
+                    title: "试验项目",
+                  },
+                  {
+                    field: "syNumber",
+                    align: "center",
+                    title: "试验记录编号",
+                  },
+                  {
+                    field: "dateTime",
+                    align: "center",
+                    title: "试验日期",
+                  },
+                ],
+              ],
+              request: {
+                pageName: "page", //页码的参数名称，默认：page
+                limitName: "pageSize", //每页数据量的参数名，默认：limit
+              },
+              where: {
+                param: $("#param").val(),
+              },
+              parseData: function (res) {
+                var data = res;
+                data["code"] = data["code"] === 200 ? 0 : null;
+                if (!$("#param").val()) {
+                  return {
+                    data: [],
+                    code: 0,
+                  };
+                } else {
+                  if (data["code"] === 0) {
+                    return {
+                      data: data.data,
+                      code: data.code,
+                    };
+                  } else {
+                    if (!data["code"]) {
+                      layer.msg(data.msg);
+                      return {
+                        data: [],
+                        code: 0,
+                      };
+                    }
+                  }
+                }
+              },
+            });
+          },
+        });
+      }
+
+      // 打开弹窗
+      // $("body").on("click", "#ypNumberBox", function () {
+      //   showEditModel("样品及实验查询");
+      // });
+
+      //查询
+      $("body").on("click", "#dialogSearch", function () {
+        let value = $("#param").val();
+        if (value) {
+          dialogTable.reload({
+            where: {
+              param: $("#param").val(),
+            },
+            page: {
+              curr: 1,
+            },
+          });
+        } else {
+          layer.msg("请输入关键字！");
+        }
+      });
+
+      // 弹窗返回按钮
+      $("body").on("click", "#back", function () {
+        layer.close(dialogModel);
+      });
+
+      // 刷新页面
+      // $("body").on("click", "#addData", function () {
+      //   window.location.reload();
+      // });
+
+      // 弹窗确定按钮
+      $("body").on("click", "#confirm", function () {
+        var checkStatus = table.checkStatus("tableProject");
+        var data = checkStatus.data;
+        if (data.length > 0) {
+          $("#ypNumber").val(data[0]["ypNumber"]);
+          $("#syNumber").val(data[0]["syNumber"]);
+          $("#wtUnit").val(data[0]["danwei"]);
+          $("#projectName").val(data[0]["project"]);
+        }
+        layer.close(dialogModel);
+      });
+
+      // 返回上一页
+      $("body").on("click", "#goBack", function () {
+        window.location.href = "./experiment-report-new.html";
+      });
+
+      // 获取表单数据
+      function getData(data, url, cb) {
+        console.log(url);
+        $.ajax({
+          url: api_url + url,
+          type: "post",
+          data: JSON.stringify(data),
+          contentType: "application/json;utf-8",
+          dataType: "json",
+          success: function (res) {
+            if (res.code === 200) {
+              console.log(res);
+              cb && cb()
+            } else {
+              layer.msg(res.msg);
+            }
+          },
+        });
+      }
+
+      // 提交数据
+      $("body").on("click", "#submitData", function () {
+        let data = {
+          projectCarId: 0,
+          sdNumber: $("#sdNumber").val(),
+          project: $("#project").val() || "0",
+          reportName: $("#reportName").val() || "0",
+          reportGoal: $("#reportGoal").val() || "0",
+          syResult: $("#syResult").val() || "0",
+          ypNumber: $("#ypNumber").val() || "0",
+          syTime: $("#syTime").val() || "0",
+          clName: $("#clName").val() || "0",
+          wtNumber: $("#wtNumber").val() || "0",
+          wtUnit: $("#wtUnit").val() || "0",
+          projectName: $("#projectName").val() || "0",
+          ypStatus: $("#ypStatus").val() || "0",
+          file: filedata,
+          syNumber: $("#syNumber").val() || "0",
+        };
+        for (let item of carList) {
+          if (item.bus_number === $("#project").val()) {
+            data.projectCarId = item.id
+          }
+        }
+        getData(data, `/api/data/addReport`, function () {
+          window.location.href = "./experiment-report-new.html";
+        });
+
+      });
+
+      // 预览
+      $("body").on("click", "#previewData", function () {
+        let data = {
+          projectCarId: 0,
+          sdNumber: $("#sdNumber").val(),
+          project: $("#project").val(),
+          reportName: $("#reportName").val(),
+          reportGoal: $("#reportGoal").val(),
+          syResult: $("#syResult").val(),
+          ypNumber: $("#ypNumber").val(),
+          syTime: $("#syTime").val(),
+          clName: $("#clName").val(),
+          wtNumber: $("#wtNumber").val(),
+          wtUnit: $("#wtUnit").val(),
+          file: filedata,
+          projectName: $("#projectName").val(),
+          ypStatus: $("#ypStatus").val(),
+          syNumber: $("#syNumber").val(),
+          jcyj: $("#jcyj").val(),
+        };
+        $.ajax({
+          url: `${api_url}/api/data/yulan`,
+          type: "post",
+          data: JSON.stringify(data),
+          contentType: "application/json;utf-8",
+          dataType: "json",
+          success: function (res) {
+            if (res.code === 200) {
+              window.location.href = `${api_url}/api/data/downloadYuLanFile/${res.data}`;
+            } else {
+              layer.msg(res.msg);
+            }
+          },
+        });
+      });
+      // 修改数据
+      $("body").on("click", "#editData", function () {
+        let data = {
+          projectCarId: 0,
+          sdNumber: $("#sdNumber").val(),
+          project: $("#project").val(),
+          reportNumber: reportNumber,
+          reportName: $("#reportName").val(),
+          reportGoal: $("#reportGoal").val(),
+          syResult: $("#syResult").val(),
+          ypNumber: $("#ypNumber").val(),
+          syTime: $("#syTime").val(),
+          clName: $("#clName").val(),
+          wtNumber: $("#wtNumber").val(),
+          wtUnit: $("#wtUnit").val(),
+          file: filedata,
+          projectName: $("#projectName").val(),
+          ypStatus: $("#ypStatus").val(),
+          syNumber: $("#syNumber").val(),
+          bgTime: $("#bgTime").val(),
+          jcyj: $("#jcyj").val(),
+        };
+        for (let item of carList) {
+          if (item.bus_number === $("#project").val()) {
+            data.projectCarId = item.id
+          }
+        }
+        getData(data, `/api/data/updateReport`, function () {
+          window.location.href = "./experiment-report-new.html";
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

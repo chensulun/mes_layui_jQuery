@@ -1,0 +1,800 @@
+<!--
+ * @Author: huyanhai
+ * @since: 2020-02-22 13:17:08
+ * @LastAuthor: huyanhai
+ * @lastTime: 2020-09-15 17:37:00
+ * @FilePath: /web/page/ExperimentManage/sample-manage.html
+ * @Description: 样品管理
+ -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>样品管理</title>
+  <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+  <link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+  <link rel="stylesheet" href="../../assets/css/common_likui.css?v=314" />
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <style>
+    .search-container {
+      padding: 25px 0 30px 20px;
+      box-sizing: border-box;
+    }
+
+    .search-container .layui-form-radio {
+      margin: 0 30px 0 0;
+    }
+
+    .project-setting-table {
+      padding: 30px 20px;
+    }
+
+    .layui-table,
+    .layui-table-view {
+      margin: 0;
+    }
+
+    .layui-btn.layui-btn-green {
+      border-radius: 15px;
+      height: 30px;
+      line-height: 30px;
+      color: #fff;
+      padding: 0 25px;
+    }
+
+    #erweicode {
+      width: 150px;
+      height: 150px;
+      border: 1px solid #eee;
+      margin: 0 auto;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .supply-img-container {}
+
+    .supply-img-item {
+      width: 96px;
+      height: 96px;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      margin-right: 20px;
+      position: relative;
+    }
+
+    .supply-img-item .supply-img-close {
+      width: 13px;
+      height: 13px;
+      cursor: pointer;
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 0, 0, 1);
+      font-size: 10px;
+      text-align: center;
+      color: rgba(255, 0, 0, 1);
+    }
+
+    .supply-img-item img {
+      width: 100%;
+    }
+
+    #contract-upload {
+      width: 98px;
+      height: 98px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 12px;
+      padding: 24px 0;
+      color: #999;
+      cursor: pointer;
+      box-sizing: border-box;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .qrcode-box .qrcode {
+      overflow: hidden;
+      clear: both;
+      margin: 20px auto 0 auto;
+    }
+
+    .qrcode-box .qrcode .code_item {
+      width: 140px;
+      float: left;
+      margin-right: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .qrcode-box .qrcode .code_item .codebox {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 5px;
+    }
+
+    .qrcode-box .qrcode .code_item:nth-child(4n) {
+      margin-right: 0;
+    }
+
+    .qrcode-box .qrcode .code_item>div {
+      width: 100%;
+      height: 100%;
+      margin: 0 auto;
+    }
+
+    .qrcode-box .qrcode .code_item p {
+      font-size: 12px;
+    }
+
+    .clear {
+      margin-bottom: 20px;
+    }
+
+    .mt-20 .layui-inline {
+      margin-bottom: 20px;
+    }
+
+    .m-center {
+      text-align: center;
+      padding-bottom: 20px;
+    }
+
+    .w-auto {
+      width: 80px;
+    }
+
+    .m-center .layui-inline {
+      margin-bottom: initial;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 页面加载loading -->
+  <div class="page-loading">
+    <div class="ball-loader"><span></span><span></span><span></span><span></span></div>
+  </div>
+
+  <!-- 正文开始 -->
+  <div class="layui-fluid">
+    <div class="layui-card" style="background-color: initial">
+      <div class="layui-card-body">
+        <div class="layui-form toolbar">
+          <div class="layui-form-item">
+            <div class="search-container bg-white" style="padding-bottom: 0">
+              <div class="clear">
+                <label class="layui-form-label w-auto">取样日期：</label>
+                <div class="layui-input-inline" style="width: 140px">
+                  <input type="text" name="taskStartTime" class="layui-input" id="test-laydate-start" placeholder="开始日期"
+                    lay-key="1" />
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-inline" style="width: 140px">
+                  <input type="text" name="taskEndTime" class="layui-input" id="test-laydate-end" placeholder="结束日期"
+                    lay-key="2" />
+                </div>
+              </div>
+              <div class="mt-20">
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">取样人员：</label>
+                  <div class="layui-input-inline" style="width: 140px">
+                    <select name="status" id="outPerson"></select>
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">样品名称：</label>
+                  <div class="layui-input-inline" style="width: 140px">
+                    <input type="text" id="productName" lay-filter="tree" class="layui-input" />
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">入库人员：</label>
+                  <div class="layui-input-inline" style="width: 140px">
+                    <select name="status" id="inPerson" lay-filter="inPerson">
+                      <option value="123">123</option>
+                      <option value="456">456</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">关键字：</label>
+                  <div class="layui-input-inline" style="width: 140px">
+                    <input id="keywords" type="text" name="keywords" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+              </div>
+              <div class="m-center">
+                <div class="layui-inline">
+                  <button id="btnSearch" class="layui-btn layui-btn-green3">查询</button>
+                </div>
+                <div class="layui-inline">
+                  <a id="btnAddProperty" class="layui-btn layui-btn-red">新增</a>
+                </div>
+                <div class="layui-inline">
+                  <a id="ruku" class="layui-btn layui-btn-green">入库</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="project-setting-table bg-white mt-20">
+          <table class="layui-table" id="tableProject" lay-filter="tableProject" style="margin: 0"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 表格操作列 -->
+  <script type="text/html" id="tableBarProperty">
+      <a class="layui-btn layui-btn-xs table-btn btn-edit" lay-event="edit"><span class="btn-icon"></span>修改</a>
+      <a class="layui-btn layui-btn-xs table-btn btn-del" lay-event="del"><span class="btn-icon"></span>删除</a>
+    </script>
+
+  <!-- 弹窗-->
+  <script type="text/html" id="modelProperty">
+      <form id="modelPropertyForm" lay-filter="modelPropertyForm" class="layui-form model-form">
+        <div class="layui-form-item">
+          <label class="layui-form-label">样品名称</label>
+          <div class="layui-input-block">
+            <input type="text" id="sampleName" name="sampleName" lay-filter="tree" class="layui-input" />
+          </div>
+        </div>
+        <div class="layui-form-item" id="yplx">
+          <label class="layui-form-label">样品类型</label>
+          <div class="layui-input-block">
+            <select name="" id="sampleType">
+              <option value="粗集料">粗集料</option>
+              <option value="粗集料">细集料</option>
+              <option value="粗集料">矿粉</option>
+              <option value="粗集料">混合料</option>
+              <option value="粗集料">沥青</option>
+              <option value="粗集料">乳化沥青</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">样品数量</label>
+          <div class="layui-input-block">
+            <input type="text" id="sampleNum" type="number" name="sampleNum" lay-verify="title" autocomplete="off" placeholder="请输入样品数量" class="layui-input" />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">委托单位</label>
+          <div class="layui-input-block">
+            <input type="text" name="wtUnit" id="wtUnit" lay-verify="title" autocomplete="off" placeholder="请输入委托单位" class="layui-input" />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">项目名称</label>
+          <div class="layui-input-block">
+            <input type="text" name="projectName" id="projectName" lay-verify="title" autocomplete="off" placeholder="请输入项目名称" class="layui-input" />
+          </div>
+        </div>
+        <div class="layui-form-item text-center p-30">
+          <button class="layui-btn layui-btn-primary" lay-filter="modelSubmitAddCustomer" id="saveFrom">保存</button>
+          <button class="layui-btn" type="button" ew-event="closePageDialog">取消</button>
+        </div>
+      </form>
+    </script>
+  <!-- 二维码弹窗 -->
+  <script type="text/html" id="qrcodeWindow">
+      <div class="qrcode-box">
+        <div class="layui-form-item">
+          <div class="qrcode"></div>
+        </div>
+        <div class="layui-form-item text-center p-30">
+          <button class="layui-btn layui-btn-primary" id="print" lay-submit>打印</button>
+          <button class="layui-btn layui-btn-primary" lay-submit ew-event="closePageDialog">跳过</button>
+          <button class="layui-btn" type="button" id="reDo">重做</button>
+        </div>
+      </div>
+    </script>
+  <!-- 入库弹窗 -->
+  <script type="text/html" id="rkwindow">
+      <div class="layui-form model-form">
+        <div class="layui-form-item">
+          <label class="layui-form-label">二维码编号</label>
+          <div class="layui-input-block">
+            <input type="text" autofocus="autofocus" id="rktoCode" type="rktoCode" name="sampleNum" lay-verify="title" placeholder="请输入二维码编号" class="layui-input" />
+          </div>
+        </div>
+        <div class="layui-form-item text-center p-30">
+          <button class="layui-btn layui-btn-primary" id="qdrk" lay-submit>确定</button>
+        </div>
+      </div>
+    </script>
+  <!-- 入库弹窗 -->
+  <!-- 状态 -->
+  <script type="text/html" id="manageState">
+      {{# if(d.manageState === 1) { }} 待检测 {{# } else if(d.manageState === 2) { }} 检测中 {{# } else if(d.manageState === 2) { }} 已完成 {{# } else if(d.manageState === 4){ }} 已完成(尚有结余) {{#
+      }}}
+    </script>
+  <!-- js部分 -->
+  <script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+  <script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+  <script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="../../assets/js/jquery.qrcode.min.js"></script>
+  <script type="text/javascript" src="../../assets/js/jQuery.print.min.js"></script>
+  <script src="module/common.js"></script>
+  <script type="text/javascript" src="../../assets/js/server.js"></script>
+  <script>
+    var zdId = localStorage.getItem("station");
+    var api_url = getServerUrl(zdId);
+    layui.use(["layer", "form", "table", "util", "laydate", "treeSelect", "element", "tree"], function () {
+      var $ = layui.jquery;
+      var layer = layui.layer;
+      var form = layui.form;
+      var table = layui.table;
+      var util = layui.util;
+      var laydate = layui.laydate;
+      var admin = layui.admin;
+      var upload = layui.upload;
+      var element = layui.element;
+      var tree = layui.tree;
+      var treeSelect = layui.treeSelect;
+      var QRCodes = []; // 二维码列表
+      var zdId = localStorage.getItem("station_id");
+
+      // 渲染table函数
+      function reRenderTable(url, parme = {}) {
+        if (!url) return false;
+        var insTb = table.render({
+          elem: "#tableProject",
+          url: api_url + url,
+          page: true,
+          cellMinWidth: 100,
+          cols: [
+            [
+              {
+                field: "toCode",
+                align: "center",
+                title: "样品编号",
+              },
+              {
+                field: "sampleName",
+                align: "center",
+                title: "样品名称",
+              },
+              {
+                field: "wtUnit",
+                align: "center",
+                title: "委托单位",
+              },
+              {
+                field: "projectName",
+                align: "center",
+                title: "项目名称",
+              },
+              {
+                field: "putManageTime",
+                align: "center",
+                title: "取样时间",
+              },
+              {
+                field: "",
+                align: "center",
+                title: "取样人员",
+              },
+              {
+                field: "putName",
+                align: "center",
+                title: "入库人员",
+              },
+              {
+                field: "manageState",
+                align: "center",
+                title: "样品状态",
+                templet: "#manageState",
+              },
+              {
+                align: "center",
+                toolbar: "#tableBarProperty",
+                title: "操作",
+                minWidth: 160,
+                fixed: "right",
+              },
+            ],
+          ],
+          request: {
+            pageName: "page", //页码的参数名称，默认：page
+            limitName: "pageSize", //每页数据量的参数名，默认：limit
+          },
+          where: parme,
+          parseData: function (res) {
+            var data = res;
+            console.log(data.data);
+            data["code"] = data["code"] === 200 ? 0 : null;
+            return {
+              data: data.data.data,
+              code: data.code,
+              count: data.data.count,
+            };
+          },
+          done: function (res, curr, count) {
+            console.log(res);
+          },
+        });
+      }
+
+      // 进入页面默认查询列表
+      reRenderTable(`/api/data/getListAll`);
+      //查询
+      $("#btnSearch").on("click", (e) => {
+        var kw = $("#keywords").val();
+        if (!kw) {
+          layer.msg("请输入关键字");
+          return false;
+        }
+        reRenderTable(`/api/data/getList`, {
+          putName: $("#productName").val(),
+          sampleName: $("#inPerson").val(),
+          param: kw,
+        });
+      });
+
+      // 下拉选择后获取列表
+      function getListFromSelect() {
+        var data = {
+          putName: $("#productName").val(),
+          sampleName: $("#inPerson").val(),
+        };
+        reRenderTable(`/api/data/getList`, data);
+      }
+
+      // form.on('select(productName)', function(data) {
+      //     getListFromSelect();
+      // });
+      // form.on('select(inPerson)', function(data) {
+      //     getListFromSelect();
+      // });
+
+      // 获取下拉框数据,并渲染
+      function bindtype(lurl, dom, name, value, data = {}) {
+        if (!url || !dom) return false;
+        $.ajax({
+          url: url + lurl,
+          type: "get",
+          data: {
+            currentIndex: 1,
+            pageSize: 10,
+          },
+          success: function (res) {
+            var data = res.list;
+            var html = '<option value="">请选择</option>';
+            $.each(data, function (item) { });
+            data.forEach(function (item) {
+              html += '<option value="' + item[value] + '">' + item[name] + "</option>";
+            });
+            $(dom).html(html);
+            layui.form.render("select");
+          },
+        });
+      }
+
+      function setNameIsTitle(arr) {
+        if (arr.length > 0) {
+          for (let item of arr) {
+            item["title"] = item["name"];
+            setNameIsTitle(item["children"]);
+          }
+        }
+        return arr;
+      }
+
+      var renderTree = function (dom, cb) {
+        treeSelect.render({
+          // 选择器
+          elem: dom,
+          // 数据
+          data: url + "yuancailiao/getyuancailiaoList?zdId=" + zdId,
+          // 异步加载方式：get/post，默认get
+          type: "get",
+          // 占位符
+          placeholder: "请选择",
+          // 是否开启搜索功能：true/false，默认false
+          // search: true,
+          // 点击回调
+          click: function (d) {
+            cb(d);
+          },
+          // 加载完成后的回调函数
+          success: function (d) { },
+        });
+      };
+
+      renderTree("#productName", function (d) {
+        $("#productName").val(d.current.u_Name);
+      });
+
+      bindtype("/sysuser/getUserList", "#inPerson", "userName", "userName", {
+        currentIndex: 1,
+        pageSize: 9999,
+      });
+
+      //日期
+      laydate.render({
+        elem: "#test-laydate-start",
+        trigger: "click",
+        format: "yyyy-MM-dd",
+        done: function (value, date, endDate) {
+          var startDate = new Date(value).getTime();
+          var endTime = new Date($("#test-laydate-end").val()).getTime();
+          if (endTime < startDate) {
+            layer.msg("开始时间不能大于结束时间");
+            $("#test-laydate-start").val($("#test-laydate-end").val());
+          }
+        },
+      });
+      laydate.render({
+        elem: "#test-laydate-end",
+        trigger: "click",
+        format: "yyyy-MM-dd",
+        done: function (value, date, endDate) {
+          var startDate = new Date($("#test-laydate-start").val()).getTime();
+          var endTime = new Date(value).getTime();
+          if (endTime < startDate) {
+            layer.msg("结束时间不能小于开始时间");
+            $("#test-laydate-end").val($("#test-laydate-start").val());
+          }
+        },
+      });
+      //客户操作
+      table.on("tool(tableProject)", function (obj) {
+        var data = obj.data;
+        var layEvent = obj.event;
+        if (layEvent === "del") {
+          layer.confirm(
+            "确定要删除“" + data.toCode + "”吗？",
+            {
+              skin: "layui-layer-admin",
+              shade: 0.1,
+            },
+            function (i) {
+              layer.close(i);
+              layer.load(2);
+              $.post(
+                api_url + `/api/data/deleteManage`,
+                {
+                  toCode: data.toCode,
+                },
+                function (res) {
+                  layer.closeAll("loading");
+                  if (res.code == 200) {
+                    layer.msg(res.msg, {
+                      icon: 1,
+                    });
+                    reRenderTable(`/api/data/getListAll`);
+                  } else {
+                    layer.msg(res.msg, {
+                      icon: 2,
+                    });
+                  }
+                },
+                "json"
+              );
+            }
+          );
+        } else if (layEvent === "edit") {
+          showEditModel(data);
+        }
+      });
+
+      // 返回时间
+      function getDate() {
+        var dateArr = [];
+        var date = new Date();
+        dateArr[0] = date.getFullYear();
+        dateArr[1] = date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        dateArr[2] = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        return String(dateArr[0]) + String(dateArr[1]) + String(dateArr[2]);
+      }
+
+      // 不足补零
+      function PrefixInteger(num, length) {
+        return (Array(length).join("0") + num).slice(-length);
+      }
+
+      // 字符串过滤
+      function flterCode(str, code) {
+        if (typeof str !== "string" || !code) return false;
+        return str.substring(str.length - 1 === code) ? str.substring(0, str.length - 1) : str;
+      }
+
+      // 二维码弹窗
+      function showQrcode(mUser) {
+        var qrcodeWindow = admin.open({
+          type: 1,
+          area: "600px",
+          title: "二维码",
+          content: $("#qrcodeWindow").html(),
+          success: function (layero, dIndex) {
+            QRCodes.forEach((item, index) => {
+              var html = `<div class="code_item"><div class='codebox code${index}'></div><p class=''text>${item}<p></div>`;
+              $(".qrcode").append(html);
+              console.log("canvas", $(".code" + index));
+              var qrcode = $(".code" + index).qrcode({
+                width: 100,
+                height: 100,
+                text: item,
+              });
+
+              var canvas = qrcode.find("canvas").get(0);
+              var img = canvas.toDataURL("image/jpg");
+              var imgHtml = `<img class='img' src='${img}' width='100%' height='100%'>`;
+              $(`.qrcode .code${index}`).html(imgHtml);
+            });
+
+            $("#reDo").click(function () {
+              showEditModel();
+              layer.close(qrcodeWindow);
+            });
+            $("#print").click(function () {
+              $(".qrcode").print({
+                title: "",
+              });
+            });
+          },
+        });
+      }
+
+      // 显示表单弹窗
+      function showEditModel(mUser = null) {
+        var formWindow = admin.open({
+          type: 1,
+          area: "600px",
+          title: mUser ? "编辑" : "新增",
+          content: $("#modelProperty").html(),
+          success: function (layero, dIndex) {
+            if (mUser) {
+              $("#sampleName").prop("disabled", true);
+              $(".sampleName .layui-input").prop("disabled", true);
+              $("#sampleNum").attr("disabled", true);
+              $("#yplx").hide();
+            } else {
+              renderTree("#sampleName", function (d) {
+                $("#sampleName").val(d.current.u_Name);
+              });
+
+              $("#sampleName").removeProp("disabled");
+              $("#sampleNum").removeProp("disabled");
+              $("#yplx").show();
+            }
+            // $("#sampleName").val('粗细集料')
+            // console.log($("#sampleName"))
+            form.val("modelPropertyForm", mUser);
+            $("#saveFrom").on("click", function (e) {
+              e.preventDefault();
+              var url = "";
+              var toCode = "";
+              QRCodes = [];
+              var parm = "";
+              var data = {};
+              // if (!$("#sampleName option:selected").val()) {
+              //     layer.msg("样品名称不能为空");
+              //     return false;
+              // }
+
+              if (!mUser) {
+                url = api_url + `/api/data/addSamples`;
+                // url = `http://47.114.106.162:8080/cangzhou/api/data/addSamples`;
+                parm = [];
+                var num = $("#sampleNum").val() ? Number($("#sampleNum").val()) : 1;
+                for (var i = 0; i < num; i++) {
+                  // var code = 'TL(L)' + getDate() + PrefixInteger(i, 4);
+                  // QRCodes.push(code);
+                  // toCode += code + ','
+                  // toCode: code,
+                  parm.push({
+                    sampleName: $("#sampleName").val(),
+                    sampleNum: $("#sampleNum").val() || 1,
+                    wtUnit: $("#wtUnit").val(),
+                    projectName: $("#projectName").val(),
+                    sampleType: $("#sampleType").val(),
+                  });
+                }
+                data["data"] = parm;
+              } else {
+                url = api_url + `/api/data/updateManage`;
+                parm = {};
+                parm["toCode"] = mUser["toCode"];
+                parm["projectName"] = $("#projectName").val();
+                parm["wtUnit"] = $("#wtUnit").val();
+                data = parm;
+              }
+              $.ajax({
+                url: url,
+                type: "POST",
+                dataType: "JSON",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(data),
+                success: function (res) {
+                  layer.closeAll("loading");
+                  if (res.code == 200) {
+                    if (!mUser) {
+                      var data = res.data;
+                      data.forEach((item, index) => {
+                        QRCodes.push(item.toCode);
+                      });
+                      QRCodes = QRCodes.filter(function (val) {
+                        return val;
+                      });
+                      if (QRCodes.length > 0) {
+                        showQrcode(mUser);
+                      } else {
+                        layer.msg("二维码编号为空！");
+                        return false;
+                      }
+                    }
+                    layer.close(formWindow);
+                    reRenderTable(`/api/data/getListAll`);
+                  } else {
+                    layer.msg(res.msg, {
+                      icon: 2,
+                    });
+                  }
+                },
+              });
+            });
+          },
+        });
+      }
+
+      // 新增项目
+      $("#btnAddProperty").on("click", (e) => {
+        showEditModel();
+      });
+      // 入库
+      $("#ruku").click(function () {
+        var rukuWindow = admin.open({
+          type: 1,
+          area: "600px",
+          title: "入库",
+          content: $("#rkwindow").html(),
+          success: function () {
+            var url = api_url + `/api/data/putManagePC`;
+            $("#rktoCode").focus();
+            // url = "https://www.zgdrkj.cn/shuangshi/api/data/putManagePC";
+            $("#qdrk").click(function () {
+              var toCode = $("#rktoCode").val();
+              if (toCode) {
+                $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: "JSON",
+                  contentType: "application/json;charset=utf-8",
+                  data: JSON.stringify({
+                    toCode: toCode,
+                    putName: localStorage.getItem("username"),
+                  }),
+                  success: function (res) {
+                    layer.msg("入库成功！");
+                    $("#rktoCode").val("");
+                    reRenderTable(`/api/data/getListAll`);
+                  },
+                  complete: function () {
+                    $("#rktoCode").focus();
+                  },
+                });
+              } else {
+                return layer.msg("二维码编号为空！");
+              }
+              console.log(toCode);
+            });
+          },
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

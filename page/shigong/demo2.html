@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        /* 代码整理：jQuery插件库 www.jq22.com */
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #333;
+        }
+
+        #pageContent {
+            width: 723px;
+            height: 128px;
+            overflow: hidden;
+            position: relative;
+            /* margin:50px auto; */
+        }
+
+        #imgContainer {
+            width: 980px;
+            height: 500px;
+        }
+
+        #positionButtonDiv {
+            background: rgb(58, 56, 63);
+            background: rgba(58, 56, 63, 0.8);
+            border: solid 1px #100000;
+            color: #fff;
+            padding: 8px;
+            text-align: left;
+            position: absolute;
+            right: 13px;
+            top: 15px;
+        }
+
+        #positionButtonDiv .positionButtonSpan img {
+            float: right;
+            border: 0;
+        }
+
+        .positionMapClass area {
+            cursor: pointer;
+        }
+
+        .zoomButton {
+            border: 0;
+            cursor: pointer;
+        }
+
+        .zoomableContainer {
+            background-image: url("images/transparent.png");
+        }
+    </style>
+    <!--	进度条-->
+
+    <style type="text/css">
+        .container {
+            width: 450px;
+            border: 1px solid #6C9C2C;
+            height: 128px;
+            position: absolute;
+            width: 727px;
+            top: 0;
+        }
+
+        #bar {
+            background: url("images/br1.png") repeat-x;
+            -ms-background-position-y: 100%;
+            float: left;
+            height: 100%;
+            text-align: center;
+            line-height: 150%;
+        }
+
+        input[type=date]::-webkit-inner-spin-button {
+            visibility: hidden;
+        }
+
+        ::-webkit-datetime-edit {
+            padding: 1px;
+            background: url(../selection.gif);
+        }
+
+        ::-webkit-datetime-edit-fields-wrapper {
+            background-color: transparent;
+        }
+
+        ::-webkit-datetime-edit-text {
+            color: #4D90FE;
+            padding: 0 .3em;
+        }
+
+        ::-webkit-datetime-edit-year-field {
+            color: purple;
+        }
+
+        ::-webkit-datetime-edit-month-field {
+            color: blue;
+        }
+
+        ::-webkit-datetime-edit-day-field {
+            color: green;
+        }
+
+        ::-webkit-inner-spin-button {
+            visibility: hidden;
+        }
+
+        ::-webkit-calendar-picker-indicator {
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            box-shadow: inset 0 1px #fff, 0 1px #eee;
+            background-color: #eee;
+            background-image: -webkit-linear-gradient(top, #f0f0f0, #e6e6e6);
+            color: #666;
+        }
+
+        .pic_div {
+            position: relative;
+            background-color: pink;
+            border: 1px dotted red;
+            margin: 10px auto;
+            width: 800px;
+            height: 600px;
+        }
+    </style>
+
+    <!--	汽车-->
+    <style type="text/css">
+        #div1 {
+            width: 100px;
+            /* height: 100px; */
+            position: absolute;
+            /*background: red;*/
+            left: 0;
+            top: 33px;
+        }
+    </style>
+    <link rel="stylesheet" href="css/css.css">
+</head>
+
+<body onload="showTime()">
+    <div class="main">
+        <div class="select">
+            <div class="selecttime selectitem">
+                <div class="selelabel">
+                    时间段：
+                </div>
+                <input type="date">
+                --
+                <input type="date">
+            </div>
+            <div class="selectitem">
+                <div class="selelabel">
+                    施工项目部名称：
+                </div>
+                <div class="selecon">
+                    <select>
+                        <option>
+                            请选择
+                        </option>
+                        <option>
+                            实施项目部1
+                        </option>
+                        <option>
+                            实施项目部2
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="selectitem">
+                <div class="selelabel">
+                    工程项目名称：
+                </div>
+                <div class="selecon">
+                    <select>
+                        <option>
+                            请选择
+                        </option>
+                        <option>
+                            实施项目部1
+                        </option>
+                        <option>
+                            实施项目部2
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="selectitem">
+                <div class="selelabel">
+                    类型：
+                </div>
+                <div class="selecon">
+                    <select>
+                        <option>
+                            请选择
+                        </option>
+                        <option>
+                            实施项目部1
+                        </option>
+                        <option>
+                            实施项目部2
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="selectitem">
+                <div class="selelabel">
+                    任务：
+                </div>
+                <div class="selecon">
+                    <select>
+                        <option>
+                            请选择
+                        </option>
+                        <option>
+                            实施项目部1
+                        </option>
+                        <option>
+                            实施项目部2
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="selectitem">
+                <div class="selelabel">
+                    参数：
+                </div>
+                <div class="selecon">
+                    <select>
+                        <option>
+                            请选择
+                        </option>
+                        <option>
+                            实施项目部1
+                        </option>
+                        <option>
+                            实施项目部2
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="selectitem">
+                <div class="selelabel">
+                    桩号：
+                </div>
+                <div class="selecon">
+                    <select>
+                        <option>
+                            请选择
+                        </option>
+                        <option>
+                            实施项目部1
+                        </option>
+                        <option>
+                            实施项目部2
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="selectitem">
+                <div class="selelabel">
+                    幅数：
+                </div>
+                <div class="selecon">
+                    <select>
+                        <option>
+                            请选择
+                        </option>
+                        <option>
+                            实施项目部1
+                        </option>
+                        <option>
+                            实施项目部2
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="selebottom">
+            <div class="left">
+                <div class="left1">
+                    <div class="left1L">
+                        <div id="time"></div>
+                    </div>
+                    <div class="left1R">
+                        设备：<img src="images/car.png"><input type="checkbox">
+                    </div>
+                </div>
+                <div class="leftbott" id="neirong">
+                    <div class="neirong">
+                        <div id="positionButtonDiv">
+
+                            <p><span> <img id="zoomInButton" class="zoomButton" src="images/zoomIn.png" title="zoom in"
+                                        alt="zoom in" /> <img id="zoomOutButton" class="zoomButton"
+                                        src="images/zoomOut.png" title="zoom out" alt="zoom out" /> </span> </p>
+
+                            <p>
+
+                                <span class="positionButtonSpan">
+
+                                    <map name="positionMap" class="positionMapClass">
+
+                                        <area id="topPositionMap" shape="rect" coords="20,0,40,20" title="move up"
+                                            alt="move up" />
+
+                                        <area id="leftPositionMap" shape="rect" coords="0,20,20,40" title="move left"
+                                            alt="move left" />
+
+                                        <area id="rightPositionMap" shape="rect" coords="40,20,60,40" title="move right"
+                                            alt="move right" />
+
+                                        <area id="bottomPositionMap" shape="rect" coords="20,40,40,60"
+                                            title="move bottom" alt="move bottom" />
+
+                                    </map>
+
+                                    <img src="images/position.png" usemap="#positionMap" />
+
+                                </span>
+
+                            </p>
+
+                        </div>
+
+                        <div id="pageContent">
+
+                            <div id="imgContainer">
+
+                                <!--			<img id="imageFullScreen" src="images/zoomFullScreen.jpg"/>-->
+                                <img id="imageFullScreen" src="images/jun2.jpg" style="width: 100%" />
+
+                            </div>
+
+
+                        </div>
+                        <!--	进度条-->
+                        <div class="container">
+                            <img id="bar" style="width:68%;"></div>
+                        <div id="div1" style="left: 490px;">
+                            <img src="images/carinfo.png">
+                        </div>
+                    </div>
+                    <!--	汽车-->
+                    <div class="bts">
+                        <input type="button" value="开始运动" id="btnstart" onclick="startMove()" />
+                        <input type="button" value="暂停运动" id="btnpause" onclick="endMove()" />
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="right">
+            <div class="rightbox">
+                <p class="righttit">
+                    气象信息
+                </p>
+                <div class="qixiang">
+                    <div class="qixiangitem">
+                        <p>
+                            <img src="images/tianqi.png">
+                        </p>
+                        <p>
+                            多云转阴
+                        </p>
+                    </div>
+                    <div class="qixiangitem">
+                        <p>
+
+                            <img src="images/wendu2.png">
+                        </p>
+                        <p>
+                            风速：23km/h
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="rightbox">
+                <p class="righttit">
+                    作业设备
+                </p>
+                <div class="sbcon">
+                    <p class="sbimg">
+                        <img src="images/shebei.png">
+                    </p>
+                    <p class="sblsit">
+                        <span>设备编号：</span>
+                        <span style="color: #13B3A4">
+                            DW232344324
+                        </span>
+                    </p>
+                    <p class="sblsit">
+                        <span>设备名称：</span>
+                        <span>
+                            华星FCC
+                        </span>
+                    </p>
+                    <p class="sblsit">
+                        <span>温度：</span>
+                        <span style="color:#6A2E3D;">
+                            <img src="images/wendu.png">90°
+                        </span>
+                    </p>
+                    <p class="sblsit">
+                        <span>速度：</span>
+                        <span>
+                            <img src="images/sudu.png">89km/min
+                        </span>
+                    </p>
+                    <p class="sblsit">
+                        <span>状态：</span>
+                        <a class="status">运行中>></a>
+                    </p>
+
+                </div>
+                <div class="sbcon">
+                    <p class="sbimg">
+                        <img src="images/shebei2.png">
+                    </p>
+                    <p class="sblsit">
+                        <span>设备编号：</span>
+                        <span style="color: #13B3A4">
+                            DW232344324
+                        </span>
+                    </p>
+                    <p class="sblsit">
+                        <span>设备名称：</span>
+                        <span>
+                            华星FCC
+                        </span>
+                    </p>
+                    <p class="sblsit">
+                        <span>温度：</span>
+                        <span style="color:#6A2E3D;">
+                            <img src="images/wendu.png">90°
+                        </span>
+                    </p>
+                    <p class="sblsit">
+                        <span>速度：</span>
+                        <span>
+                            <img src="images/sudu.png">89km/min
+                        </span>
+                    </p>
+                    <p class="sblsit">
+                        <span>状态：</span>
+                        <a class="status">运行中>></a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="http://www.jq22.com/jquery/1.11.1/jquery.min.js"></script>
+
+    <script src="js/e-smart-zoom-jquery.min.js"></script>
+
+    <!--[if lt IE 9]>
+
+<script src="http://libs.baidu.com/html5shiv/3.6/html5shiv.min.js"></script>
+
+<![endif]-->
+
+    <script>
+        $(document).ready(function () {
+
+            $('#imageFullScreen').smartZoom({
+                'containerClass': 'zoomableContainer'
+            });
+
+            jQuery.extend({
+                changeIndexSlider: function () {
+                    var totalWidth = jQuery("#t3-header").width();
+                    jQuery("#reslider_ul").height(totalWidth / 2);
+                    jQuery(".slide_img").width(totalWidth);
+                    jQuery(".slide_img").height(totalWidth / 2);
+
+                }
+            });
+            jQuery(window).resize(function () {
+                jQuery.changeIndexSlider();
+            });
+            jQuery(document).ready(function () {
+                jQuery.changeIndexSlider();
+            });
+
+            $('#topPositionMap,#leftPositionMap,#rightPositionMap,#bottomPositionMap').bind("click",
+                moveButtonClickHandler);
+
+            $('#zoomInButton,#zoomOutButton').bind("click", zoomButtonClickHandler);
+
+
+            function bigit() {
+                var image = document.getElementById("container");
+                image.height = image.height * 1.1 + 'px';
+                image.width = image.width * 1.1 + 'px';
+            }
+
+            function littleit() {
+                var image = document.getElementById("container");
+                image.height = image.height / 1.1 + 'px';
+                image.width = image.width / 1.1 + 'px';
+            }
+
+            function zoomButtonClickHandler(e) {
+
+                var containerneirong = document.getElementById("neirong");
+                var scaleToAdd = 0.8;
+
+                if (e.target.id == 'zoomOutButton') {
+                    // scaleToAdd = -scaleToAdd;
+                    var de = document;
+                    de.exitFullscreen();
+                } else {
+                    containerneirong.requestFullscreen();
+                    // $("#imageFullScreen").attr("width","100%");
+                }
+
+                //    
+
+                //  $('#imageFullScreen').smartZoom('zoom', scaleToAdd);
+
+                //  $('#bar').smartZoom('zoom', scaleToAdd);
+                // // $('#')
+
+            }
+
+            function moveButtonClickHandler(e) {
+
+                var pixelsToMoveOnX = 0;
+
+                var pixelsToMoveOnY = 0;
+
+
+
+                switch (e.target.id) {
+
+                    case "leftPositionMap":
+
+                        pixelsToMoveOnX = 50;
+
+                        break;
+
+                    case "rightPositionMap":
+
+                        pixelsToMoveOnX = -50;
+
+                        break;
+
+                    case "topPositionMap":
+
+                        pixelsToMoveOnY = 50;
+
+                        break;
+
+                    case "bottomPositionMap":
+
+                        pixelsToMoveOnY = -50;
+
+                        break;
+
+                }
+
+                $('#imageFullScreen').smartZoom('pan', pixelsToMoveOnX, pixelsToMoveOnY);
+
+            }
+
+        });
+    </script>
+
+    <!--代码部分end-->
+    <!--压路机-->
+    <script type="text/javascript">
+        var timeout = null
+
+        function run() {
+            var bar = document.getElementById("bar");
+            var total = document.getElementById("total");
+            var oDiv = document.getElementById('div1');
+            // console.log("距离: "+oDiv.style.right);
+            bar.style.width = parseInt(bar.style.width) + 1 + "%";
+            if (oDiv.style.right < 0) oDiv.style.right = 0;
+            // total.innerHTML = bar.style.width;
+            if (bar.style.width == "100%") {
+                console.log("压路机运动完成");
+                window.clearTimeout(timeout);
+                return;
+            }
+            timeout = window.setTimeout("run()", 100);
+        }
+
+        function stoptun() {
+            clearTimeout(timeout);
+        }
+        // window.onload = function(){
+        // 	run();
+        // }
+    </script>
+    <!--汽车-->
+    <script type="text/javascript">
+        var timer = null;
+        var isend = false;
+
+        function startMove() {
+            // $("#btnstart").attr('disabled',true);
+            // $("#btnpause").attr('disabled',false);
+            var oDiv = document.getElementById('div1');//车
+            var oBar = document.getElementById('bar');//路
+            if (oBar.style.width == "100%") {
+                oBar.style.width = "30%";
+                oDiv.style.left = 0;
+            }
+            /**
+             * 在开始运动前,先清除定时器
+             * 防止多次点击按钮，开多个定时器函数
+             * 因为定时器函数为异步的，这样的话速度会变快
+             */
+            clearInterval(timer);
+            /**
+             * 用于实现运动的定时器函数
+             */
+            timer = setInterval(function () {
+                /**
+                 * 因为速度固定，所以是匀速运动
+                 */
+                var iSpeed = 2;
+                if (isend) {
+                    // oDiv.style.left = 0;
+
+                    oBar.style.left = 0;
+
+                }
+                /**
+                 * 使用if和else，用于区别是否到达终点
+                 */
+                if (oDiv.offsetLeft >= 670) //是否到达终点,
+                {
+                    isend = true;
+                    //速度为7为301,所以判断条件用oDiv.offsetLeft >= 300，>=
+                    // clearInterval(timer); //到达终点
+
+                    var st = setInterval(function () {
+                        oDiv.style.left = oDiv.offsetLeft - 1 + 'px'
+
+                    }, 30)
+                    // oDiv.style.left=oDiv.offsetLeft-1+'px'
+
+
+                    clearInterval(timer); //到达终点
+                    setTimeout(function () {
+                        clearInterval(st)
+                    }, 4000)
+                    // clearInterval(st)
+                } else {
+                    oDiv.style.left = oDiv.offsetLeft + iSpeed + 'px'; //到达之前
+                }
+            }, 30);
+
+            run();
+        }
+
+        function endMove() {
+            // $("#btnstart").attr('disabled',false);
+            // $("#btnpause").attr('disabled',true);
+            clearInterval(timer);
+            stoptun()
+        }
+    </script>
+
+    <script>
+        function showTime() {
+            var now = new Date();
+            var nowTime = now.toLocaleString();
+            var date = nowTime.substring(0, 10); //截取日期
+            var time = nowTime.substring(10, 20); //截取时间
+            var week = now.getDay(); //星期
+            var hour = now.getHours(); //小时
+            //判断星期几
+            var weeks = ["日", "一", "二", "三", "四", "五", "六"];
+            var getWeek = "星期" + weeks[week];
+            var sc;
+            //判断是AM or PM
+            if (hour >= 0 && hour < 5) {
+                sc = '凌晨';
+            } else if (hour > 5 && hour <= 7) {
+                sc = '早上';
+            } else if (hour > 7 && hour <= 11) {
+                sc = '上午';
+            } else if (hour > 11 && hour <= 13) {
+                sc = '中午';
+            } else if (hour > 13 && hour <= 18) {
+                sc = '下午';
+            } else if (hour > 18 && hour <= 23) {
+                sc = '晚上';
+            }
+            document.getElementById('time').innerHTML = "当前时间：" + date + " " + getWeek + " " + "   " + sc + "  " + time;
+            setTimeout('showTime()', 1000);
+        }
+    </script>
+
+
+</body>
+
+</html>

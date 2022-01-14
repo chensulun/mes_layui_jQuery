@@ -1,0 +1,708 @@
+﻿<!doctype html>
+<html class="no-js">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../assets/layui/css/layui2.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common2.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/index2.css" />
+		<link href="http://vjs.zencdn.net/5.19/video-js.min.css" rel="stylesheet">
+		<script src="http://vjs.zencdn.net/5.19/video.min.js"></script>
+		<script src="https://unpkg.com/flv.js/dist/flv.min.js"></script>
+		<script src="https://unpkg.com/videojs-flvjs/dist/videojs-flvjs.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.12.2/videojs-contrib-hls.js"></script>
+
+	</head>
+	<style>
+		.xgplayer-skin-default{
+		background:none !important;
+	}
+	.top-title{
+		width: auto !important;
+	}
+</style>
+
+	<body>
+
+		<div class="top-title clearfix">
+			<img src="../../assets/images/top_title.png" alt="" />
+			<h1 class="h1_title"></h1>
+		</div>
+
+		<div class="main">
+			<div class="section1 fl">
+				<div class="section1-top">
+					<div class="section1-top-item">
+						<div class="intro-text"><em></em>累计生产总量</div>
+						<div class="produce-num"><span id="productTotal">0</span>吨</div>
+					</div>
+					<div class="section1-top-item">
+						<div class="intro-text"><em></em>当日生产总量</div>
+						<div class="produce-num"><span id="curdayProductTotal">0</span>吨</div>
+					</div>
+					<div class="section1-top-item">
+						<div class="intro-text"><em></em>当日发货总量</div>
+						<div class="produce-num"><span id="curdayFahuoTotal">0</span>吨</div>
+					</div>
+				</div>
+				<div class="section1-bottom">
+					<h2>拌站场区视频监控画面
+						<!--<a href="http://192.168.2.222" target="_blank" class="fr">查看全部监控</a>-->
+					</h2>
+					<div class="video-list" id="zhanvideo">
+
+					</div>
+				</div>
+			</div>
+
+			<div class="section2 fl">
+				<div class="section2-top">
+					<h2>运输车辆地图</h2>
+					<div id="map"></div>
+				</div>
+				<div class="section2-bottom">
+					<div class="section2-bottom-item fl">
+						<h2>生产消耗</h2>
+						<div class="chuhuo-list">
+							<table cellpadding="20" cellspacing="0">
+								<thead>
+									<tr>
+										<th>时间</th>
+										<th>集料</th>
+										<th>添加剂</th>
+										<th>矿粉</th>
+										<th>沥青</th>
+									</tr>
+								</thead>
+								<tbody id="productList"></tbody>
+							</table>
+						</div>
+					</div>
+					<div class="section2-bottom-item fr">
+						<h2>出货详情</h2>
+						<div class="chuhuo-list">
+							<table cellpadding="20" cellspacing="0">
+								<thead>
+									<tr>
+										<th>项目名称</th>
+										<th>车牌号</th>
+										<th>净重</th>
+										<th>出货时间</th>
+									</tr>
+								</thead>
+								<tbody id="chuhuo"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="section3 fl">
+				<div class="section3-top1">
+					<h1 class="fl" style="margin-left: 1rem;">生产状态:&nbsp;<span id="produceState"></span></h1>
+					<h1>生产材料:&nbsp;<span id="productName"></span></h1>
+				</div>
+				<div class="section3-top">
+					<h2>生产数据</h2>
+					<div class="section3-top-content">
+						<div class="section3-top-item">
+							<div id="guliao" style="width:120px;height:100px;margin-bottom: 0;"></div>
+						</div>
+						<div class="section3-top-item">
+							<div id="chuliao" style="width:120px;height:100px;margin-bottom: 0;"></div>
+						</div>
+						<div class="section3-top-item">
+							<div id="ratio" style="width:120px;height:100px;margin-bottom: 0;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="section3-bottom">
+					<div class="section3-chart1">
+						<h2>油石比</h2>
+						<div id="lineChart1"></div>
+					</div>
+
+					<div class="section3-chart2">
+						<h2>温度</h2>
+						<div id="lineChart2"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+		<script src="../../assets/js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+
+		<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+		<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+		<script src="../../assets/js/common.js"></script>
+		<script src="../../assets/js/common1.js"></script>
+		<script src="../../assets/js/server.js"></script>
+		<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=CKozdeH8v9XoTyaFB5slrpMMwzzIvvs0"></script>
+		<script src="../../assets/js/InfoBox_min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../assets/libs/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <script src="../../assets/js/xgplayer.js" charset="utf-8"></script>
+<script src="../../assets/js/xgplayer-flv.js" charset="utf-8"></script> -->
+		<script src="../../assets/js/hls.js" charset="utf-8"></script>
+		<script src="../../assets/js/comprehensiveapi.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../assets/js/map.js" type="text/javascript" charset="utf-8"></script>
+
+		<script type="text/javascript">
+			let topTitle = projectName === 'chongjiao' ? '沥青搅拌站智慧生产管控系统' : '沥青搅拌站智慧生产管控系统';
+			$('.h1_title').text(topTitle);
+			document.title = topTitle;
+			$(function() {
+				indexvideo();
+			})
+
+			function gaugeOption(name, max, value, unit) {
+				return {
+					//backgroundColor: "#fff",
+					color: ["#37A2DA", "#32C5E9", "#67E0E3"],
+
+					series: [{
+						name: name,
+						type: 'gauge',
+						min: 0,
+						max: max,
+						radius: '100%',
+						detail: {
+							//show:false,
+							formatter: '{value}' + unit,
+							fontSize: 20,
+						},
+						axisLine: {
+							show: true,
+							lineStyle: {
+								width: 5,
+								shadowBlur: 0,
+								color: [
+									[0.3, '#67e0e3'],
+									[0.7, '#37a2da'],
+									[1, '#fd666d']
+								]
+							}
+						},
+						splitLine: {
+							show: false,
+						},
+						axisLabel: {
+							show: false,
+							distance: 0
+						},
+						title: {
+							color: '#00A7DC'
+						},
+						axisTick: { // 刻度样式
+							//show:false
+						},
+						// itemStyle
+						pointer: {
+							//show:false
+							width: 2
+						},
+						data: [{
+							value: value,
+							name: name,
+						}]
+
+					}]
+				};
+			}
+
+			var guliao = echarts.init(document.getElementById("guliao"));
+			var chuliao = echarts.init(document.getElementById("chuliao"));
+			var ratio = echarts.init(document.getElementById("ratio"));
+
+			// 地图实时数据;
+			map.setZoom(13);
+			var point = new BMap.Point(106.278022, 29.682351);
+			//if (projectName == "guangzhou") {
+			//	point = new BMap.Point(113.41370944660196, 23.34191249371705);
+			//} else if (projectName == "chongjiao") {
+			//	if (localStorage.getItem("station") == "双石站") {
+			//		point = new BMap.Point(105.818459, 29.402740);
+			//	} else if (localStorage.getItem("station") == "双石站") {
+			//		point = new BMap.Point(105.818459, 29.402740);
+			//	}
+			//}
+			var station = localStorage.getItem("station");
+			if(station == '鑫丰站'){
+				point = new BMap.Point(117.390471, 38.448497);
+			}
+			if(station == '任丘站'){
+				point = new BMap.Point(116.171438, 38.77867);
+			}
+			if(station == '新基地'){
+				point = new BMap.Point(116.996768, 38.437637);
+			}
+			map.centerAndZoom(point, 16);
+			
+			var marker = new BMap.Marker(point); // 创建标注
+			map.addOverlay(marker);
+			var opts = {
+				position: point, // 指定文本标注所在的地理位置
+				offset: new BMap.Size(10, -20) //设置文本偏移量
+			}
+			var label = new BMap.Label("搅拌站", opts); // 创建文本标注对象
+			label.setStyle({
+				color: "red",
+				fontSize: "12px",
+				height: "20px",
+				lineHeight: "20px",
+				fontFamily: "微软雅黑"
+			});
+			map.addOverlay(label);
+			var convertor = new BMap.Convertor();
+			getCarLocation();
+			setInterval(function() {
+				getCarLocation();
+			}, 10000);
+			var xData1 = [];
+			var yData1 = [];
+
+			var xData2 = [];
+			var yData2 = [];
+
+			//油石比
+			var rate = []
+
+			// 生产实时数据	
+			WebSocketFn(productUrl, function(data) {
+				if (data == '{}' || data == '[]') {
+					return;
+				}
+				var data = JSON.parse(data)
+
+				// 累计生产总量
+				$('#productTotal').html(data.productTotal);
+
+				// 当日生产总量
+				$('#curdayProductTotal').html(data.curTotal);
+
+
+
+				// 当前生产材料
+				$('#productName').html(data.productName);
+
+				// 生产消耗
+				var str = ''
+
+
+				if (data.productList && data.productList.length > 0) {
+					if (data.productList.length >= 5) {
+						for (var i = 0; i < 5; i++) {
+							str += '<tr>' +
+								'<td>' + data.productList[i].dateTime + '</td>' +
+								'<td>' + data.productList[i].glsl + '</td>' +
+								'<td>' + data.productList[i].tjjsl + '</td>' +
+								'<td>' + data.productList[i].xfsl + '</td>' +
+								'<td>' + data.productList[i].lqsl + '</td>' +
+								'</tr>'
+						}
+					} else {
+						for (var i = 0; i < data.productList.length; i++) {
+							str += '<tr>' +
+								'<td>' + data.productList[i].dateTime + '</td>' +
+								'<td>' + data.productList[i].glsl + '</td>' +
+								'<td>' + data.productList[i].tjjsl + '</td>' +
+								'<td>' + data.productList[i].xfsl + '</td>' +
+								'<td>' + data.productList[i].lqsl + '</td>' +
+								'</tr>'
+						}
+					}
+
+
+					$('#productList').empty()
+					$('#productList').prepend(str);
+					/**
+					if($('#productList tr').length>5){
+						var n = $('#productList  tr').length-1;
+						$('#productList tr').eq(n).remove();
+					}**/
+				}
+
+				// 仪表盘
+
+				// 骨料温度  为模拟数据
+				if (data.guliaoTemp) {
+					if (data.guliaoTemp == '--') {
+						data.guliaoTemp = 0;
+					}
+					guliao.setOption(gaugeOption('骨料温度', 200, data.guliaoTemp, '℃'));
+				}
+
+				if (data.state) {
+					$('#produceState').html(data.state)
+				}
+
+
+				// 出料温度
+				if (data.outTList && data.outTList.length > 0) {
+					var initXdata1 = data.outTList.map(function(index, value) {
+						return index.outDate;
+					})
+
+					var initYdata1 = data.outTList.map(function(index, value) {
+						return index.out;
+					})
+					xData1 = xData1.concat(initXdata1);
+					yData1 = yData1.concat(initYdata1);
+
+					chuliao.setOption(gaugeOption('出料温度', 500, data.outTemp, '℃'));
+					ratioChart('温度', 'lineChart2', xData1, yData1);
+
+				} else if (data.outTemp) {
+					chuliao.setOption(gaugeOption('出料温度', 500, data.outTemp, '℃'));
+					// 温度曲线
+
+					if (xData1.length > 100) {
+						xData1 = [];
+						yData1 = [];
+					}
+
+					xData1.push(data.date);
+					yData1.push(data.outTemp)
+
+					ratioChart('温度', 'lineChart2', xData1, yData1);
+				}
+
+
+				// 油石比
+				if (data.rate) {
+					if (data.change) {
+						rate = data.productList;
+					} else {
+						rate = data.productList.concat(rate);
+					}
+					ratio.setOption(gaugeOption('油石比', 30, data.rate, '%'));
+					//油石比曲线
+
+					xData2 = rate.map(function(index, value) {
+						return index.date + '  ' + index.dateTime;
+					})
+
+					yData2 = rate.map(function(index, value) {
+						return index.ysb;
+					})
+
+					xData2.sort();
+					yData2.sort();
+
+
+					ratioChart('油石比', 'lineChart1', xData2, yData2);
+				}
+				// 出货详情
+			});
+
+			// 出货详情
+			WebSocketFn(weightUrl, function(data) {
+				if (data == '{}' || data == '[]') {
+					return;
+				}
+				var data = JSON.parse(data);
+				//alert(data.curCHTotal);
+				if (data.curCHTotal) {
+					// 当日发货总量
+					$('#curdayFahuoTotal').html(data.curCHTotal);
+				}
+				data = data.list;
+				console.log(data)
+				var str = ''
+
+
+				//	if(data.productList && data.productList.length>0){
+				//		if(data.productList.length>=5){
+				//			for(var i=0;i<5;i++){
+				//	   			str +='<tr>'
+				//					+	'<td>'+data.productList[i].dateTime+'</td>'
+				//					+	'<td>'+data.productList[i].glsl+'</td>'
+				//					+	'<td>'+data.productList[i].tjjsl+'</td>'
+				//					+	'<td>'+data.productList[i].xfsl+'</td>'
+				//					+	'<td>'+data.productList[i].lqsl+'</td>'
+				//					+'</tr>'
+				//	   		}
+				//		}else{
+				//			for(var i=0;i<data.productList.length;i++){
+				//	   			str +='<tr>'
+				//					+	'<td>'+data.productList[i].dateTime+'</td>'
+				//					+	'<td>'+data.productList[i].glsl+'</td>'
+				//					+	'<td>'+data.productList[i].tjjsl+'</td>'
+				//					+	'<td>'+data.productList[i].xfsl+'</td>'
+				//					+	'<td>'+data.productList[i].lqsl+'</td>'
+				//					+'</tr>'
+				//	   		}
+				//		}
+				// 		
+				// 		
+				// 		$('#productList').prepend(str);
+				// 		
+				// 		if($('#productList tr').length>5){
+				// 			var n = $('#productList  tr').length-1;
+				// 			$('#productList tr').eq(n).remove();
+				// 		}
+				//	}
+
+
+
+
+				if (data) {
+					if (data.length >= 5) {
+						for (var i = 0; i < 5; i++) {
+							str += '<tr>';
+							if(data[i].xm==null){
+								var xm = "";
+							}else{
+								if (data[i].xm.length > 6) {
+									// 项目名长度超6 截取字符串
+									var xm = data[i].xm.substr(0, 6);
+								} else {
+									var xm = data[i].xm;
+								}}
+							str += '<td title="' + data[i].xm + '">' + xm + '</td>' +
+								'<td>' + data[i].cph + '</td>' +
+								'<td>' + data[i].jz + '</td>' +
+								'<td>' + data[i].ccsj + '</td>' +
+								'</tr>'
+						}
+						$('#chuhuo').prepend(str);
+
+						if ($('#chuhuo tr').length > 5) {
+							var n = $('#chuhuo  tr').length - 1;
+							$('#chuhuo tr').eq(n).remove();
+						}
+					} else {
+						for (var i = 0; i < data.length; i++) {
+							str += '<tr>'
+							if(data[i].xm==null){
+								var xm = "";
+							}else{
+							if (data[i].xm.length > 6) {
+								// 项目名长度超6 截取字符串
+								var xm = data[i].xm.substr(0, 6);
+							} else {
+								var xm = data[i].xm;
+							}}
+							str += '<td title="' + data[i].xm + '">' + xm + '</td>' +
+								'<td>' + data[i].cph + '</td>' +
+								'<td>' + data[i].jz + '</td>' +
+								'<td>' + data[i].rcsj + '</td>' +
+								'</tr>'
+						}
+
+						$('#chuhuo').prepend(str);
+
+						if ($('#chuhuo tr').length > 5) {
+							var n = $('#chuhuo  tr').length - 1;
+							$('#chuhuo tr').eq(n).remove();
+						}
+					}
+				}
+
+			})
+
+			function doTranslateGps(points, callback) {
+				var N = Math.ceil(points.length / 10);
+				var result = []
+				var idx = 0;
+
+				var loop = function(i) {
+					var pts = points.slice(i++ * 10, i * 10);
+
+					convertor.translate(pts, 1, 5, function(d) {
+						if (d.status === 0) {
+							result = result.concat(d.points);
+							if (++idx >= N) {
+								callback(result)
+							} else {
+								loop(idx);
+							}
+						}
+					})
+				}
+
+				loop(idx)
+			}
+
+			function getCarLocation() {
+				ajaxData(carList, {}, function(data) {
+
+					//转换百度坐标
+					var pts = [];
+					for (var i = data.list.length - 1; i > -1; i--) {
+						if (data.list[i].location) {
+							var lng = data.list[i].location.lng;
+							var lat = data.list[i].location.lat;
+							//pts_str += lng + ',' + lat + ';'	
+							var pt = new BMap.Point(lng, lat);
+							pts.unshift(pt);
+						} else {
+							data.list.splice(i, 1);
+						}
+					}
+					doTranslateGps(pts, function(pts) {
+						for (var i = 0; i < pts.length; i++) {
+							data.list[i].location.lng = pts[i].lng;
+							data.list[i].location.lat = pts[i].lat;
+						}
+
+						translateCallBack()
+					});
+
+					/* var convertor = new BMap.Convertor();
+					convertor.translate(pts, 1, 5, function(d){
+						if(d.status === 0) {
+							for(var i=0; i<d.points.length; i++){
+								data.list[i].location.lng = d.points[i].lng;
+								data.list[i].location.lat = d.points[i].lat;
+							}
+							
+							translateCallBack()
+						}
+					}) */
+
+
+					var translateCallBack = function() {
+						var carStr = '';
+						for (var i = 0; i < data.list.length; i++) {
+							removeOverlay(data.list[i].carNo);
+							if (!data.list[i].location || !data.list[i].location.lng || !data.list[i].location.lat) {
+								continue
+							}
+
+							// 地图标注
+							var lng = data.list[i].location.lng; // 113.66345643997192
+							var lat = data.list[i].location.lat; // 23.18814065752128 
+							carStr += '<li carnum="' + data.list[i].carNo + '" lng=' + lng + ' lat=' + lat + '>' + data.list[i].carNo +
+								'</li>';
+
+							var pt = new BMap.Point(lng, lat);
+							var opt = {
+								width: 300, // 信息窗口宽度
+								height: 130, // 信息窗口高度
+							}
+
+							var projectName = data.list[i].projectName ? data.list[i].projectName : '';
+							var CompressiveStrength = data.list[i].CompressiveStrength ? data.list[i].CompressiveStrength : '';
+
+							getAddress(pt, function(address, params) {
+								var content = '<p style="font-weight:bold">车辆号码:' + params.carNo + '</p>' +
+									'<p>运输项目:' + params.projectName + '</p>' +
+									'<p>运输类型:' + params.CompressiveStrength + '</p>'
+								if (params.projectName) {
+									content += '<p>运输状态:' + (params.transport === 1 ? '运输中' : '已停止') + '</p>'
+								}
+								if (!params.power) {
+									params.power = ''
+								}
+
+								content += '<p>电量:' + params.power + '</p>' +
+									'<p>车辆位置:' + address + '</p>'
+
+								var InfoWindow = new BMap.InfoWindow(content, opt);
+								InfoWindow.enableAutoPan();
+								var label = params.carNo;
+								var icon = new BMap.Icon("../../assets/images/icon_car.png", new BMap.Size(33, 21));
+
+								addMarker(params.pt, icon, label, InfoWindow);
+							}, {
+								carNo: data.list[i].carNo,
+								projectName: projectName,
+								CompressiveStrength: CompressiveStrength,
+								pt: pt,
+								power: data.list[i].power,
+								transport: data.list[i].transport
+							})
+						}
+
+						// var project = $('#station').find('option:selected')[0];
+						// if(!project || project.value==='0') {
+						// 	$('#carList').html(carStr);
+
+
+						// }	
+					}
+				});
+			}
+
+			function getAddress(point, callback, params) {
+				var geoc = new BMap.Geocoder();
+
+				geoc.getLocation(point, function(rs) {
+					callback(rs.address, params);
+				});
+			}
+
+			function ratioChart(name, obj, xData, yData) {
+				// 折线图
+				var lineChart = echarts.init(document.getElementById(obj));
+				var option = {
+					grid: {
+						top: 35,
+						left: 40,
+						right: 0,
+						bottom: 10
+					},
+					tooltip: {
+						trigger: 'axis',
+					},
+					xAxis: {
+						type: 'category',
+						data: xData,
+						axisLine: {
+							lineStyle: {
+								color: '#148976'
+							}
+						},
+						axisTick: {
+							lineStyle: {
+								color: '#fff'
+							}
+						},
+						//			axisLabel: {
+						//				show:false
+						//			}   //隐藏x轴的刻度lable
+						tooltip: {
+							trigger: 'axis',
+						},
+						axisLabel: {
+							show: false
+						}
+					},
+					yAxis: {
+						name: name,
+						type: 'value',
+						splitLine: {
+							show: false
+						},
+						axisLine: {
+							show: true,
+							lineStyle: {
+								color: '#148976'
+							}
+						},
+						axisTick: {
+							lineStyle: {
+								color: '#fff'
+							}
+						},
+					},
+					series: [{
+						name: name,
+						type: 'line',
+						data: yData,
+						itemStyle: {
+							color: '#FFAE00'
+						}
+					}]
+				};
+
+				lineChart.setOption(option);
+			}
+		</script>
+	</body>
+</html>

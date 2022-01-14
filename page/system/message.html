@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>消息管理</title>
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=314"/>
+    <link rel="stylesheet" href="../../assets/css/common_likui.css?v=314"/>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .message-container {
+            margin-top: 16px;
+        }
+        .message-item {
+            padding: 20px 20px 20px 80px;
+            border-radius:0px 8px 8px 8px;
+            background-color: #fff;
+            position: relative;
+            margin-bottom: 16px
+        }
+        .message-header {
+            margin-bottom: 16px;
+        }
+        .message-title {
+            font-size:16px;
+            font-family:MicrosoftYaHeiUISemibold;
+            color:rgba(51,51,51,1);
+            font-weight: bold;
+        }
+        .message-time {
+            font-size:14px;
+            font-family:MicrosoftYaHeiUI;
+            color:rgba(153,153,153,1);
+        }
+        .message-content {
+            color:rgba(102,102,102,1);
+            font-size: 14px;
+            line-height: 24px;
+            margin-bottom: 16px;
+        }
+        .message-icon {
+            display: inline-block;
+            width: 42px;
+            height: 44px;
+            background-size: contain;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        .message-icon-gonggao {background: url(../../assets/images/公告@2x.png) no-repeat center center;background-size: contain;}
+        .message-icon-tongzhi {background: url(../../assets/images/通知@2x.png) no-repeat center center;background-size: contain;}
+        .message-icon-gongdan {background: url(../../assets/images/工单@2x.png) no-repeat center center;background-size: contain;}
+        .message-item-notice {
+            padding-right: 14px;
+            border-right: 1px solid rgba(216, 216, 216, 1);
+        }
+        .message-item-status {
+            padding: 0 14px;
+        }
+        #laypage .layui-laypage a, .layui-laypage span {
+            background-color: initial;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 页面加载loading -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body table-tool-mini">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <button id="btnAddUser" class="layui-btn layui-btn-green"><i class="layui-icon">&#xe654;</i>添加消息</button>
+                    </div>
+                    <div class="layui-inline pull-right">
+                        <button class="layui-btn layui-btn-green" lay-filter="formSubSearch" lay-submit>查询</button>
+                    </div>
+
+                    <div class="layui-inline pull-right">
+                        <div class="layui-input-inline mr0">
+                            <input id="keywords" class="layui-input" type="text" id="sitename" placeholder="请输入关键字"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="message-container">
+        <div id="message-items">
+            
+        </div>
+        <div class="clear" style="padding-right: 10px;margin-top: -10px;">
+            <div id="laypage" class="pull-right"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 表单弹窗 -->
+<script type="text/html" id="modelMessage">
+    <form id="modelMessageForm" lay-filter="modelMessageForm" class="layui-form model-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">消息类型</label>
+            <div class="layui-input-block">
+                <select name="type" lay-verType="tips" lay-verify="required">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">消息主题</label>
+            <div class="layui-input-block">
+                <input name="biaoti" placeholder="请输入消息主题" type="text" class="layui-input" maxlength="20"
+                       lay-verType="tips" lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">消息正文</label>
+            <div class="layui-input-block">
+                <textarea name="neir" placeholder="请输入消息正文" class="layui-textarea" maxlength="200"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item text-right text-center mt-20">
+            <button class="layui-btn layui-btn-primary" lay-filter="modelSubmitMessage" lay-submit>保存</button>
+            <button class="layui-btn" type="button" ew-event="closePageDialog">取消</button>
+        </div>
+    </form>
+</script>
+<!-- 详情弹窗 -->
+<script type="text/html" id="modelInfo">
+    <form id="modelMessageInfo" lay-filter="modelMessageForm" class="layui-form model-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">消息类型</label>
+            <div class="layui-input-block">
+                <input name="type" type="text" class="layui-input" maxlength="20"
+                       readonly="readonly"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">消息主题</label>
+            <div class="layui-input-block">
+                <input name="title" type="text" class="layui-input" maxlength="20"
+                       readonly="readonly"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">消息正文</label>
+            <div class="layui-input-block">
+                <textarea name="text" readonly="readonly" class="layui-textarea" maxlength="200"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item text-right text-center mt-20">
+            <button class="layui-btn" type="button" ew-event="closePageDialog">取消</button>
+        </div>
+    </form>
+</script>
+<!-- js部分 -->
+<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+<script>
+    var zdId=localStorage.getItem("station_id");
+    layui.use(['layer', 'form', 'util', 'admin', 'zTree', 'laypage'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var util = layui.util;
+        var admin = layui.admin;
+        var laypage = layui.laypage;
+
+        // 获取数据
+
+        function getData(currentIndex = 1, isFirst) {
+            $.ajax({
+                type: "post",
+                url: url + '/Tongzhi/getPage',
+                data: {
+                    key: $('#keywords').val(),
+                    currentIndex: currentIndex,
+                    pageSize: 5,
+                    zdId:zdId
+                },
+                success: function(res) {
+                    var str = '';
+                    for(var i = 0; i < res.list.length; i++) {
+                        str += `<div class="message-item">
+                            <div class="message-header clear">
+                                <div class="pull-left message-title">${res.list[i].biaoti}</div>
+                                <div class="pull-right message-time">创建时间: ${res.list[i].riqi}</div>
+                            </div>
+                            <div class="message-content">${res.list[i].neir}</div>
+                            <div class="message-footer clear">
+                                <div class="pull-left">
+                                    <span class="text-green message-item-notice">${res.list[i].type}</span>
+
+                                </div>
+                                <div class="pull-right">
+                                    <a href="javascript:;" data-text="${res.list[i].neir}"  data-type="${res.list[i].type}" data-title="${res.list[i].biaoti}" class="text-blue mr-20 showTz">· 查看</a>
+                                  <!--  <a href="javascript:;" class="text-green mr-20"><i style="font-size: 16px;" class="layui-icon">&#xe669;</i>重新发送</a>-->
+                                    <a href="javascript:;" data-id="${res.list[i].tzid}" data-title="${res.list[i].biaoti}" class="text-red delTz"><i style="font-size: 16px;" class="layui-icon">&#xe640;</i>删除</a>
+                                </div>
+                            </div>
+                            <span class="message-icon ${res.list[i].type === '系统公告' ? 'message-icon-gonggao' : (res.list[i].type === '设备通知' ? 'message-icon-tongzhi' : 'message-icon-gongdan')}"></span>
+                        </div>`
+                    }
+                    $('#message-items').html(str);
+                    if (!isFirst) paged(res.totalCount);
+                    $('.delTz').click(function () {
+                        var action =url+"/Tongzhi/delTongzhi";
+                        var tzid=$(this).data('id')
+                        layer.confirm('确定要删除“' + $(this).data('title')+ '”吗？', {
+                            skin: 'layui-layer-admin',
+                            shade: .1
+                        }, function (i) {
+                            layer.close(i);
+                            layer.load(2);
+                            $.post(action, {
+                                tzid:tzid
+                            }, function (res) {
+                                layer.closeAll('loading');
+                                if (res.code == 0) {
+                                    layer.msg(res.msg, {icon: 1});
+                                    getData(1);
+                                } else {
+                                    layer.msg(res.msg, {icon: 2});
+                                }
+
+                            }, 'json');
+                        });
+                    })
+                    $('.showTz').click(function () {
+                        var title=$(this).data('title')
+                        var text=$(this).data('text')
+                        var type=$(this).data('type')
+                        admin.open({
+                            type: 1,
+                            area: '645px',
+                            title:  '消息详情',
+                            content: $('#modelInfo').html(),
+                            success: function (layero, dIndex) {
+                                $("[name='title']").val(title);
+                                $("[name='text']").val(text)
+                                $("[name='type']").val(type)
+                            }
+                        });
+                    });
+                }
+            });
+        }
+        form.on('submit(formSubSearch)', function () {
+            getData(1);
+        });
+        // 分页
+        function paged(count = 1) {
+            laypage.render({
+                elem: 'laypage', //注意，这里的 test1 是 ID，不用加 # 号
+                count: count,
+                limit: 5,
+                limits: [5,10,20,30,40,50,60,70,80,90],
+                groups: 3,
+                layout: ['prev', 'page', 'next', 'skip', 'count', 'limit'],
+                prev: '<i class="layui-icon">&#xe603;</i>',
+                next: '<i class="layui-icon">&#xe602;</i>',
+                //跳转页码时调用
+                jump: function (obj, first) { //obj为当前页的属性和方法，第一次加载first为true
+                   //非首次加载 do something
+                   if (!first) {
+                       //清空以前加载的数据
+                       $('#message-items').empty();
+                       //调用加载函数加载数据
+                       getData(obj.curr, true);
+                   }
+               }
+            });
+        }
+        
+        // 添加
+        $('#btnAddUser').click(function () {
+            showEditModel();
+        });
+
+        // 搜索
+        form.on('submit(formSubSearchUser)', function (data) {
+            insTb.reload({where: data.field}, 'data');
+        });
+
+        // 显示表单弹窗
+        function showEditModel(mUser) {
+
+            admin.open({
+                type: 1,
+                area: '645px',
+                title:  '添加消息',
+                content: $('#modelMessage').html(),
+                success: function (layero, dIndex) {
+                    $.post(url+'/Tongzhi/getTongzhiType', '', function (res) {
+                        if (res.code ==0) {
+                            var html="";
+                            var list=res.list;
+                            for(var i=0;i<list.length;i++){
+                                html+="<option value='"+list[i].name+"'>"+list[i].name+"</option>";
+                            }
+                            $("[name='type']").html(html);
+                            layui.use('form', function(){
+                                var form = layui.form;
+                                form.render();
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon: 2});
+                        }
+                    }, 'json');
+
+                    // $(layero).children('.layui-layer-content').css('overflow', 'visible');
+                    var action =url+"/Tongzhi/addTongzhi";
+
+                    // 表单提交事件
+                    form.on('submit(modelSubmitMessage)', function (data) {
+                        layer.load(2);
+                        data.field.fabuz=localStorage.getItem("userid");
+                        data.field.zdId=zdId;
+                        $.post(action, data.field, function (res) {
+                            layer.closeAll('loading');
+                            if (res.code == 0) {
+                                layer.close(dIndex);
+                                layer.msg(res.msg, {icon: 1});
+                                getData(1);
+                            } else {
+                                layer.msg(res.msg, {icon: 2});
+                            }
+                        }, 'json');
+                        return false;
+                    });
+                }
+            });
+        }
+
+
+        getData();
+
+    });
+
+</script>
+
+</body>
+</html>

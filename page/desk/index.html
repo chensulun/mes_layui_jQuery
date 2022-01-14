@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./plugin/element/index.css" />
+    <link rel="stylesheet" href="./css/index.min.css" />
+</head>
+
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="container">
+                <div class="col-l" @click="pianchashow = true">设备偏差设置</div>
+                <div class="col-r" @click="biangengshow = true">设备变更</div>
+                <span class="item">
+                    <p class="text red">入网设备</p>
+                    <p class="num">8</p>
+                </span>
+                <span class="item">
+                    <p class="text yellow">运行设备</p>
+                    <p class="num">8</p>
+                </span>
+                <span class="item">
+                    <p class="text green">待机设备</p>
+                    <p class="num">8</p>
+                </span>
+                <span class="item">
+                    <p class="text">异常设备</p>
+                    <p class="num">8</p>
+                </span>
+            </div>
+        </header>
+        <div class="box">
+            <div class="item" v-for="(item,index) in 8" :key="index">
+                <div class="title">
+                    <span>构件</span>
+                </div>
+                <div class="qiehuan">
+                    <div class="btn img"><img src="./img/tp.png" />图片</div>
+                    <div class="btn video"><img src="./img/sp.png" />视频</div>
+                </div>
+                <div class="shebei">
+                    <img src="./img/shebei.png" />
+                    <span class="status">正常运转</span>
+                </div>
+                <div class="info">
+                    <div class="list">
+                        <span class="text">设备名称：</span>
+                        <span class="val">XXXX</span>
+                    </div>
+                    <div class="list">
+                        <span class="text">设备名称：</span>
+                        <span class="val">XXXX</span>
+                    </div>
+                    <div class="list">
+                        <span class="text">设备名称：</span>
+                        <span class="val">XXXX</span>
+                    </div>
+                    <div class="list">
+                        <span class="text">设备名称：</span>
+                        <span class="val">XXXX</span>
+                    </div>
+                    <div class="list">
+                        <span class="text">设备名称：</span>
+                        <span class="val">XXXX</span>
+                    </div>
+                    <div class="list">
+                        <span class="text">设备名称：</span>
+                        <span class="val">XXXX</span>
+                    </div>
+                </div>
+                <div class="more" @click="xiangqingshow = true">查看更多<img src="./img/more.png" /></div>
+            </div>
+        </div>
+        <el-dialog title="设备偏差设置" :visible.sync="pianchashow" width="700px">
+            <div class="pianchaleirong">
+                <el-row>
+                    <el-col :span="12" class="ui-row">
+                        <span class="ui-name">设备名称</span>
+                        <el-select v-model="pianchaData.name" placeholder="请选择">
+                            <el-option value="1">1</el-option>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="12" class="ui-row">
+                        <span class="ui-name">构件</span>
+                        <el-select v-model="pianchaData.name" placeholder="请选择">
+                            <el-option value="1">1</el-option>
+                        </el-select>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12" class="ui-row input-row">
+                        <span class="ui-name">电流</span>
+                        <el-input v-model="pianchaData.input" placeholder="请输入内容"></el-input>
+                    </el-col>
+                    <el-col :span="12" class="ui-row input-row">
+                        <span class="ui-name">-</span>
+                        <el-input v-model="pianchaData.input" placeholder="请输入内容"></el-input>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12" class="ui-row input-row">
+                        <span class="ui-name">电压</span>
+                        <el-input v-model="pianchaData.input" placeholder="请输入内容"></el-input>
+                    </el-col>
+                    <el-col :span="12" class="ui-row input-row">
+                        <span class="ui-name">-</span>
+                        <el-input v-model="pianchaData.input" placeholder="请输入内容"></el-input>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12" class="ui-row input-row">
+                        <span class="ui-name">温度</span>
+                        <el-input v-model="pianchaData.input" placeholder="请输入内容"></el-input>
+                    </el-col>
+                    <el-col :span="12" class="ui-row input-row">
+                        <span class="ui-name">-</span>
+                        <el-input v-model="pianchaData.input" placeholder="请输入内容"></el-input>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12" class="ui-row input-row">
+                        <span class="ui-name">震动</span>
+                        <el-input v-model="pianchaData.input" placeholder="请输入内容"></el-input>
+                    </el-col>
+                    <el-col :span="12" class="ui-row input-row">
+                        <span class="ui-name">-</span>
+                        <el-input v-model="pianchaData.input" placeholder="请输入内容"></el-input>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12" class="ui-row input-row">
+                        <span class="ui-name">转速</span>
+                        <el-input v-model="pianchaData.input" placeholder="请输入内容"></el-input>
+                    </el-col>
+                    <el-col :span="12" class="ui-row input-row">
+                        <span class="ui-name">-</span>
+                        <el-input v-model="pianchaData.input" placeholder="请输入内容"></el-input>
+                    </el-col>
+                </el-row>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="pianchashow = false">取 消</el-button>
+                <el-button type="primary" @click="pianchashow = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="设备变更" :visible.sync="biangengshow" width="700px">
+            <div class="">
+                <el-table :data="biangengData.list" style="width: 100%" max-height="250">
+                    <el-table-column align="center" prop="date" label="设备名称" style="width: 100">
+                    </el-table-column>
+                    <el-table-column align="center" prop="date" label="构件" style="width: 100">
+                    </el-table-column>
+                    <el-table-column align="center" prop="date" style="width: 100">
+                        <template slot-scope="scope">
+                            <span @click="delshebei(scope.$index)">删除</span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-row class="shebei-row">
+                    <div>
+                        <el-select v-model="biangengData.name" placeholder="请选择">
+                            <el-option value="1">1</el-option>
+                        </el-select>
+                    </div>
+                    <div>
+                        <el-select v-model="biangengData.name" placeholder="请选择">
+                            <el-option value="1">1</el-option>
+                        </el-select>
+                    </div>
+                    <div @click="addshebei">添加</div>
+                </el-row>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="biangengshow = false">取 消</el-button>
+                <el-button type="primary" @click="biangengshow = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="设备详情" :visible.sync="xiangqingshow" width="700px" @opened="showDetails" @closed="destroy">
+            <div class="tabs">
+                <span v-for="item in tabs" :class="{active:activeTab===item.value}" :key="item.value"
+                    @click="changeTab(item.value)">{{item.name}}</span>
+            </div>
+            <div class="search">
+                <el-date-picker v-model="date" type="date" placeholder="选择日期">
+                </el-date-picker>
+            </div>
+            <div class="data-line" id="line1" ref="line1"></div>
+        </el-dialog>
+    </div>
+    <script src="./plugin/g2/g2.min.js"></script>
+    <script src="./plugin/vue.js"></script>
+    <script src="./plugin/axios.min.js"></script>
+    <script src="./plugin/element/index.js"></script>
+    <script src="./js/init.js"></script>
+    <script src="./plugin/contextmenu.umd.js"></script>
+</body>
+
+</html>

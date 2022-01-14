@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <title>消耗量统计</title>
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+      /*.layui-layer-setwin {*/
+      /*    position: absolute;*/
+      /*    right: 15px;*/
+      /*    *right: 0;*/
+      /*    top: 15px;*/
+      /*    font-size: 0;*/
+      /*    line-height: initial;*/
+      /*}*/
+
+      .my_title {
+        width: 110px;
+        height: 34px;
+        background-color: #26c44f;
+        text-align: center;
+        color: #ffffff;
+        font-size: 14px;
+        line-height: 34px;
+        float: left;
+      }
+      @media screen and (max-width: 375px) {
+        /* .layui-table-box {
+          overflow-x: scroll !important;
+        }
+        .layui-table-box .layui-table-init{
+          width: 800px !important;
+        } */
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 页面加载loading -->
+    <div class="page-loading">
+      <div class="ball-loader">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- 正文开始 -->
+    <div class="layui-fluid">
+      <div class="layui-card">
+        <div class="layui-card-body table-tool-mini">
+          <div class="layui-form toolbar">
+            <!-- <div class="layui-form-item">
+							<div class="layui-inline">
+								<div class="my_title">
+									消耗量统计
+								</div>
+							</div>
+						</div> -->
+            <div class="layui-form-item" style="margin-top: 20px">
+              <div class="layui-inline">
+                <div class="layui-input-inline mr0">
+                  <input
+                    type="text"
+                    name="startTime"
+                    class="layui-input"
+                    id="test-laydate-start"
+                    placeholder="开始日期"
+                    lay-key="1"
+                  />
+                </div>
+              </div>
+              <div class="layui-inline">
+                <div class="layui-input-inline mr0">
+                  <input
+                    type="text"
+                    name="endTime"
+                    class="layui-input"
+                    id="test-laydate-end"
+                    placeholder="结束日期"
+                    lay-key="2"
+                  />
+                </div>
+              </div>
+              <div class="layui-inline">
+                <button
+                  class="layui-btn icon-btn layui-btn-green"
+                  lay-filter="formSubSearchUser"
+                  lay-submit
+                >
+                  <i class="layui-icon">&#xe615;</i>
+                  查询
+                </button>
+              </div>
+              <div class="layui-inline" id="xmdiv">
+                <label class="layui-form-label w-auto">项目：</label>
+                <div class="layui-input-inline mr0">
+                  <select
+                    lay-filter="sel1"
+                    class="select"
+                    lay-verify="type"
+                    name="sel1"
+                    id="sel1"
+                  >
+                    <option value="">全部</option>
+                  </select>
+                </div>
+              </div>
+              <div class="layui-inline" id="lxdiv">
+                <label class="layui-form-label w-auto">类型：</label>
+                <div class="layui-input-inline mr0">
+                  <select
+                    lay-filter="sel2"
+                    class="select"
+                    lay-verify="type"
+                    name="sel2"
+                    id="sel2"
+                  >
+                    <option value="">全部</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div style="width: 100%;">
+              <table
+                class="layui-table"
+                id="tableUser"
+                lay-filter="tableUser"
+              ></table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- js部分 -->
+    <script type="text/javascript" src="../../assets/js/server.js"></script>
+    <script
+      type="text/javascript"
+      src="../../assets/libs/layui/layui.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="../../assets/js/common.js?v=314"
+    ></script>
+    <script
+      type="text/javascript"
+      src="../../assets/js/echarts.min.js"
+    ></script>
+    <script>
+      layui.use(
+        ['layer', 'form', 'table', 'util', 'admin', 'laydate'],
+        function () {
+          var $ = layui.jquery;
+          var layer = layui.layer;
+          var laydate = layui.laydate;
+          var form = layui.form;
+          var table = layui.table;
+          var util = layui.util;
+          var admin = layui.admin;
+          var zd = localStorage.getItem('station');
+          var time = timeFn();
+          var startTime = time.y + '-' + time.um + '-' + time.d;
+          var endTime = time.y + '-' + time.m + '-' + time.d;
+          layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            let month = new Date().getMonth() + 1;
+            let days = new Date().getDate();
+            days = days < 10 ? '0' + days : days;
+            laydate.render({
+              type: 'datetime',
+              elem: '#test-laydate-start',
+              value:
+                new Date().getFullYear() +
+                '-' +
+                (month > 10 ? month : '0' + month) +
+                '-' +
+                days +
+                ' 00:00:00',
+            });
+
+            laydate.render({
+              type: 'datetime',
+              elem: '#test-laydate-end',
+              value: new Date(),
+            });
+          });
+          //广州
+          if (zd === '广州站') {
+            setTimeout(function () {
+              var params = {
+                beginDate: $('#test-laydate-start').val(),
+                endDate: $('#test-laydate-end').val(),
+                projectName: $('#sel1').val(),
+                type: $('#sel2').val(),
+              };
+              getProject();
+              tableFn(params);
+              chartFn(params);
+            }, 500);
+
+            function getProject() {
+              var params = {
+                beginDate: $('#test-laydate-start').val(),
+                endDate: $('#test-laydate-end').val(),
+              };
+              $.get(
+                getServerUrl(zd) + '/api/data/getXiaoName',
+                params,
+                function (res) {
+                  var arrProject = res.list;
+                  var html = "<option value=''>-请选择-</option>";
+                  $.each(arrProject, function (i, item) {
+                    html +=
+                      '<option value="' + item + '">' + item + '</option>';
+                  });
+                  $('#sel1').html(html);
+                  layui.form.render('select');
+                }
+              );
+            }
+
+            form.on('select(sel1)', function (data) {
+              var params = {
+                beginDate: $('#test-laydate-start').val(),
+                endDate: $('#test-laydate-end').val(),
+                projectName: $('#sel1').val(),
+                type: $('#sel2').val(),
+              };
+              getType();
+              tableFn(params);
+              chartFn(params);
+            });
+
+            function getType() {
+              var params = {
+                beginDate: $('#test-laydate-start').val(),
+                endDate: $('#test-laydate-end').val(),
+                projectName: $('#sel1').val(),
+              };
+              $.get(
+                getServerUrl(zd) + '/api/data/getXiaoType',
+                params,
+                function (res) {
+                  var arrProject = res.list;
+                  var html = "<option value=''>-请选择-</option>";
+                  $.each(arrProject, function (i, item) {
+                    html +=
+                      '<option value="' + item + '">' + item + '</option>';
+                  });
+                  $('#sel2').html(html);
+                  layui.form.render('select');
+                }
+              );
+            }
+
+            form.on('select(sel2)', function (data) {
+              var params = {
+                beginDate: $('#test-laydate-start').val(),
+                endDate: $('#test-laydate-end').val(),
+                projectName: $('#sel1').val(),
+                type: $('#sel2').val(),
+              };
+              tableFn(params);
+              chartFn(params);
+            });
+
+            //查询
+            // 搜索
+            form.on('submit(formSubSearchUser)', function (data) {
+              var params1 = {
+                beginDate: $('#test-laydate-start').val(),
+                endDate: $('#test-laydate-end').val(),
+              };
+              getProject();
+              tableFn(params1);
+              chartFn(params1);
+            });
+
+            function tableFn(params) {
+              layui.use('table', function () {
+                var table = layui.table;
+                table.render({
+                  elem: '#tableUser',
+                  url: getServerUrl(zd) + '/api/data/getXiao',
+                  cellMinWidth: 80, //全局定义常规单元格的最小宽度
+                  cols: getCols(),
+                  page: true,
+                  limit: 10,
+                  limits: [10],
+                  height: 500,
+                  request: {
+                    pageName: 'page', //页码的参数名称，默认：page
+                    limitName: 'pageSize', //每页数据量的参数名，默认：limit
+                  },
+                  where: params,
+                  response: {
+                    statusName: 'errno', //数据状态的字段名称，默认：code
+                    statusCode: 0, //成功的状态码，默认：0
+                    msgName: 'error', //状态信息的字段名称，默认：msg
+                    countName: 'num', //数据总数的字段名称，默认：count
+                    dataName: 'list', //数据列表的字段名称，默认：data
+                  },
+                  even: true,
+                });
+              });
+            }
+
+            function getCols() {
+              var cols = [
+                [
+                  {
+                    field: '_id',
+                    title: '材料名称',
+                  },
+                  {
+                    field: 'total',
+                    title: '数量',
+                  },
+                ],
+              ];
+              return cols;
+            }
+
+            //柱状图
+            function chartFn(params) {
+              $.ajax({
+                type: 'get',
+                url: getServerUrl(zd) + '/api/data/getXiao',
+                data: params,
+                success: function (res) {
+                  if (res.obj == null) {
+                    res.obj = [];
+                  }
+                  var yData = [];
+                  var xData = [];
+                  for (var i in res.list) {
+                    //用javascript的for/in循环遍历对象的属性
+                    yData.push(res.list[i].total);
+                    xData.push(res.list[i]._id);
+                    //temp += i+":"+obj[i]+"\n";
+                  }
+
+                  var barChart = echarts.init(
+                    document.getElementById('barChart')
+                  );
+                  var option = {
+                    color: '#26C44F',
+                    tooltip: {
+                      trigger: 'axis',
+                      axisPointer: {
+                        // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow', // 默认为直线，可选为：'line' | 'shadow'
+                      },
+                    },
+                    xAxis: {
+                      type: 'value',
+                    },
+                    yAxis: {
+                      type: 'category',
+                      data: xData,
+                      axisLabel: {
+                        interval: 0,
+                        rotate: 50,
+                      },
+                    },
+                    series: [
+                      {
+                        name: '数量',
+                        type: 'bar',
+                        stack: '总量',
+                        data: yData,
+                      },
+                    ],
+                  };
+
+                  barChart.setOption(option);
+                },
+              });
+            }
+          } else {
+            $('#xmdiv').hide();
+            $('#lxdiv').hide();
+            setTimeout(function () {
+              var params = {
+                beginDate: $('#test-laydate-start').val(),
+                endDate: $('#test-laydate-end').val(),
+              };
+              tableFn(params);
+              chartFn(params);
+            }, 500);
+
+            //查询
+            // 搜索
+            form.on('submit(formSubSearchUser)', function (data) {
+              var params1 = {
+                beginDate: $('#test-laydate-start').val(),
+                endDate: $('#test-laydate-end').val(),
+              };
+
+              tableFn(params1);
+              chartFn(params1);
+            });
+
+            function tableFn(params) {
+              layui.use('table', function () {
+                var table = layui.table;
+                table.render({
+                  elem: '#tableUser',
+                  url: getServerUrl(zd) + '/api/data/ajaxXHL',
+                  cellMinWidth: 80, //全局定义常规单元格的最小宽度
+                  cols: getCols(),
+                  page: true,
+                  limit: 10,
+                  limits: [10],
+                  height: 500,
+                  request: {
+                    pageName: 'page', //页码的参数名称，默认：page
+                    limitName: 'pageSize', //每页数据量的参数名，默认：limit
+                  },
+                  where: params,
+                  response: {
+                    statusName: 'errno', //数据状态的字段名称，默认：code
+                    statusCode: 0, //成功的状态码，默认：0
+                    msgName: 'error', //状态信息的字段名称，默认：msg
+                    countName: 'num', //数据总数的字段名称，默认：count
+                    dataName: 'list', //数据列表的字段名称，默认：data
+                  },
+                  even: true,
+                });
+              });
+            }
+
+            function getCols() {
+              var cols = [
+                [
+                  {
+                    field: 'date',
+                    title: '日期',
+                  },
+                  {
+                    field: 'HuiShou',
+                    title: '回收料',
+                  },
+                  {
+                    field: 'GLSL',
+                    title: '骨料',
+                  },
+                  {
+                    field: 'XFSL',
+                    title: '新粉',
+                  },
+                  {
+                    field: 'LQSL',
+                    title: '沥青',
+                  },
+                  {
+                    field: 'TJJSL',
+                    title: '添加剂',
+                  },
+                ],
+              ];
+              return cols;
+            }
+
+            //柱状图
+            function chartFn(params) {
+              $.ajax({
+                type: 'get',
+                url: getServerUrl(zd) + '/api/data/ajaxXHL',
+                data: params,
+                success: function (res) {
+                  if (res.obj == null) {
+                    res.obj = [];
+                  }
+                  var yData = [];
+                  for (var i in res.obj) {
+                    //用javascript的for/in循环遍历对象的属性
+                    //alert(i);
+                    if (i == 'date' || i == 'total') {
+                    } else {
+                      yData.push(res.obj[i]);
+                    }
+
+                    //temp += i+":"+obj[i]+"\n";
+                  }
+
+                  var xData = ['回收料', '骨料', '新粉', '沥青', '添加剂'];
+
+                  var barChart = echarts.init(
+                    document.getElementById('barChart')
+                  );
+                  var option = {
+                    color: '#26C44F',
+                    tooltip: {
+                      trigger: 'axis',
+                      axisPointer: {
+                        // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow', // 默认为直线，可选为：'line' | 'shadow'
+                      },
+                    },
+                    xAxis: {
+                      type: 'value',
+                    },
+                    yAxis: {
+                      type: 'category',
+                      data: xData,
+                    },
+                    series: [
+                      {
+                        name: '合计总量',
+                        type: 'bar',
+                        stack: '总量',
+                        data: yData,
+                      },
+                    ],
+                  };
+
+                  barChart.setOption(option);
+                },
+              });
+            }
+          }
+          //日期
+          laydate.render({
+            elem: '#test-laydate-start',
+            trigger: 'click',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+              var startDate = new Date(value).getTime();
+              var endTime = new Date($('#test-laydate-end').val()).getTime();
+              if (endTime < startDate) {
+                layer.msg('开始时间不能大于结束时间');
+                $('#test-laydate-start').val($('#test-laydate-end').val());
+              }
+            },
+          });
+          laydate.render({
+            elem: '#test-laydate-end',
+            trigger: 'click',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+              var startDate = new Date(
+                $('#test-laydate-start').val()
+              ).getTime();
+              var endTime = new Date(value).getTime();
+              if (endTime < startDate) {
+                layer.msg('结束时间不能小于开始时间');
+                $('#test-laydate-end').val($('#test-laydate-start').val());
+              }
+            },
+          });
+        }
+      );
+    </script>
+  </body>
+</html>

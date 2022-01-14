@@ -1,0 +1,62 @@
+
+.jiankong-main .section1 .ysb{
+	    height: 14.6rem !important;
+}
+.jiankong-main .section1 .peibi .head{
+	    height: 5.0rem !important;
+    line-height: 5.0rem !important;
+}
+
+.layui-table-cell{
+			    height: 56.4px;
+			        line-height: 56.4px;
+		}
+		
+.peibi .layui-table-cell{
+			width: 84px !important;
+		}
+		.jiankong-main .video{
+			height: 36.45rem;
+			width: 23rem;
+		}
+		.shenchan .layui-table-cell{
+			width: 85px !important;
+		}
+		.shenchan .laytable-cell-2-ysb{
+			width: 85px !important;
+		}
+			.peibi .laytable-cell-1-eight{
+			width:108px !important;
+		}
+		.jiankong-main .section{
+			width:67.2rem;
+		}
+		.jiankong-main .section1 .peibi{
+			width:58.3rem;
+		}
+		.jiankong-main .section1{
+			width:100%;
+		}
+		.jiankong-main .table{
+			width:100%;
+		}
+		.jiankong-main .section1 .ysb .head {
+			height: 8.3rem;
+			line-height: 8.3rem;
+		}
+		.peibi .layui-table-body .layui-table tr{
+			background: #FFFFFF;
+		}
+		.jiankong-main .section1 .ysb .ratio{
+			height: 3.1rem;
+			    line-height: 3.1rem;
+				border-top: 1px solid #f2f2f2;
+		}
+		.jiankong-main .section1 .ysb .ratiopb{
+			height: 3.1rem;
+			    font-size: 2rem;
+			    line-height: 3.1rem;
+			    color: #202B3D;
+			    text-align: center;
+				
+			}

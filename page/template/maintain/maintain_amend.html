@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>角色管理</title>
+    <link rel="stylesheet" href="../../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../../assets/module/admin.css?v=314"/>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .xq_text{
+            color: #333;
+            font-size: 16px;
+            padding-top: 50px;
+        }
+        .xq_text p{
+            font-weight: bold;
+            padding: 10px 0;
+        }
+        .xq_text p span{
+            font-weight: lighter;
+
+        }
+        #photo-list img{
+            width: 120px;
+            height: 120px;
+        }
+        #photo-list .layui-col-sm3{
+            text-align: center;
+        }
+        .chakan{
+            padding-bottom: 100px;
+        }
+        .icon-delete{
+            position: absolute;
+            right: 36%;
+            top: 6px;
+        }
+        .layui-col-md3{
+            padding-top: 15px;
+        }
+        #photo-list .layui-col-sm3{
+            text-align: center;
+        }
+        .chakan{
+            padding-bottom: 100px;
+        }
+        .icon-delete,.btns{
+            width: 24px;
+            height: 24px;
+            position: absolute;
+            top: 6px;
+            overflow: hidden;
+            z-index: 99999;
+        }
+        .icon-mp4{
+            right: 0%;
+            top: 0;
+        }
+        .icon-img{
+            right: 36%;
+        }
+        .icon-delete img{
+            width: 100% !important;
+            height: 100%  !important;
+        }
+        .btns img{
+            width: 24px  !important;
+            height: 24px  !important;
+        }
+        #photo-list img{
+            width: 120px;
+            height: 120px;
+        }
+        .layui-col-md3{
+            padding-top: 15px;
+        }
+        .btncladd{
+            width: 120px;
+            height: 120px;
+        }
+        .btns{
+            background-color:rgba(0,0,0,0);
+            padding: 0;
+            height:24px;
+            line-height:0;
+        }
+        .layui-form-label{
+            width: 112px;
+        }
+        .layui-input-block {
+            margin-left: 143px;
+
+        }
+    </style>
+</head>
+<body>
+
+<!-- 页面加载loading -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card  layui-row chakan la">
+        <div class="layui-col-xs6">
+            <!-- 填充内容 -->
+
+            <div class="layui-card-header ">修改信息</div>
+            <div class="layui-card-body xq_text" >
+                <form class="layui-form" lay-filter="formQA" style="max-width: 480px;" action="javascript:jg()" method="post" >
+                    <!--                    <input type="hidden" name="equestionId" value="">-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">站点:</label>
+                        <div class="layui-input-inline inputkuang">
+                            <select disabled="disabled" name="site" id="site" lay-vertype="tips"   lay-search lay-filter="province">
+                                <option value="请输入">请输入</option>
+                                <!--                                <option value="两江站">两江站</option>-->
+                                <!--                                <option value="璧山站">璧山站</option>-->
+                                <!--                                <option value="双石站">双石站</option>-->
+                                <!--                                <option value="朱沱站">朱沱站</option>-->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">类  别:</label>
+                        <div class="layui-input-inline inputkuang">
+                            <select name="categoryMaintenance"  id="categoryMaintenance"   lay-vertype="tips"  lay-search lay-filter="city">
+                                <option value="请输入">请输入</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">保养位置:</label>
+                        <div class="layui-input-inline inputkuang">
+                            <select name="pointMonitor" id="pointMonitor" lay-vertype="tips"  lay-filter="category" lay-verify="required" required="">
+                                <option value="请输入">请输入</option>
+
+                            </select>
+                        </div>
+                    </div>
+
+<!--                    <div class="layui-form-item" >-->
+<!--                        <label class="layui-form-label">站点：</label>-->
+<!--                        <div class="layui-input-inline">-->
+<!--                            <select name="site" id="site" lay-vertype="tips" lay-verify="required" required="">-->
+<!--                                <option value="两江站">两江站</option>-->
+<!--                                <option value="璧山站">璧山站</option>-->
+<!--                                <option value="双石站">双石站</option>-->
+<!--                                <option value="朱沱站">朱沱站</option>-->
+<!--                            </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit" style=""><dd lay-value="" class="layui-select-tips layui-this">请选择</dd><dd lay-value="1" class="">0.5</dd><dd lay-value="2" class="">1</dd></dl></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-form-item" >-->
+<!--                        <label class="layui-form-label">保养位置:</label>-->
+<!--                        <div class="layui-input-block" >-->
+<!--                            <input type="text" name="pointMonitor" value="" class="layui-input" lay-verify="required" required="">-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <!--                        <div class="layui-form-item">-->
+                    <!--                            <label class="layui-form-label">类型：</label>-->
+                    <!--                            <div class="layui-input-inline">-->
+                    <!--                                <select name="difficulty" lay-vertype="tips" lay-verify="required" required="">-->
+                    <!--                                    <option value="">请选择</option>-->
+                    <!--                                    <option value="1">0.5</option>-->
+                    <!--                                    <option value="2">1</option>-->
+                    <!--                                </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit" style=""><dd lay-value="" class="layui-select-tips layui-this">请选择</dd><dd lay-value="1" class="">0.5</dd><dd lay-value="2" class="">1</dd></dl></div>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">保养类型:</label>
+                        <div class="layui-input-inline">
+                            <select name="classification" id="classification"  lay-vertype="tips" lay-verify="required" required="">
+                                <option value="日常检">日常检</option>
+                                <option value="中保">中保</option>
+                                <option value="大保">大保</option>
+                            </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit" style=""><dd lay-value="" class="layui-select-tips layui-this">请选择</dd><dd lay-value="1" class="">0.5</dd><dd lay-value="2" class="">1</dd></dl></div>
+                        </div>
+                    </div>
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">类别：</label>-->
+<!--                        <div class="layui-input-inline">-->
+<!--                            <select name="categoryMaintenance" id="categoryMaintenance"  lay-vertype="tips" lay-verify="required" required="">-->
+<!--                                <option value="类别">类别</option>-->
+<!--                                <option value="类别2">类别2</option>-->
+<!--                                <option value="类别3">类别3</option>-->
+<!--                            </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit" style=""><dd lay-value="" class="layui-select-tips layui-this">请选择</dd><dd lay-value="1" class="">0.5</dd><dd lay-value="2" class="">1</dd></dl></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">计划保养时间:</label>
+                        <div class="layui-input-inline required">
+                            <input type="text" name="datePlan" class="layui-input" id="maintest1" placeholder=""lay-vertype="tips" lay-verify="required" required="">
+                        </div>
+                    </div>
+                </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">实际保养时间:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="dateFinish" class="layui-input" id="maintest2" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">状态:</label>
+                        <div class="layui-input-inline">
+                            <select name="stateMaintenance"id="stateMaintenance" lay-vertype="tips" lay-verify="required" required="">
+                                <option value="待保养">待保养</option>
+                                <option value="保养中">保养中</option>
+                                <option value="已完成">已完成</option>
+                            </select>
+                            <div class="layui-unselect layui-form-select">
+                                <div class="layui-select-title"><input type="text" placeholder="请选择" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit" style=""><dd lay-value="" class="layui-select-tips layui-this">请选择</dd><dd lay-value="1" class="">0.5</dd><dd lay-value="2" class="">1</dd></dl></div>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">保养情况:</label>
+                        <div class="layui-input-block">
+                            <textarea name="project" placeholder="请填写" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" >
+                        <label class="layui-form-label">保养人:</label>
+                        <div class="layui-input-block required" >
+                            <input type="text" name="inspectingofficer" value="" class="layui-input" lay-verify="required" required="">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" >
+                        <label class="layui-form-label">责任人:</label>
+                        <div class="layui-input-block required" >
+                            <input type="text" name="personresponsible" value="" class="layui-input" lay-verify="required" required="">
+                        </div>
+                    </div>
+                    <!--                    <div class="layui-form-item">-->
+                    <!--                        <label class="layui-form-label">维修人员：</label>-->
+                    <!--                        <div class="layui-input-inline">-->
+                    <!--                            <select name="personRepair" id="personRepair" lay-vertype="tips" lay-verify="required" required="">-->
+                    <!--                                <option value="小明">小明</option>-->
+                    <!--                                <option value="等好">邓好</option>-->
+                    <!--                            </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit" style=""><dd lay-value="" class="layui-select-tips layui-this">请选择</dd><dd lay-value="1" class="">0.5</dd><dd lay-value="2" class="">1</dd></dl></div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <!--                    <div class="layui-form-item">-->
+                    <!--                        <label class="layui-form-label">责任人：</label>-->
+                    <!--                        <div class="layui-input-inline">-->
+                    <!--                            <select name="personresponsible" id="personresponsible" lay-vertype="tips" lay-verify="required" required="">-->
+                    <!--                                <option value="小明">小明</option>-->
+                    <!--                                <option value="掌声">掌声</option>-->
+                    <!--                                <option value="邓好">邓好</option>-->
+                    <!--                            </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit" style=""><dd lay-value="" class="layui-select-tips layui-this">请选择</dd><dd lay-value="1" class="">0.5</dd><dd lay-value="2" class="">1</dd></dl></div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <div class="layui-form-item">
+                        <div class="layui-input-block text-center">
+                            <button class="layui-btn layui-btn-green" lay-filter="formSubmitAQddd" lay-submit>&emsp;提交&emsp;</button>
+                            <button ew-event="closeThisTabs" type="button" class="layui-btn layui-btn-danger">&emsp;取消&emsp;</button>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+
+        <div class="layui-col-xs6" >
+            <!-- 填充内容 -->
+            <div class="layui-card-header">
+                <div class="layui-card-header layui-col-sm12 ">
+                    <div class="layui-col-sm6">附件</div>
+                    <div class="layui-col-sm6">
+                        <div class="layui-col-sm4">巡检点：89</div>
+                        <div class="layui-col-sm4">待检：65</div>
+                        <div class="layui-col-sm4">检毕：13</div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-card-body layui-form-item"  id="photo-list">
+                <div class="layui-card-header" style="border-bottom:none">图片
+                </div>
+                <div class="layui-upload">
+
+                    <div class="layui-col-md3" id="img" >
+                        <button type="button" class="layui-btn btncladd" id="testimg" lay-filter="tupianbtn"lay-submit>上传图片</button>
+                        <div class="layui-upload-list"  >
+                            <img class="layui-upload-img" id="demo1">
+                            <p id="demoText"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--                <button type="button" class="layui-btn" id="testimg">-->
+            <!--                    <i class="layui-icon">&#xe67c;</i>上传图片-->
+            <!--                </button>-->
+            <!--             </div>-->
+
+            <!--                    音频-->
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space15" id="audio">
+                    <div class="layui-card-header">语音</div>
+                    <div id="yingping">
+                    <div class="layui-card" style="box-shadow:none">
+
+                        <button type="button" class="layui-btn btncladd" id="test6"><i class="layui-icon"></i>上传音频</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!--视频-->
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space15" id="mp4" >
+                    <div class="layui-card-header">视频</div>
+                    <div id="shipin">
+                    <div class="layui-col-md3">
+                        <div class="layui-card" style="box-shadow: none">
+                            <button type="button" class="layui-btn btncladd" id="test5"><i class="layui-icon"></i>上传视频</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- js部分 -->
+<script type="text/javascript" src="../../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../../assets/js/common.js?v=314"></script>
+<script type="text/javascript" src="../../../assets/js/a.js"></script>
+
+<script>
+    layui.use(['layer', 'form', 'table', 'util', 'admin','upload', 'zTree','Player',"laydate"], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var table = layui.table;
+        var util = layui.util;
+        var admin = layui.admin;
+        var Player = layui.Player;
+        var upload = layui.upload;
+        //日期
+        laydate.render({
+            elem: '#maintest1',
+            trigger: 'click'
+        });
+        laydate.render({
+            elem: '#maintest2',
+            trigger: 'click'
+        });
+        // 渲染表单
+
+       // var  serverUrl='http://192.168.0.16:8080';
+        // var serverUrl='http://113.204.72.94:8080/CjManager';
+        var maintenanceId=sessionStorage.getItem("maintainId");
+        var userid=localStorage.getItem("userid");
+        var token=localStorage.getItem("token");
+        // 站点
+        bindzhandian();
+        function bindzhandian(){
+            $.ajax({
+                //url:'https://mes.cqzonjo.com/CjManager/zhandian/getZhandian',
+                url:url+'/zhandian/getZhandian?pageIndex=1&pageSize=10&zdname=&create_time=',
+                type: "get",
+                dataType:"json",
+                async:false,
+                success:function(res){
+                    console.log(4444);
+                    console.log(res);
+                    var str1='';
+                    for (var i = 0; i < res.list.length; i++) {
+                        str1+= '<option data-id=' + i + '>' + res.list[i].zdname + '</option>'
+                    }
+                    $('#site').html(str1);
+                    console.log($('#site'));
+                    layui.form.render("select");
+                }
+            });
+        }
+		form.on('select(province)', function(obj) {
+		    bindkehu();
+		});
+        // 保养科目
+        bindkehu();
+        function bindkehu(){
+			var siteName=$("#site").val();
+            $.ajax({
+                url:url+'/shebei/getleibieList',
+                type: "get",
+                dataType:"json",
+                async:false,
+				data:{siteName:siteName},
+                success:function(res){
+
+                    var str1='';
+                    for (var i = 0; i < res.length; i++) {
+                        str1+= '<option data-id=' + i + '>' + res[i].kemu + '</option>'
+                    }
+                    $('#categoryMaintenance').html(str1);
+                    layui.form.render("select");
+                }
+            });
+        }
+        form.on('select(city)', function(obj) {
+            getchanges();
+        });
+        setTimeout(function () {
+            getchanges();
+        },200);
+
+        function getchanges(){
+
+            $.ajax({
+                url:url+'/shebei/getweizhiList',
+                type: "get",
+                dataType:"json",
+                async:false,
+                data:{
+                    kemu:$("#categoryMaintenance").val()
+                },
+                success:function(res){
+                    console.log(1111);
+                    console.log(res);
+                    var str1='';
+                    for (var i = 0; i < res.length; i++) {
+                        str1+= '<option data-id=' + i + '>' + res[i].weizhi + '</option>'
+                    }
+                    $('#pointMonitor').html(str1);
+                    layui.form.render("select");
+                }
+            });
+
+        }
+        $.ajax({
+            url:serverUrl+'/maintenance/queryRecordOfMaintenanceById',
+            type: "post",
+            dataType:"json",
+            data:{
+                maintenanceId:maintenanceId
+            },
+            success:function(res){
+                console.log(res);
+                datauser=res.data;
+                var data=res.data;
+                form.val("formQA",{
+                    "pointMonitor":data.pointMonitor,
+                    "site":data.site,
+                    'inspectingofficer':data.inspectingofficer,
+                    "categoryRepair":data.categoryRepair,
+                    "category":data.category,
+                    "datePlan":data.datePlan,
+                    "dateFinish":data.dateFinish,
+                    'project':data.project,
+                    "personresponsible":data.personresponsible,
+                    "stateMaintenance":data.stateMaintenance,
+                    "classification":data.classification
+
+                });
+
+                var classification=$("#classification").value;
+                classification=data.categoryMaintenance;
+                var site=$("#site").value;
+                site=data.size;
+                var stateMaintenance=$("#stateMaintenance").value;
+                stateMaintenance=data.stateMaintenance;
+                $('#site').next().find('[lay-value="'+data.site+'"]').click();
+                $('#categoryMaintenance').next().find('[lay-value="'+data.categoryMaintenance+'"]').click();
+                $('#pointMonitor').next().find('[lay-value="'+data.pointMonitor+'"]').click();
+                // 图片加载
+
+                if(data.img==null){
+                    imgnum=0;
+                }else {
+                    var imgs = data.img.split(";");
+                    imgnum=imgs.length;
+                    console.log(imgs);
+                    if(imgs[0]==""){
+                        for (var i = 1; i < imgs.length; i++) {
+                            var imgss = '<div class="layui-col-md3 "  >\n' +
+                                '<button class="layui-btn btns icon-img "  lay-filter="del"  lay-submit><img src="../../../assets/images/delete.png" alt="" layer-pid="undefined" style="cursor: pointer;"></button>'+
+                                '    <img class="tupian" src="'+uploadurl+'' + imgs[i] + '" alt="" layer-pid="undefined" style="cursor: move;">\n' +
+                                '  </div>';
+                            $("#photo-list").append(imgss);
+                        }
+                    }else{
+                        for (var i = 0; i < imgs.length; i++) {
+                            var imgss = '<div class="layui-col-md3 "  >\n' +
+                                '<button class="layui-btn btns icon-img "  lay-filter="del"  lay-submit><img src="../../../assets/images/delete.png" alt="" layer-pid="undefined" style="cursor: pointer;"></button>'+
+                                '    <img class="tupian" src="'+uploadurl+'' + imgs[i] + '" alt="" layer-pid="undefined" style="cursor: move;">\n' +
+                                '  </div>';
+                            $("#photo-list").append(imgss);
+                        }
+
+
+                    }
+
+                }
+                // 音频加载
+                if(data.voice==null){
+                    mp3num=0;
+                }else {
+                    var mp3=data.voice.split(";");
+                    mp3num=mp3.length;
+                    if(mp3[0]=="") {
+                        for (var j = 1; j < mp3.length; j++) {
+
+                            var voice = ' <div class="layui-col-md4">\n' +
+                                '<button class="layui-btn btns icon-mp4 "  lay-filter="delmp3"  lay-submit><img src="../../../assets/images/delete.png" alt="" layer-pid="undefined" style="cursor: pointer;"></button>'+
+                                // '  <div class="layui-card-body" style="padding: 5px;">\n' +
+                                '   <audio class="audio"  src="'+uploadurl+'' + mp3[j] + '" controls="controls" style="width: 100%">\n' +
+                                '  </audio>\n' +
+                                // ' </div>\n' +
+                                '</div>';
+                            $("#audio").append(voice);
+                            // console.log(mp3[i]);
+                        }
+                    }else {
+                        for (var j = 0; j < mp3.length; j++) {
+
+                            var voice = ' <div class="layui-col-md4">\n' +
+                                '<button class="layui-btn btns icon-mp4 "  lay-filter="delmp3"  lay-submit><img src="../../../assets/images/delete.png" alt="" layer-pid="undefined" style="cursor: pointer;"></button>'+
+                                // '  <div class="layui-card-body" style="padding: 5px;">\n' +
+                                '   <audio class="audio"  src="'+uploadurl+'' + mp3[j] + '" controls="controls" style="width: 100%">\n' +
+                                '  </audio>\n' +
+                                // ' </div>\n' +
+                                '</div>';
+                            $("#audio").append(voice);
+                        }
+                    }
+                }
+                // 视频
+                if(data.video==null){
+                    mp4num=0;
+                }else {
+                    var mp4=data.video.split(";");
+                    mp4num=mp4.length;
+                    if(mp4[0]=="") {
+                        for (var h = 1; h < mp4.length; h++) {
+                            var shipin='  <div class="layui-col-md4">\n' +
+                                '<button class="layui-btn btns icon-mp4 "  lay-filter="delmp4"  lay-submit><img src="../../../assets/images/delete.png" alt="" layer-pid="undefined" style="cursor: pointer;"></button>'+
+                                // '  <div class="layui-card-body" style="padding: 5px;">\n' +
+                                '        <video width="100%" height="150" controls>\n' +
+                                '          <source class="video" src="'+uploadurl+'' + mp4[h] + '" type="video/mp4">\n' +
+                                '        </video>\n' +
+                                // '    </div>\n' +
+                                '</div>';
+                            $("#mp4").append( shipin);
+
+
+                        }
+                    }else{
+                        for (var h = 0; h < mp4.length; h++) {
+                            var shipin='  <div class="layui-col-md4">\n' +
+                                '<button class="layui-btn btns icon-mp4 "  lay-filter="delmp4"  lay-submit><img src="../../../assets/images/delete.png" alt="" layer-pid="undefined" style="cursor: pointer;"></button>'+
+                                // '  <div class="layui-card-body" style="padding: 5px;">\n' +
+                                '        <video width="100%" height="150" controls>\n' +
+                                '          <source class="video" src="'+uploadurl+'' + mp4[h] + '" type="video/mp4">\n' +
+                                '        </video>\n' +
+                                // '    </div>\n' +
+                                '</div>';
+                            $("#mp4").append( shipin);
+                        }
+                    }
+                }
+                imgnums(datauser);
+                videonum(datauser);
+                voicenums(datauser);
+            },error:function (res) {
+                layer.msg(res.msg);
+            }
+
+        });
+        form.render(null, 'formQA');
+
+        //修改接口的调用
+        form.on('submit(formSubmitAQddd)', function (data) {
+            console.log(data.field);
+            var userid=localStorage.getItem("userid");
+            var token=localStorage.getItem("token");
+            var datajson={};
+            datajson.userid=userid;
+            datajson.token=token;
+
+            if(data.field.datePlan==''){
+                delete data.field.datePlan;
+                console.log(data.field.datePlan);
+            }
+            if(data.field.dateFinish==''){
+                delete data.field.dateFinish;
+            }
+            var datafield= data.field;
+            console.log(datafield);
+            datafield.maintenanceId=maintenanceId;
+            datajson.informationRepairJson= JSON.stringify(datafield);
+            $.ajax({
+                url:serverUrl+'/maintenance/updateRecordOfMaintenance',
+                type: "get",
+                dataType:"json",
+                data:datajson,
+                 async:false,
+                success:function(res){
+                    layer.msg(res.msg);
+                    parent.location.reload();
+                    parent.layui.admin.events.closeThisTabs();
+
+                },error:function (res) {
+                    layer.msg(res.msg);
+                }
+
+            });
+            // $.get(serverUrl+'/maintenance/updateRecordOfMaintenance',datajson, function (res) {
+            //     layer.closeAll('loading');
+            //     if (res.code == 200) {
+            //         layer.close(dIndex);
+            //         layer.msg(res.msg, {icon: 1});
+            //         alert(1111);
+            //         insTb.reload({}, 'tableUser');
+            //     } else {
+            //         alert(222);
+            //         layer.msg(res.msg, {icon: 2});
+            //     }
+            // }, 'json');
+
+
+        });
+// 三级联动菜单
+//         var province = $("#site"),
+//             city = $("#categoryMaintenance"),
+//             district = $("#pointMonitor");
+//         for (var i = 0; i < provinceList.length; i++) {
+//             addEle(province, provinceList[i].name);
+//         }
+//         form.render('select');
+//         function addEle(ele, value) {
+//             var optionStr = "";
+//             optionStr = "<option value=" + value + " >" + value + "</option>";
+//             ele.append(optionStr);
+//         }
+//
+//
+//         function removeEle(ele) {
+//             ele.find("option").remove();
+//             var optionStar = "<option value=" + "0" + ">" + "请输入" + "</option>";
+//             ele.append(optionStar);
+//         }
+//
+//         var provinceText,
+//             cityText,
+//             cityItem;
+//         form.on('select(province)', function(data) {
+//             provinceText = data.value;
+//             $.each(provinceList, function(i, item) {
+//                 if (provinceText == item.name) {
+//                     cityItem = i;
+//                     return cityItem;
+//                 }
+//             });
+//             removeEle(city);
+//             removeEle(district);
+//             $.each(provinceList[cityItem].cityList, function(i, item) {
+//                 addEle(city, item.name);
+//             });
+//             form.render('select');
+//         });
+//         form.on('select(city)', function(data) {
+//             cityText = data.value;
+//             removeEle(district);
+//             $.each(provinceList, function(i, item) {
+//                 if (provinceText == item.name) {
+//                     cityItem = i;
+//                     return cityItem;
+//                 }
+//             });
+//             $.each(provinceList[cityItem].cityList, function(i, item) {
+//                 if (cityText == item.name) {
+//                     for (var n = 0; n < item.areaList.length; n++) {
+//                         addEle(district, item.areaList[n]);
+//                     }
+//                 }
+//             });
+//
+//
+//             //重新渲染select
+//             form.render('select');
+//         })
+        //    上传图片
+        function imgnums(datauser) {
+            if (datauser.numberofimg == null) {
+                $(".layui-upload").css("display", "none");
+            } else {
+                if (imgnum <= datauser.numberofimg) {
+
+                    $(".layui-upload").css("display", "block");
+
+                } else {
+                    $(".layui-upload").css("display", "none");
+
+
+                }
+            }
+            console.log(maintenanceId);
+            var uploadInst = upload.render({
+                elem: '#testimg'
+                , url: serverUrl + '/CommonManager/uploadFile'
+                , data: {
+                    wj_path: file_path,
+                    equipmentId: maintenanceId,
+                    wxorby: 'by',
+                }
+                , before: function (obj) {
+                    obj.preview(function (index, file, result) {
+                        var img = $('#demo1').attr('src', result); //图片链接（base64）
+
+                    });
+
+                }
+                , done: function (res, index, upload) {
+                    //如果上传失败
+                    console.log(res);
+                    if (res.code > 0) {
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                    layer.msg("上传成功");
+                    location.reload();
+                    // layer.msg("上传成功",function(){
+                    //     setTimeout('location.reload()',100);
+                    // });
+                    // location.reload();
+
+
+                }
+                , error: function () {
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function () {
+                        uploadInst.upload();
+                    });
+                }
+
+            });
+        }
+
+
+// 视频跟音频
+        function videonum(datauser) {
+            if (datauser.numberofvideo == null) {
+                $("#shipin").css("display", "none");
+            } else {
+                console.log(datauser.numberofvideo);
+                if (mp4num <= datauser.numberofvideo) {
+                    $("#shipin").css("display", "block");
+                } else {
+                    $("#shipin").css("display", "none");
+
+                }
+            }
+            upload.render({
+                elem: '#test5'
+                , url: serverUrl + '/CommonManager/uploadFile'
+                , data: {
+                    wj_path: "D:\\apache-tomcat-8555\\webapps\\ROOT\\cj_upWenjian",
+                    equipmentId: maintenanceId,
+                    wxorby: 'by',
+
+                }
+                , accept: 'video' //视频
+                , done: function (res) {
+                    console.log(res);
+                    layer.msg("视频上传成功");
+                    console.log(res);
+                    location.reload();
+                }, error: function () {
+                    layer.msg("上传失败请重试");
+                }
+            });
+        }
+        function voicenums(datauser) {
+            if (datauser.numberofvideo == null) {
+                $("#yingping").css("display", "none");
+            } else {
+                if (mp3num <= datauser.numberofvoice) {
+
+                    $("#yingping").css("display", "block");
+
+                } else {
+                    $("#yingping").css("display", "none");
+
+                }
+            }
+            upload.render({
+                elem: '#test6'
+                , url: serverUrl + '/CommonManager/uploadFile'
+                , data: {
+                    wj_path: "D:\\apache-tomcat-8555\\webapps\\ROOT\\cj_upWenjian",
+                    equipmentId: maintenanceId,
+                    wxorby: 'by',
+
+                }
+                , accept: 'audio' //音频
+                , done: function (res) {
+                    layer.msg("音频上传成功");
+                    location.reload();
+
+                }, error: function () {
+                    layer.msg("上传失败请重试");
+                }
+
+            });
+
+        }
+        //删除图片
+        // var xgdata=sessionStorage.getItem("xgdata");
+        // var datauser=JSON.parse(xgdata);
+        form.on('submit(del)', function (data) {
+            var paths=$(this ).siblings('.tupian').attr('src');
+            var path=paths.substring(23);
+            var delimgs = datauser.img.split(";");
+            if( delimgs.includes(path)){
+                delimgs.splice(delimgs.indexOf(path),1);
+                console.log(delimgs);
+                var deljson={};
+                var  imgid={};
+                deljson.userid= userid;
+                deljson.token=token;
+                var  str=  delimgs.join(";",delimgs);
+                imgid.maintenanceId=maintenanceId;
+                imgid.img=str;
+                deljson.informationMaintenanceJson=JSON.stringify(imgid);
+                console.log(deljson);
+                var inmgname=" 图片";
+                doDel(deljson,inmgname);
+
+            }else{
+                layer.msg("加载失败");
+            }
+
+        });
+        //删除语音
+        form.on('submit(delmp3)', function (data) {
+            console.log( datauser);
+            var audiopaths=$(this).siblings('.audio').attr('src');
+            var audiopath=audiopaths.substring(23);
+            var delaudio = datauser.voice.split(";");
+            if( delaudio.includes(audiopath)){
+                delaudio.splice(delaudio.indexOf(audiopath),1);
+                console.log(delaudio);
+                var audiojson={};
+                var  audioid={};
+                audiojson.userid= userid;
+                audiojson.token=token;
+                var  str=  delaudio.join(";",delaudio);
+                audioid.maintenanceId=maintenanceId;
+                audioid.voice=str;
+                audiojson.informationMaintenanceJson=JSON.stringify(audioid);
+                console.log(audiojson);
+                var inmgname=" 语音";
+                doDel(audiojson,inmgname);
+
+            }else{
+                layer.msg("加载失败");
+            }
+
+        });
+        //删除视频
+        form.on('submit(delmp4)', function (data) {
+            console.log( datauser);
+            var videopaths=$(this).siblings('video').children(".video").attr('src');
+            console.log(videopaths);
+            var videopath=videopaths.substring(23);
+            var delvideo = datauser.video.split(";");
+            console.log(delvideo );
+            if( delvideo.includes(videopath)){
+                delvideo.splice(delvideo.indexOf(videopath),1);
+                console.log(delvideo);
+                var videojson={};
+                var  videoid={};
+                videojson.userid= userid;
+                videojson.token=token;
+                var  str=  delvideo.join(";",delvideo);
+                videoid.maintenanceId=maintenanceId;
+                videoid.video=str;
+                videojson.informationMaintenanceJson=JSON.stringify(videoid);
+                var inmgname=" 视频";
+                doDel(videojson,inmgname);
+
+            }else{
+                layer.msg("加载失败");
+            }
+
+        });
+        // 删除
+        function doDel(json,nickName) {
+            layer.confirm('确定要删除“' + nickName + '”吗？', {
+                skin: 'layui-layer-admin',
+                shade: .1
+            }, function (i) {
+                layer.close(i);
+                layer.load(2);
+                $.ajax({
+                    url:serverUrl+'/maintenance/thAndImg',
+                    type: "post",
+                    dataType:"json",
+                    data:json,
+                    async:false,
+                    success:function(res){
+                        layer.closeAll('loading');
+                        layer.msg(res.msg, {icon: 1});
+                        location.reload();
+                    },error:function (res) {
+                        layer.msg("请求错误");
+                    }
+
+                });
+                return false;
+            });
+        }
+    });
+
+
+</script>
+
+</body>
+</html>

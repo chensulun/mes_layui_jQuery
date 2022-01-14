@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>原材料扣重</title>
+		<link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+		<link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+		<link rel="stylesheet" href="../../assets/css/common_likui.css?v=314" />
+		<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style>
+			.search-container {
+            height: 144px;
+            padding: 25px 0 30px 20px;
+            box-sizing: border-box;
+        }
+        .search-container .layui-form-radio {
+            margin: 0 30px 0 0 ;
+        }
+        .project-setting-table {
+            padding: 20px 20px 30px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0;
+        }
+        #erweicode {
+            width: 150px;
+            height: 150px;
+            border: 1px solid #eee;
+            margin: 0 auto;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+		.supply-img-container {
+		
+		}
+		.supply-img-item {
+		    width: 96px;
+		    height: 96px;
+		    border: 1px solid #eee;
+		    border-radius: 6px;
+		    margin-right: 20px;
+		    position: relative;
+		}
+		.supply-img-item .supply-img-close {
+		    width: 13px;
+		    height: 13px;
+		    cursor: pointer;
+		    position: absolute;
+		    top: -6px;
+		    right: -6px;
+		    border-radius: 50%;
+		    border: 1px solid rgba(255, 0, 0, 1);
+		    font-size: 10px;
+		    text-align: center;
+		    color: rgba(255, 0, 0, 1);
+		}
+		.supply-img-item img {width: 100%;}
+		#contract-upload {
+			width: 98px;
+			height: 98px;
+			border: 1px solid #eee;
+			border-radius: 4px;
+			text-align: center;
+			font-size: 12px;
+			padding: 24px 0;
+			color: #999;
+			cursor: pointer;
+			box-sizing: border-box;
+			display: inline-block;
+			vertical-align: top;
+		}
+    </style>
+	</head>
+	<body>
+
+		<!-- 页面加载loading -->
+		<div class="page-loading">
+			<div class="ball-loader">
+				<span></span><span></span><span></span><span></span>
+			</div>
+		</div>
+
+		<!-- 正文开始 -->
+		<div class="layui-fluid">
+			<div class="layui-card" style="background-color: initial;">
+				<div class="layui-card-body">
+					<!-- <div class="layui-form toolbar">
+						<div class="layui-form-item">
+							<div class="search-container bg-white">
+
+								<div class="mt-20">
+
+									<div class="layui-inline">
+										<a id="btnAddProperty" class="layui-btn layui-btn-blue">新增</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> -->
+
+					<div class="project-setting-table bg-white">
+						<div style="padding-bottom: 10px;"><a id="btnAddProperty" class="layui-btn layui-btn-blue">新增</a></div>
+						<table class="layui-table" id="tableProject" lay-filter="tableProject" style="margin: 0;"></table>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- 表格操作列 -->
+		<script type="text/html" id="tableBarProperty">
+			<!-- <a class="layui-btn layui-btn-xs table-btn">查看</a> -->
+		    <a class="layui-btn layui-btn-xs table-btn btn-edit" lay-event="edit"><span class="btn-icon"></span>修改</a>
+		    <a class="layui-btn layui-btn-xs table-btn btn-del" lay-event="del"><span class="btn-icon"></span>删除</a>
+		</script>
+		<script type="text/html" id="deduction_Type">
+			              {{#  if(d.deduction_Type === 1){ }}
+                 <span>重量</span>
+              {{#  } else { }}
+               <span>比例</span>
+              {{#  } }}
+        </script>
+		<!-- 弹窗-新增客户 -->
+		<script type="text/html" id="modelProperty">
+			<form id="modelPropertyForm" lay-filter="modelPropertyForm" class="layui-form model-form">
+		        <div class="layui-form-item layui-row">
+		            <div class="layui-col-md12 p-10">
+		                <label class="layui-form-label">原材料</label>
+		                <div class="layui-input-block">
+		                    <select id="sys_Material_ID" lay-filter="ycl" name="sys_Material_ID" lay-verType="tips" lay-verify="required">
+								
+		                    </select>
+		                </div>
+		            </div>
+		            <div class="layui-col-md12 p-10">
+		                <label class="layui-form-label">供应商</label>
+		                <div class="layui-input-block">
+		                  <select id="material_Supplier_ID" name="material_Supplier_ID" lay-verType="tips" lay-verify="required">
+		                  </select>
+		                </div>
+		            </div>
+					<div class="layui-col-md12 p-10">
+					    <label class="layui-form-label">扣除重量</label>
+					    <div class="layui-input-block">
+					        <input name="discountWeight" id="discountWeight" placeholder="请输入类别" type="text" class="layui-input"
+					               lay-verType="tips" />
+					    </div>
+					</div>
+		            <div class="layui-col-md12 p-10">
+		                <label class="layui-form-label">扣除比例</label>
+		                <div class="layui-input-block">
+		                    <input name="discountRatio" id="discountRatio" placeholder="请输入类别" type="text" class="layui-input"
+		                           lay-verType="tips" />
+		                </div>
+		            </div>
+					<div class="layui-col-md12 p-10">
+					    <label class="layui-form-label">扣重类型</label>
+					    <div class="layui-input-block">
+					        <select id="deduction_Type" name="deduction_Type" lay-verType="tips" lay-verify="required">
+					        	<option value="1">重量</option>
+					        	<option value="2">比例</option>
+					        </select>
+					    </div>
+					</div>
+		        </div>
+		        <div class="layui-form-item text-center p-30">
+		            <button class="layui-btn layui-btn-primary"  type="button" lay-filter="modelSubmitAddCustomer" lay-submit>保存</button>
+		            <button class="layui-btn" type="button" ew-event="closePageDialog">取消</button>
+		        </div>
+		    </form>
+		</script>
+		<!-- js部分 -->
+		<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+		<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+		<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jquery.qrcode.min.js"></script>
+		<script>
+			layui.use(['layer', 'form', 'table', 'util', 'laydate', 'admin', 'element', 'upload'], function() {
+				var $ = layui.jquery;
+				var layer = layui.layer;
+				var form = layui.form;
+				var table = layui.table;
+				var util = layui.util;
+				var laydate = layui.laydate;
+				var admin = layui.admin;
+				var upload = layui.upload;
+				var element = layui.element;
+
+				var yclList= [];
+				var options = '';
+				var insTb = table.render({
+					elem: '#tableProject',
+					url: url + '/yuancailiao/getyuancailiaokouzhongList',
+					page: true,
+					cellMinWidth: 100,
+					cols: [
+						[
+							// {type: 'numbers', title: '序号'},
+							{
+								field: 'ycl_name',
+								align: 'center',
+								title: '材料名称'
+							},
+							{
+								field: 'gys_name',
+								align: 'center',
+								title: '供应商'
+							},
+							{
+								field: 'discountWeight',
+								align: 'center',
+								title: '扣除重量'
+							},
+							{
+								field: 'discountRatio',
+								align: 'center',
+								title: '扣除比例'
+							}, {
+								field: 'CreationTime',
+								align: 'center',
+								title: '创建时间',
+								templet: "<div>{{layui.util.toDateString(d.ordertime, 'yyyy-MM-dd HH:mm:ss')}}</div>"
+							},
+							{
+								field: 'deduction_Type',
+								align: 'center',
+								title: '扣重类型',
+								templet: '#deduction_Type'
+							},
+							{
+								align: 'center',
+								toolbar: '#tableBarProperty',
+								title: '操作',
+								minWidth: 160,
+								fixed: 'right'
+							}
+						]
+					],
+					request: {
+						pageName: 'pageIndex', //页码的参数名称，默认：page
+						limitName: 'pageSize' //每页数据量的参数名，默认：limit
+					},
+					where: {
+						zdId: localStorage.getItem("station_id")
+					},
+					response: {
+						countName: 'totalCount', //数据总数的字段名称，默认：count
+						dataName: 'list' //数据列表的字段名称，默认：data
+					}
+				});
+				bindycl();
+				//绑定原材料				
+				
+				function bindycl() {
+					var html = '';
+					$.ajax({
+						type: "get",
+						url: url + '/yuancailiao/getyuancailiaoList',
+						data:{
+							zdId: localStorage.getItem("station_id")
+						},
+						async: false,
+						success: function(res) {
+							//这里循环绑定原材料,下拉列表,但是要区分层级
+							formateData(res.list)
+							yclList.map(val => {
+								options += `<option value="${val.id}">${val.u_Name}</option>`
+							})
+						}
+					})
+				}
+				function formateData (arr, index=0) {
+					let index1 = index;
+					index++;
+					return arr.map(val => {
+						yclList.push({
+							...val,
+							u_Name: formateName(index1) + val.u_Name
+						})
+						if (val.children.length > 0) formateData(val.children, index);
+					})
+				}
+				function formateName (index) {
+	            	let str = '';
+	            	for (let i = 0; i < index; i++) {
+	            		str += '&nbsp;&nbsp;&nbsp;&nbsp;';
+	            	}
+	            	return str
+	            }
+				//查询
+				$('#btnSearch').on('click', (e) => {
+					insTb.reload({
+						where: {},
+						page: {
+							curr: 1
+						}
+					});
+				});
+
+				$('#btnAddProperty').on('click', () => {
+					showEditModel("添加");
+				});
+				//客户操作
+				table.on('tool(tableProject)', function(obj) {
+					var data = obj.data;
+					console.log(data);
+					var layEvent = obj.event;
+					if (layEvent === 'del') {
+						layer.confirm('确定要删除扣重“' + data.ycl_name + '”吗？', {
+							skin: 'layui-layer-admin',
+							shade: .1
+						}, function(i) {
+							layer.close(i);
+							layer.load(2);
+							$.post(url + '/yuancailiao/delete', {
+								id: data.id,
+								table_name: 'Material_HiddenDiscount_T',
+								zdId: localStorage.getItem("station_id")
+							}, function(res) {
+								layer.closeAll('loading');
+								if (res.code == 0) {
+									layer.msg(res.msg, {
+										icon: 1
+									});
+									insTb.reload();
+								} else {
+									layer.msg(res.msg, {
+										icon: 2
+									});
+								}
+							}, 'json');
+						});
+					} else if (layEvent === 'edit') {
+						showEditModel(data);
+					}
+				});
+
+				function bindImgList(mUser) {
+					$.ajax({
+						url: url + '/shebei/getassetsDetails',
+						type: 'get',
+						async: false,
+						data: {
+							id: mUser.id
+						},
+						success: function(res) {
+							if (res.code == 0) {
+								var html = '';
+								$.each(res.data.img_list, function() {
+									html += '<li img_url="' + this.img_url +
+										'" class="pull-left supply-img-item"><img src="' + imgUrl + this.img_url +
+										'"><i   class="supply-img-close  layui-icon" onclick="getdeleteImg(this)">&#x1006;</i></li>';
+								})
+								$("#img_list").html(html);
+							}
+						}
+					})
+				}
+
+				// 显示表单弹窗
+				function showEditModel(mUser) {
+					admin.open({
+						type: 1,
+						area: '800px',
+						title: mUser ? '修改' : '添加',
+						content: $('#modelProperty').html(),
+						success: function(layero, dIndex) {
+							//$("[name='status']").val(mUser.status);
+							//layui.form.render("select");
+							console.log(mUser);
+							if (mUser) {
+								$.ajax({
+									type: "get",
+									url: url + '/yuancailiao/getgongyingshang',
+									data: {
+										sys_Material_ID: mUser.sys_Material_ID,
+										zdId: localStorage.getItem("station_id")
+									},
+									async: false,
+									success: function(res) {
+										var str = ''
+										res.list.map(val => {
+											str += `<option value="${val.id}">${val.u_Name}</option>`
+										})
+										$("#material_Supplier_ID").html(str);
+										layui.form.render("select");
+									}
+								})
+							}
+							$("#sys_Material_ID").html(options);
+							// $("#material_Supplier_ID").val('<option>')
+							layui.form.render("select");
+							form.val('modelPropertyForm', mUser);
+							//执行一个laydate实例
+							laydate.render({
+								elem: '#cg_date' //指定元素
+							});
+							laydate.render({
+								elem: '#rk_date' //指定元素
+							});
+							if (mUser != '添加') {
+								bindImgList(mUser);
+							};
+							// 表单提交事件
+							form.on('submit(modelSubmitAddCustomer)', function(data) {
+							
+								var parm = data.field;	
+								var discountWeight=$("#discountWeight").val();
+								var discountRatio=$("#discountRatio").val();
+								if(discountWeight==""&&discountRatio==""){
+									alert("重量和比例至少有一个必填");
+									return;
+								}	else{	
+										layer.load(2);
+								$.ajax({
+									url: url + '/yuancailiao/addkouzhong',
+									type: 'post',
+									async: false,
+									dataType: 'json',
+									data: {
+										...data.field,
+										zdId: localStorage.getItem("station_id")
+									},
+									success: function(res) {
+										layer.closeAll('loading');
+									
+										if (res.code == 0) {
+											layer.msg(res.msg, {
+												icon: 1
+											});
+											insTb.reload();
+												layer.close(dIndex);
+										} else {
+											layer.msg(res.msg, {
+												icon: 2
+											});
+										}
+									}
+								});
+								}
+
+							});
+							form.on('select(ycl)', function(data){
+								$.ajax({
+									type: "get",
+									url: url + '/yuancailiao/getgongyingshang',
+									data: {
+										sys_Material_ID: data.value,
+										zdId: localStorage.getItem("station_id")
+									},
+									async: false,
+									success: function(res) {
+										var str = ''
+										res.list.map(val => {
+											str += `<option value="${val.id}">${val.u_Name}</option>`
+										})
+										$("#material_Supplier_ID").html(str);
+										layui.form.render("select");
+									}
+								})
+							});
+						}
+					});
+				}
+				// 新增项目
+				$('#btnAddProject').on('click', (e) => {
+
+				});
+
+				//一些事件监听
+				element.on('tab(projectSetting)', function(data) {
+					console.log(data);
+				});
+
+			});
+
+			function getdeleteImg(ii) {
+				ii.parentNode.parentNode.removeChild(ii.parentNode);
+			}
+		</script>
+
+	</body>
+</html>

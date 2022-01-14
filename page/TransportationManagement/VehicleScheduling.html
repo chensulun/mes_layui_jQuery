@@ -1,0 +1,570 @@
+﻿<!doctype html>
+<html class="no-js">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>车辆调度</title>
+		<link rel="stylesheet" type="text/css" href="../../assets/layui/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common.css" />
+		<style>
+			.wx{
+				/* width: 19.25rem !important; */
+				margin-top: auto !important;
+			}
+			.seelct_c{
+				width:163px !important;
+				height:30px !important;
+				background:rgba(229,229,229,0.4) !important;
+				border:1px solid #DDDDDD !important;
+				border-radius:0 !important; 
+				color: #000000 !important;
+			}
+			.sp11{
+				  width: 9.5rem  !important;
+				      display: -webkit-inline-box;
+				      -webkit-box-orient: horizontal;
+				      border: 1px solid #DDDDDD;
+				      height: 25px !important;
+				      margin-left: 13px;
+				      /* margin-top: 0px; */
+				      /* position: relative; */
+				      /* border-radius: 0.85rem; */
+				padding-left: 8px;
+				      /* padding-top: 4px; */
+			}
+			#carList{
+				margin-left: 38px;
+				    width: 14.25rem height:auto !important;
+				    margin-top: 1.8rem;
+				    overflow: auto;
+				    background: #F7F7F7;
+				    border: 1px solid #dddddd;
+				    max-height: 356px !important;
+				    background-color: #ffffff;
+				    width: 204px;
+				    position: relative;
+				    top: 16px;
+
+			}
+			.car-map{
+					    max-height: 490px;
+						/* margin-top: -420px; */
+						
+						    border: 1px solid #dddddd;
+							float: left;
+							    left: 16px;
+			}
+			.search{
+				right: 59.8rem !important;
+				top: 1.6rem;
+				    left: 2px;
+			}
+			.tigh{
+				    position: relative;
+				    float: right;
+				   
+			}
+			.btn{
+			width: 42px;
+			    height: 27px;
+			    margin-left: -4px;
+			    background: rgba(38,196,79,1);
+			    border-radius: 2px;
+			    background-color: #26C44F;
+			    text-align: center;
+			    color: #FFFFFF;
+			    border: 0px;
+			    position: relative;
+			    top: 3px;
+			}
+			.div_ri{
+				    margin-left: 1.625rem;
+			}
+			
+		</style>
+	</head>
+
+	<body style="background-color: #FFFFFF;">
+		<div class="container" style="width: 100%; background-color: #ffffff;">
+			<div style="width: 100%;">
+
+				<div style="width:75%;" class="car-map fr" id="map"></div>
+				<div style="width:23%;" class="car-list car fls tigh">
+					<div class="div_ri"><label style="margin-left: 0.625rem;">站点：</label>
+						<select class="seelct_c" id="protect" name="" disabled="disabled">
+							<!-- <option value="" selected="selected">广州站</option> -->
+						</select>
+					</div>
+					<div class="div_ri">
+						<label style="margin-left: 0.625rem;">项目：</label>
+						<select class="seelct_c" id="station" name="">
+
+						</select>
+					</div>
+					 <div class="div_ri" style="margin-top: 12px;">
+						<label type="text" class="search-address sp11">点击地图选择项目地址</label>
+						<button type="button" class="btn" id="btn_confirm">确定</button>
+					</div> 
+					<ul id="carList" class="wx">
+						
+					</ul>
+				</div>
+				<div class="search">
+					<input placeholder="请输入关键字" id="suggestId" value="" />
+				</div>
+				<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+			</div>
+		</div>
+
+		<script src="../../assets/js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+		<script src="../../assets/js/common.js?v=2.1"></script>
+		<script src="../../assets/js/server.js?v=1.1" type="text/javascript" charset="utf-8"></script>
+		<script src="../../assets/js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=CKozdeH8v9XoTyaFB5slrpMMwzzIvvs0"></script>
+		<script src="../../assets/js/api.js?v=1.1" type="text/javascript" charset="utf-8"></script>
+		<script src="../../assets/js/map.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function() {
+				//1920*1080分辨率
+				if ($(document.body).width() > 1300) {
+					$("#map").css("max-height", "720px");
+					$("#carList").css("min-height", "583px");
+					$(".search").css("margin-left", "-566px");
+				}
+			})
+			//设置地图初始缩放比例
+			map.setZoom(13);			
+			var makers = {};
+			
+			//地图关键字检索
+			function G(id) {
+				return document.getElementById(id);
+			}
+
+			var ac = new BMap.Autocomplete( //建立一个自动完成的对象
+				{
+					"input": "suggestId",
+					"location": map
+				});
+
+			ac.addEventListener("onhighlight", function(e) { //鼠标放在下拉列表上的事件
+				var str = "";
+				var _value = e.fromitem.value;
+				var value = "";
+				if (e.fromitem.index > -1) {
+					value = _value.province + _value.city + _value.district + _value.street + _value.business;
+				}
+				str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+				value = "";
+				if (e.toitem.index > -1) {
+					_value = e.toitem.value;
+					value = _value.province + _value.city + _value.district + _value.street + _value.business;
+				}
+				str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+				G("searchResultPanel").innerHTML = str;
+			});
+
+			var myValue;
+			ac.addEventListener("onconfirm", function(e) { //鼠标点击下拉列表后的事件
+				var _value = e.item.value;
+				myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+				G("searchResultPanel").innerHTML = "onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+
+				setPlace();
+			});
+
+			function setPlace() {
+				//map.clearOverlays(); //清除地图上所有覆盖物
+				function myFun() {
+					var pp = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
+					map.centerAndZoom(pp, 18);
+					map.addOverlay(new BMap.Marker(pp)); //添加标注
+				}
+				var local = new BMap.LocalSearch(map, { //智能搜索
+					onSearchComplete: myFun
+				});
+				local.search(myValue);
+				console.log(myValue)
+			}
+
+			//获取地图坐标
+			var geoc = new BMap.Geocoder();
+			map.addEventListener("click", function(e) {
+				var pt = e.point;
+				geoc.getLocation(pt, function(rs) {
+					console.log(rs)
+					$('.search-address').html(rs.address)
+					
+					/* removeOverlay('endpt')
+					var marker = new BMap.Marker(pt); // 创建标注
+					map.addOverlay(marker);
+					overlays['endpt'] = marker; */
+						
+					$('.search-address').attr({
+						"lat": rs.point.lat,
+						"lng": rs.point.lng
+					})
+				});
+			});
+
+			//确定终点坐标
+			$('#btn_confirm').click(function() {
+				if (confirm("只有一次设置终点机会，确定要设置吗？")) {
+
+					//存入数据库
+					var lat = $('.search-address').attr("lat");
+					var lng = $('.search-address').attr("lng");
+					var end = $('.search-address').html();
+					var project = $('#station').find('option:selected')[0].value;
+					if(project === '0'){
+						alert('请选择项目')
+						return
+					}
+					
+					if (lat) {
+						$.ajax({
+							type: "post",
+							url: projectPushUrl,
+							data: {
+								"projectname": project,
+								"jingdu": lng,
+								"weidu": lat,
+								"end": end
+							},
+							success: function(res) {
+								if (res.obj) {
+									$('.search-address').html(res.obj.end);
+									$("#btn_confirm").attr('disabled', true);
+								} else {
+									$('.search-address').html("请选择");
+									$("#btn_confirm").attr('disabled', false);
+								}
+							}
+						})
+					} else {
+
+						alert("请选择项目终点");
+					}
+
+				}
+			});
+			
+			$("#protect").html('<option value="" selected="selected">'+ localStorage.getItem("station")  +'</option>')
+
+			//路径回放
+			var run = function(myP1, myP2, pts, myIcon) {
+				var driving2 = new BMap.DrivingRoute(map, {
+					renderOptions: {
+						map: map,
+						autoViewport: true
+					}
+				}); //驾车实例
+				driving2.search(myP1, myP2); //显示一条公交线路
+				
+				var driving = new BMap.DrivingRoute(map); //驾车实例
+				driving.search(myP1, myP2);
+				driving.setSearchCompleteCallback(function() {
+					var pts = driving.getResults().getPlan(0).getRoute(0).getPath(); //通过驾车实例，获得一系列点的数组
+					var paths = pts.length; //获得有几个点
+					var carMk = new BMap.Marker(pts[0], {
+						icon: myIcon
+					});
+					map.addOverlay(carMk);
+					i = 0;
+
+					function resetMkPoint(i) {
+						carMk.setPosition(pts[i]);
+
+						if (i < paths) {
+							setTimeout(function() {
+								i++;
+								resetMkPoint(i);
+							}, 20);
+						}else{
+							driving2.clearResults()	
+							driving.clearResults()	
+							map.removeOverlay(carMk)
+						}
+						
+					}
+					setTimeout(function() {
+						resetMkPoint(0);
+					}, 100)
+
+				});
+			}
+			
+			 $.ajax({
+				type: "post",
+				url: projectUrl + '?last48h=1',
+				success: function(res) {
+					// console.log("站点：");
+					console.log(res);
+					if (res.errno == 0) {
+						var str1 = '';
+						for (var i = 0; i < res.list.length; i++) {
+							str1 += '<option value=' + res.list[i].projectId + '>' + res.list[i].projectName + '</option>'
+						}
+						str1 = '<option value="0">请选择</option>' + str1;
+						$('#station').html(str1);
+						
+						getCarLocation();
+					    setInterval(function () {
+						    getCarLocation();						   
+						}, 10000);	 			
+					}
+				}
+			}); 
+			
+			//选择材料类型
+			$('#station').change(function() {
+				var project = $('#station').find('option:selected')[0].value;
+				if(project==='0') {
+					getCarLocation();
+					return;
+				}
+				debugger;
+				ajaxData(carList, {project: project, last48h: 1}, function(data) {
+					var carStr = '';
+					for (var i = 0; i < data.list.length; i++) {
+						carStr += '<li carnum="' + data.list[i].carNo + '">' + data.list[i].carNo + '</li>';						
+					}	
+					
+					$('#carList').html(carStr);
+					
+					//路径回放点击事件
+					$('#carList li').bind('click', function() {
+						var project = $('#station').find('option:selected')[0].value;
+					
+						var myIcon = "../../assets/images/icon_car.png";
+						var carNum = $(this).attr('carnum');
+						debugger;
+						ajaxData(carTrail, {
+							carNo: carNum,
+							project: project
+						}, function(data) {							
+							if (data.list.length != 0) {
+								var points = [];													
+								for (var j = 0; j < data.list.length; j++) {
+									points.push(new BMap.Point(data.list[j].lng, data.list[j].lat))
+								}
+								doTranslateGps(points, function(pts){
+									var myP1 = pts[0]
+									var myP2 = pts[pts.length-1]
+									var myIcon = new BMap.Icon("../../assets/images/icon_car.png", new BMap.Size(32, 70), { //小车图片
+										imageOffset: new BMap.Size(0, 0) //图片的偏移量。为了是图片底部中心对准坐标点。
+									});
+									
+									run(myP1, myP2, pts, myIcon); 
+								})
+								
+								/* var convertor = new BMap.Convertor();								
+								convertor.translate(pts, 1, 5, function(data){
+									if(data.status === 0) {
+										var myP1 = data.points[0]
+										var myP2 = data.points[data.points.length-1]
+										//var last = data.list[data.list.length - 1];
+										// 起点
+										//var myP1 = new BMap.Point(data.list[0].lng, data.list[0].lat)
+										// 终点
+										//var myP2 = new BMap.Point(last.lng, last.lat)
+										
+															
+										var myIcon = new BMap.Icon("../../assets/images/icon_car.png", new BMap.Size(32, 70), { //小车图片
+											//offset: new BMap.Size(0, -5),    //相当于CSS精灵
+											imageOffset: new BMap.Size(0, 0) //图片的偏移量。为了是图片底部中心对准坐标点。
+										});
+										
+										run(myP1, myP2, data.points, myIcon); 
+									}	
+								}) */
+							}
+						})
+					});
+				})
+			});
+			
+			var point = new BMap.Point(106.278022, 29.682351);
+			if(projectName=="guangzhou"){				
+					point = new BMap.Point(113.41370944660196, 23.34191249371705);
+			}
+			else if(projectName=="chongjiao"){
+				if(localStorage.getItem("station")=="双石站"){
+					point = new BMap.Point(105.818459, 29.402740);
+				}
+				else if(localStorage.getItem("station")=="双石站"){
+					point = new BMap.Point(105.818459, 29.402740);
+				}
+			}
+			var station = localStorage.getItem("station");
+			if(station == '鑫丰站'){
+				point = new BMap.Point(117.390471, 38.448497);
+			}
+			if(station == '任丘站'){
+				point = new BMap.Point(116.171438, 38.77867);
+			}
+			if(station == '新基地'){
+				point = new BMap.Point(116.996768, 38.437637);
+			}
+			map.centerAndZoom(point, 16);
+			var marker = new BMap.Marker(point); // 创建标注
+			map.addOverlay(marker);
+			var opts = {
+				position: point, // 指定文本标注所在的地理位置
+				offset: new BMap.Size(10, -20) //设置文本偏移量
+			}
+			var label = new BMap.Label("搅拌站", opts); // 创建文本标注对象
+			label.setStyle({
+				color: "red",
+				fontSize: "12px",
+				height: "20px",
+				lineHeight: "20px",
+				fontFamily: "微软雅黑"
+			});
+			map.addOverlay(label);
+			
+			var convertor = new BMap.Convertor();
+							
+			function doTranslateGps(points, callback) {
+				var N = Math.ceil(points.length / 10);
+				var result = []
+				var idx = 0;
+				
+				var loop = function(i) {
+					var pts = points.slice(i++*10, i*10);
+					
+					convertor.translate(pts, 1, 5, function(d){
+						if(d.status === 0) {
+							result = result.concat(d.points);
+							if(++idx >= N){
+								callback(result)
+							}else{
+								loop(idx);
+							}
+						}
+					})
+				}
+				
+				loop(idx)
+			} 
+			
+			function getCarLocation(){					
+				ajaxData(carList, {}, function(data) {
+					
+					//转换百度坐标
+					var pts = [];
+					for(var i=data.list.length-1; i>-1; i--){
+						if(data.list[i].location){
+							var lng = data.list[i].location.lng;
+							var lat = data.list[i].location.lat;
+							//pts_str += lng + ',' + lat + ';'	
+							var pt = new BMap.Point(lng, lat);
+							pts.unshift(pt);	
+						}else{
+							data.list.splice(i,1);
+						}
+					}
+					doTranslateGps(pts, function(pts){
+						// for (var i = 0; i < pts.length; i++) {
+						// 	data.list[i].location.lng = pts[i].lng;
+						// 	data.list[i].location.lat = pts[i].lat;
+						// }
+						
+						translateCallBack()
+					});
+					
+					/* var convertor = new BMap.Convertor();
+					convertor.translate(pts, 1, 5, function(d){
+						if(d.status === 0) {
+							for(var i=0; i<d.points.length; i++){
+								data.list[i].location.lng = d.points[i].lng;
+								data.list[i].location.lat = d.points[i].lat;
+							}
+							
+							translateCallBack()
+						}
+					}) */
+					
+					
+					var translateCallBack = function() {
+						var carStr = '';
+						for (var i = 0; i < data.list.length; i++) {
+							removeOverlay(data.list[i].carNo);
+							if(!data.list[i].location || !data.list[i].location.lng || !data.list[i].location.lat){
+								continue
+							}						
+													
+							// 地图标注
+							var lng = data.list[i].location.lng;  // 113.66345643997192
+							var lat = data.list[i].location.lat;  // 23.18814065752128 
+							carStr += '<li carnum="' + data.list[i].carNo + '" lng=' + lng + ' lat=' + lat + '>' + data.list[i].carNo + '</li>';
+							
+							var pt = new BMap.Point(lng, lat);
+							var opt = {
+								width: 300, // 信息窗口宽度
+								height: 130, // 信息窗口高度
+							}
+							
+							var projectName = data.list[i].projectName ? data.list[i].projectName : '';
+							var CompressiveStrength = data.list[i].CompressiveStrength ? data.list[i].CompressiveStrength : '';
+							
+							getAddress(pt, function(address, params){
+								var content = '<p style="font-weight:bold">车辆号码:' + params.carNo + '</p>' +
+										'<p>运输项目:' + params.projectName + '</p>' +
+										'<p>运输类型:' + params.CompressiveStrength + '</p>'
+								if(params.projectName) {
+									content += '<p>运输状态:' + (params.transport===1?'运输中':'已停止') + '</p>'
+								}
+								if(!params.power){
+									params.power = ''
+								}
+									
+								content += '<p>电量:' + params.power + '</p>' +
+									'<p>车辆位置:' + address + '</p>'
+														
+								var InfoWindow = new BMap.InfoWindow(content, opt);
+								InfoWindow.enableAutoPan();
+								var label = params.carNo;
+								var icon = new BMap.Icon("../../assets/images/icon_car.png", new BMap.Size(33, 21));
+						
+								addMarker(params.pt, icon, label, InfoWindow);
+							},{
+								carNo: data.list[i].carNo,
+								projectName: projectName,
+								CompressiveStrength: CompressiveStrength,
+								pt: pt,
+								power: data.list[i].power,
+								transport: data.list[i].transport
+							})												
+						}
+						
+						var project = $('#station').find('option:selected')[0];
+						if(!project || project.value==='0') {
+							$('#carList').html(carStr);
+							
+							$('#carList li').bind('click', function() {
+								var lng = $(this).attr("lng");
+								var lat = $(this).attr("lat");
+								var p = new BMap.Point(lng, lat);
+								map.centerAndZoom(p, 16);
+							});
+						}	
+					}				
+				});	
+			}
+
+			function getAddress(point, callback, params){
+				var geoc = new BMap.Geocoder();
+				
+				geoc.getLocation(point, function(rs){
+					callback(rs.address, params);		
+				});   
+			}
+		</script>
+	</body>
+
+</html>

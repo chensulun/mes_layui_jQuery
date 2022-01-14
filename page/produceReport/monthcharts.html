@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>生产月报</title>
+		<link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+		<link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+		<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style>
+			/*.layui-layer-setwin {*/
+        /*    position: absolute;*/
+        /*    right: 15px;*/
+        /*    *right: 0;*/
+        /*    top: 15px;*/
+        /*    font-size: 0;*/
+        /*    line-height: initial;*/
+        /*}*/
+		
+		.my_title{
+			width: 110px;
+			height: 34px;
+			background-color: #26C44F;
+			text-align: center;
+			color: #FFFFFF;
+			font-size: 14px;
+			line-height: 34px;
+			float: left;
+		}
+		
+		.layui-laypage .layui-laypage-curr .layui-laypage-em {
+				    position: absolute;
+				    left: -1px;
+				    top: -1px;
+				    padding: 1px;
+				    width: 100%;
+				    height: 100%;
+				    background-color: #26C44F;
+				}
+    </style>
+	</head>
+	<body>
+
+		<!-- 页面加载loading -->
+		<div class="page-loading">
+			<div class="ball-loader">
+				<span></span><span></span><span></span><span></span>
+			</div>
+		</div>
+
+		<!-- 正文开始 -->
+		<div class="layui-fluid">
+			<div class="layui-card">
+				<div class="layui-card-body table-tool-mini">
+					<div class="layui-form toolbar">
+						<!-- <div class="layui-form-item">
+							<div class="layui-inline">
+								<div class="my_title">
+									生产月报
+								</div>
+							</div>
+						</div> -->
+						<div class="layui-form-item" style="margin-top: 20px;">
+							<div class="layui-inline">
+								<div class="layui-input-inline mr0">
+									<input type="text" name="startTime" class="layui-input" id="test-laydate-start" placeholder="开始日期" lay-key="1">
+								</div>
+							</div>
+							<div class="layui-inline">
+								<div class="layui-input-inline mr0">
+									<input type="text" name="endTime" class="layui-input" id="test-laydate-end" placeholder="结束日期" lay-key="2">
+								</div>
+							</div>
+							<div class="layui-inline" style="padding-right: 110px;">
+								<button style="background-color: #26C44F;" class="layui-btn icon-btn layui-btn-green" lay-filter="formSubSearchUser" lay-submit>
+									确定
+								</button>
+							</div>
+						</div>
+					</div>
+					<table class="layui-table" id="tableUser" lay-filter="tableUser">
+
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- js部分 -->
+		<script type="text/javascript" src="../../assets/js/server.js"></script>
+		<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+		<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+		<script type="text/javascript" src="../../assets/js/jquery-2.1.1.min.js"></script>
+		<script>
+			var zd = localStorage.getItem("station");
+			layui.use(['layer', 'form', 'table', 'util', 'admin', 'laydate'], function() {
+				var $ = layui.jquery;
+				var layer = layui.layer;
+				var laydate = layui.laydate;
+				var form = layui.form;
+				var table = layui.table;
+				var util = layui.util;
+				var admin = layui.admin;
+				// 时间选择
+				var time = timeFn();
+				
+				
+				function getFormatDate(arg) {
+				            if (arg == undefined || arg == '') {
+				                return '';
+				            }
+				
+				            var re = arg + '';
+				            if (re.length < 2) {
+				                re = '0' + re;
+				            }
+				
+				            return re;
+				        }
+						
+				// var startTime = time.y + '-' + (time.m - 7) + '-' + (time.d);
+				// var endTime = time.y + '-' + (10) + '-' + (time.d);
+				var nowdate=new Date(); 
+				var qiandate=new Date();
+				qiandate.setMonth(-2);
+				
+				var startTime = qiandate.getFullYear() + '-' + getFormatDate(qiandate.getMonth()+1) + '-' + getFormatDate(qiandate.getDate());
+				var endTime = nowdate.getFullYear() + '-' + getFormatDate(nowdate.getMonth()+1) + '-' + getFormatDate(nowdate.getDate());
+				layui.use('laydate', function() {
+					var laydate = layui.laydate;
+					laydate.render({
+						elem: '#test-laydate-start',
+						value: new Date()
+					});
+					laydate.render({
+						elem: '#test-laydate-end',
+						value: new Date()
+					});
+				});
+
+				setTimeout(function(){
+					var params = {
+						beginDate: $('#test-laydate-start').val(),
+						endDate: $('#test-laydate-end').val()
+					}
+					tableFn(params);
+				},500)
+				
+
+				//查询
+				// 搜索
+				form.on('submit(formSubSearchUser)', function(data) {
+					params = {
+						beginDate: $('#test-laydate-start').val(),
+						endDate: $('#test-laydate-end').val()
+					}
+					tableFn(params);
+				});
+
+				function tableFn(params) {
+					debugger;
+					var lastItemPB;
+					layui.use('table', function() {
+						var table = layui.table;
+						table.render({
+							elem: '#tableUser',
+							url: getServerUrl(zd) + '/api/data/ajaxMonthList',
+							cellMinWidth: 80 //全局定义常规单元格的最小宽度
+								,
+							cols: [
+								[ //标题栏
+									{
+										field: 'id',
+										title: '编号'
+									}, {
+										field: 'date',
+										title: '生成日期'
+									}, {
+										field: 'month',
+										title: '月份'
+									}, {
+										field: 'remark',
+										title: '备注'
+									}, {
+										field: '下载',
+										title: '下载',
+										align: 'center',
+										templet: function(d) {
+											if (d.state == '0') {
+												// if(d.date>new Date().toLocaleDateString()){
+												// 	return '<button style="background-color:#ccc" class="layui-btn layui-btn-xs" disabled="disabled" onclick="createMonthDoc(' + d.month +
+												// 		')">生成</button>'
+												// 		}
+												// else{
+												// 	return '<button class="layui-btn layui-btn-xs" onclick="createMonthDoc(' + d.month +
+												// 		')">生成</button>'
+												// }
+												var nowdate=new Date();
+												var xitong = nowdate.getFullYear() + '-' + getFormatDate(nowdate.getMonth()+1) + '-' + getFormatDate(nowdate.getDate());
+												var chuandimonth=d.month;
+												if(chuandimonth<10){
+													chuandimonth="0"+chuandimonth;
+												}
+												var chuandi=d.year+"-"+chuandimonth+"-01";
+												//var xitong=new Date().toLocaleDateString();
+												// debugger;
+												// if(new Date(d.year+"-"+d.month+"-01")>=new Date("2020-03-01 00:00:00"))
+												// {
+												// 	return "";
+												// }
+												 if(Date.parse(chuandi)>Date.parse(xitong)  || (d.year==new Date().getFullYear() && d.month==new Date().getMonth()+1)){
+													return '<button style="background-color:#ccc" class="layui-btn layui-btn-xs" disabled="disabled" onclick="createMonthDoc(' + d.month +
+														')">生成</button>'
+														}
+												else{
+													return '<button class="layui-btn layui-btn-xs" onclick="createMonthDoc(' + d.month +',' + d.year +
+														')">生成</button>'
+												}
+												
+											} else {
+												var res='<a href="'+getServerUrl(zd)+'/api/data/downloadFile/';
+												res+=zd+"月报";
+												return res+'('+d.year+'年' + d.month +
+													'月).xls"><img style="height:25px;width:25px;" src="../../assets/images/icon_download.png"></a>';
+											}
+										}
+									},
+								]
+							],
+							page: true,
+							limit: 10,
+                            limits:[10],
+							request: {
+								pageName: 'page' //页码的参数名称，默认：page
+									,
+								limitName: 'pageSize' //每页数据量的参数名，默认：limit
+
+							},
+							where: params,
+							response: {
+								statusName: 'errno' //数据状态的字段名称，默认：code
+									,
+								statusCode: 0 //成功的状态码，默认：0
+									,
+								msgName: 'error' //状态信息的字段名称，默认：msg
+									,
+								countName: 'num' //数据总数的字段名称，默认：count
+									,
+								dataName: 'list' //数据列表的字段名称，默认：data
+							},
+							even: true
+
+						});
+					});
+				}
+
+				
+
+				//日期
+				laydate.render({
+					elem: '#test-laydate-start',
+					trigger: 'click',
+					format: 'yyyy-MM-dd',
+					done: function(value, date, endDate) {
+						var startDate = new Date(value).getTime();
+						var endTime = new Date($('#test-laydate-end').val()).getTime();
+						if (endTime < startDate) {
+							layer.msg('开始时间不能大于结束时间');
+							$('#test-laydate-start').val($('#test-laydate-end').val());
+						}
+					}
+
+				});
+				laydate.render({
+					elem: '#test-laydate-end',
+					trigger: 'click',
+					format: 'yyyy-MM-dd',
+					done: function(value, date, endDate) {
+						var startDate = new Date($('#test-laydate-start').val()).getTime();
+						var endTime = new Date(value).getTime();
+						if (endTime < startDate) {
+							layer.msg('结束时间不能小于开始时间');
+							$('#test-laydate-end').val($('#test-laydate-start').val());
+						}
+					}
+				});
+			});
+			
+			function createMonthDoc(month,year) {
+			
+				var json = {
+					'month': month,
+					'year':year,
+					'station': localStorage.getItem("station")
+				}
+				$.ajax({
+					url: getServerUrl(zd) + '/api/data/ajaxMonthCreate',
+					type: 'POST',
+					dataType: 'json',
+					data:JSON.stringify(json),
+					contentType:"application/json;charset=utf-8",
+					success: function(res) {
+						$(".layui-laypage-btn")[0].click();
+						//刷新data
+					},
+					error: function() {
+						layer.alert('获取数据失败，请检查是否部署在本地服务器环境下')
+					}
+				})
+			}
+		</script>
+
+	</body>
+</html>

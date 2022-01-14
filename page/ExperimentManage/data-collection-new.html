@@ -1,0 +1,1484 @@
+<!--
+ * @Author: huyanhai
+ * @since: 2020-02-22 13:17:08
+ * @LastAuthor: huyanhai
+ * @lastTime: 2020-09-23 17:29:42
+ * @FilePath: /web/page/ExperimentManage/data-collection-new.html
+ * @Description: 数据采集
+ -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>数据采集</title>
+  <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+  <link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+  <link rel="stylesheet" href="../../assets/css/common_likui.css?v=314" />
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <style>
+    .search-container {
+      /*height: 144px;*/
+      padding: 25px 0 30px 20px;
+      /*box-sizing: border-box;*/
+    }
+
+    .search-container .layui-form-radio {
+      margin: 0 30px 0 0;
+    }
+
+    .project-setting-table {
+      padding: 30px 20px;
+    }
+
+    .layui-table,
+    .layui-table-view {
+      margin: 0;
+    }
+
+    #erweicode {
+      width: 150px;
+      height: 150px;
+      border: 1px solid #eee;
+      margin: 0 auto;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .supply-img-container {}
+
+    .supply-img-item {
+      width: 96px;
+      height: 96px;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      margin-right: 20px;
+      position: relative;
+    }
+
+    .supply-img-item .supply-img-close {
+      width: 13px;
+      height: 13px;
+      cursor: pointer;
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 0, 0, 1);
+      font-size: 10px;
+      text-align: center;
+      color: rgba(255, 0, 0, 1);
+    }
+
+    .supply-img-item img {
+      width: 100%;
+    }
+
+    #contract-upload {
+      width: 98px;
+      height: 98px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 12px;
+      padding: 24px 0;
+      color: #999;
+      cursor: pointer;
+      box-sizing: border-box;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .m-b-10 {
+      margin-bottom: 10px;
+    }
+
+    .m-b-5 {
+      margin-bottom: 5px;
+    }
+
+    .like_device {
+      color: #a2a2a2;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .like_device:hover {
+      color: #26c44f;
+    }
+
+    .layui-btn-normal {
+      background-color: #1e9fff !important;
+      color: #ffffff !important;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 页面加载loading -->
+  <div class="page-loading">
+    <div class="ball-loader"><span></span><span></span><span></span><span></span></div>
+  </div>
+
+  <!-- 正文开始 -->
+  <div class="layui-fluid">
+    <div class="layui-card" style="background-color: initial">
+      <div class="layui-card-body">
+        <div class="layui-form toolbar">
+          <div class="layui-form-item">
+            <div class="search-container bg-white">
+              <div class="clear">
+                <label class="layui-form-label w-auto">实验日期：</label>
+                <div class="layui-input-inline" style="width: 140px">
+                  <input type="text" name="taskStartTime" class="layui-input" id="test-laydate-start" placeholder="开始日期"
+                    lay-key="1" />
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-inline" style="width: 140px">
+                  <input type="text" name="taskEndTime" class="layui-input" id="test-laydate-end" placeholder="结束日期"
+                    lay-key="2" />
+                </div>
+                <div class="layui-inline">
+                  <button id="btnSearch" class="layui-btn layui-btn-green3">查询</button>
+                </div>
+                <div class="layui-inline">
+                  <a id="btnAddProperty" ew-href="page/ExperimentManage/add-data.html" class="layui-btn layui-btn-red"
+                    style="padding: 0 18px">新增</a>
+                </div>
+              </div>
+
+              <div class="mt-10">
+                <!-- <div class="layui-inline">
+                  <label class="layui-form-label w-auto">检验人员：</label>
+                  <div class="layui-input-inline">
+                    <select id="userName" name="userName" lay-filter="userName" lay-verType="tips" lay-verify="required"
+                      lay-search>
+                      检验人员
+                    </select>
+                  </div>
+                </div> -->
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">校验人员：</label>
+                  <div class="layui-input-inline">
+                    <select id="xyName" name="xyName">
+                      <option value="">请选择</option>
+                      <option value="张三">张三</option>
+                      <option value="李四">李四</option>
+                      <option value="王二麻子">王二麻子</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">工程项目：</label>
+                  <div class="layui-input-inline">
+                    <select id="project" name="gcxm"></select>
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto">实验状态：</label>
+                  <div class="layui-input-inline">
+                    <select id="state" name="state">
+                      <!--                                        <option value=""> 请选择</option>-->
+                      <!--                                        <option value="0">进行中</option>-->
+                      <!--                                        <option value="1">校验中</option>-->
+                      <!--                                        <option value="2">校验未通过</option>-->
+                      <!--                                        <option value="3">已完成</option>-->
+                    </select>
+                  </div>
+                </div>
+
+                <div class="layui-inline">
+                  <label class="layui-form-label w-auto" style="min-width: 70px">关键字：</label>
+                  <div class="layui-input-inline">
+                    <input id="param" type="text" name="param" class="layui-input" placeholder="请输入关键字" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-setting-table bg-white mt-20">
+          <table class="layui-table" id="tableProject" lay-filter="tableProject" style="margin: 0"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 表格操作列 -->
+  <script type="text/html" id="tableBarProperty">
+      <button class="layui-btn layui-btn-xs table-btn btn-look" lay-event="look" {{# if(d.state <=0){ }} title="当前状态不支持查看" disabled {{# } }}><span class="btn-icon"></span>查看</button>
+      <button class="layui-btn layui-btn-xs table-btn btn-edit" lay-event="edit" {{# if(d.state ==1){ }} title="当前状态不支持查看" disabled {{# } }}><span class="btn-icon"></span>修改</button>
+      <button class="layui-btn layui-btn-xs table-btn btn-del" lay-event="del"><span class="btn-icon"></span>删除</button>
+    </script>
+
+  <!-- js部分 -->
+  <script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+  <script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+  <script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="../../assets/js/jquery.qrcode.min.js"></script>
+  <script type="text/javascript" src="../../assets/js/server.js"></script>
+  <script>
+    var zdId = localStorage.getItem("station");
+    var api_url = getServerUrl(zdId);
+    // api_url = "https://test.zgdrkj.cn/xinfeng";
+    if (window.sessionStorage.getItem("data")) {
+      window.sessionStorage.removeItem("data")
+    }
+    layui.use(["layer", "form", "table", "util", "laydate", "admin", "element", "upload"], function () {
+      var $ = layui.jquery;
+      var layer = layui.layer;
+      var form = layui.form;
+      var table = layui.table;
+      var laydate = layui.laydate;
+      var admin = layui.admin;
+      var element = layui.element;
+      var insTb = table.render({
+        elem: "#tableProject",
+        url: api_url + "/api/data/getSyListBy",
+        // url: 'http://47.114.106.162:8080/cangzhou/api/data/getSyListBy',
+        page: true,
+        cellMinWidth: 100,
+        cols: [
+          [
+            {
+              field: "syNumber",
+              align: "center",
+              title: "试验记录编号",
+            },
+            {
+              field: "project",
+              align: "center",
+              title: "试验项目",
+            },
+            {
+              field: "dateTime",
+              align: "center",
+              title: "试验日期",
+            },
+            {
+              field: "ypNumber",
+              align: "center",
+              title: "样品编号",
+            },
+            {
+              field: "xyName",
+              align: "center",
+              title: "校验人员",
+            },
+            {
+              align: "center",
+              toolbar: "#tableBarProperty",
+              title: "操作",
+              minWidth: 200,
+              fixed: "right",
+            },
+          ],
+        ],
+        request: {
+          pageName: "page", //页码的参数名称，默认：page
+          limitName: "pageSize", //每页数据量的参数名，默认：limit
+        },
+        where: {
+          startTime: $("#test-laydate-start").val(),
+          endTime: $("#test-laydate-end").val(),
+          // jyName: $("#userName").val(),
+          xyName: $("#xyName").val(),
+          state: $("#state").val(),
+          param: $("#param").val(),
+        },
+        response: {
+          countName: "count", //数据总数的字段名称，默认：count
+          dataName: "data", //数据列表的字段名称，默认：data
+        },
+        parseData: function (res) {
+          res["code"] = res["code"] === 200 ? 0 : null;
+          return {
+            data: res.data.data,
+            code: res.code,
+            count: res.data.count,
+          };
+        },
+      });
+
+      //查询
+      $("#btnSearch").on("click", (e) => {
+        insTb.reload({
+          where: {
+            startTime: $("#test-laydate-start").val(),
+            endTime: $("#test-laydate-end").val(),
+            // jyName: $("#userName").val(),
+            xyName: $("#xyName").val(),
+            state: $("#state").val(),
+            param: $("#param").val(),
+            project: $("#project").val()
+          },
+          page: {
+            curr: 1,
+          },
+        });
+      });
+
+      //日期
+      laydate.render({
+        elem: "#test-laydate-start",
+        trigger: "click",
+        format: "yyyy-MM-dd",
+        done: function (value, date, endDate) {
+          var startDate = new Date(value).getTime();
+          var endTime = new Date($("#test-laydate-end").val()).getTime();
+          if (endTime < startDate) {
+            layer.msg("开始时间不能大于结束时间");
+            $("#test-laydate-start").val($("#test-laydate-end").val());
+          }
+        },
+      });
+
+      laydate.render({
+        elem: "#test-laydate-end",
+        trigger: "click",
+        format: "yyyy-MM-dd",
+        done: function (value, date, endDate) {
+          var startDate = new Date($("#test-laydate-start").val()).getTime();
+          var endTime = new Date(value).getTime();
+          if (endTime < startDate) {
+            layer.msg("结束时间不能小于开始时间");
+            $("#test-laydate-end").val($("#test-laydate-start").val());
+          }
+        },
+      });
+
+      //客户操作
+      table.on("tool(tableProject)", function (obj) {
+        var data = obj.data;
+        var layEvent = obj.event;
+        if (layEvent === "del") {
+          layer.confirm(
+            "确定要删除实验记录“" + data.syNumber + "”吗？",
+            {
+              skin: "layui-layer-admin",
+              shade: 0.1,
+            },
+            function (i) {
+              console.log(data);
+              layer.close(i);
+              layer.load(2);
+              var del_data = {
+                syNumber: data.syNumber,
+              };
+              deleteSy(del_data, deleteSyCallback); //删除实验记录数据
+            }
+          );
+        } else if (layEvent === "edit") {
+          // showEditModel('录入实验记录表',data);
+          window.sessionStorage.setItem("data", JSON.stringify(data));
+          window.location.href = `add-data.html?editSyNumber=${data.syNumber}`;
+        } else if (layEvent === "look") {
+          var post_data = {};
+          post_data.syNumber = data.syNumber;
+          window.location.href = `${api_url}/api/data/downloadBgFile/${data.file}`;
+          // $.ajax({
+          //   url: `${api_url}/api/data/syExcel`,
+          //   type: "post",
+          //   data: JSON.stringify(post_data),
+          //   contentType: "application/json;utf-8",
+          //   dataType: "json",
+          //   success: function (res) {
+          //     if (res.code === 200) {
+          //       window.location.href = `${api_url}/api/data/downloadSyFile/${res.data}`;
+          //     } else {
+          //       layer.msg(res.msg);
+          //     }
+          //   },
+          // });
+        }
+      });
+
+      // 保存数据
+      form.on("submit(modelSubmitAddCustomer)", function (data) {
+        try {
+          var data_obj = data.field;
+          var submit_data = Object();
+          var syDataObj = Object();
+          var syDataStr = "syData_";
+          var sySbObj = Object();
+          var sySbStr = "sbName";
+          for (var i in data_obj) {
+            if (i.indexOf(syDataStr) !== -1) {
+              var key_name = i.replace(syDataStr, "");
+              syDataObj[key_name] = data_obj[i];
+            } else if (i.indexOf(sySbStr) !== -1) {
+              sySbObj[i] = data_obj[i];
+            } else {
+              submit_data[i] = data_obj[i];
+            }
+          }
+          var typeNumberObj = Object();
+          typeNumberObj[submit_data["typeNumber"]] = syDataObj;
+          submit_data["syData"] = typeNumberObj; //实验参数数据
+          submit_data["sySB"] = sySbObj; //实验设备
+          // var jyName = localStorage.getItem("username"); //获取当前登录的用户的名称
+          // if ($.trim(jyName) === "") {
+          //   jyName = "测试检验人员";
+          // }
+          // submit_data["jyName"] = jyName;
+          // console.log(submit_data);
+
+          var new_submit_data = Object();
+          if ($.trim(submit_data["syNumber"]) === "") {
+            //新增记录数据
+            for (var i in submit_data) {
+              if (i.indexOf("searchSySB") !== -1 || i.indexOf("syNumber") !== -1) {
+              } else {
+                new_submit_data[i] = submit_data[i];
+              }
+            }
+            putSy(new_submit_data, addPutSyCallback); //新增实验记录
+          } else {
+            //再次添加数据
+            //继续新增记录数据
+            for (var i in submit_data) {
+              if (i.indexOf("searchSySB") !== -1) {
+              } else {
+                new_submit_data[i] = submit_data[i];
+              }
+            }
+            putSy(new_submit_data, addMorePutSyCallback); //继续新增实验记录
+          }
+        } catch (e) {
+          console.log(e.message);
+        }
+        return false; //禁止刷新页面
+      });
+
+      //删除实验记录
+      function deleteSy(data, callback) {
+        console.log(data);
+        var url = api_url + "/api/data/deleteSy";
+        data = JSON.stringify(data);
+        var headers = {
+          "Content-Type": "application/json; charset=utf-8",
+        };
+        ajaxReq(url, "post", data, callback, headers);
+      }
+
+      //删除实验记录 回调函数
+      function deleteSyCallback(res) {
+        layer.closeAll("loading");
+        if (res.code === 200) {
+          layer.msg("数据删除成功", {
+            icon: 1,
+          });
+          insTb.reload();
+        } else {
+          layer.msg("数据删除失败，请稍后再试", {
+            icon: 2,
+          });
+        }
+      }
+
+      //新增实验记录
+      function putSy(data, callback) {
+        var url = api_url + "/api/data/putSy";
+        data = JSON.stringify(data);
+        console.log(data);
+        var headers = {
+          "Content-Type": "application/json; charset=utf-8",
+        };
+        ajaxReq(url, "post", data, callback, headers);
+      }
+
+      //新增实验记录 回调函数
+      function addPutSyCallback(res) {
+        console.log(res);
+        var data = res.data;
+        if (res.code === 200) {
+          $("#syNumber").val(data.syNumber);
+          layer.msg("数据新增成功", {
+            icon: 1,
+          });
+        } else {
+          layer.msg(res.msg, {
+            icon: 2,
+          });
+        }
+      }
+
+      //继续新增实验记录 回调函数
+      function addMorePutSyCallback(res) {
+        console.log(res);
+        var data = res.data;
+        if (res.code === 200) {
+          $("#syNumber").val(data.syNumber);
+          layer.msg("数据新增成功", {
+            icon: 1,
+          });
+        } else {
+          layer.msg(res.msg, {
+            icon: 2,
+          });
+        }
+      }
+
+      //清除实验编号
+      function clearSyNumber() {
+        $("#syNumber").val("");
+      }
+
+      userNameList(); //获取检验人员
+      //检验人员
+      function userNameList() {
+        var req_url = url + "/sysuser/getUserList";
+        var data = {
+          currentIndex: 1,
+          pageSize: 10,
+        };
+        ajaxReq(req_url, "get", data, userNameListCallback);
+      }
+
+      //检验人员 回调函数
+      function userNameListCallback(res) {
+        selectHtml(res.list, "#userName", "userName", "userName");
+        getProject(""); //初始化实验项目
+      }
+
+      //点击新增按钮
+      $("#btnAddProperty").on("click", () => {
+        // showEditModel("新增实验记录表",'');
+        // window.location.href="add-data.html"
+      });
+
+      //选择实验类别 获取实验项目
+      form.on("select(categoryName)", function (data) {
+        getProject(data.value);
+        form.render("select");
+      });
+
+      //实验类别
+      function categoryList() {
+        var url = api_url + "/api/data/getCategoryList";
+        ajaxReq(url, "get", {}, categoryListCallback);
+      }
+
+      //实验类别 回调函数
+      function categoryListCallback(res) {
+        selectHtml(res.data, "#categoryName", "categoryName", "categoryName");
+        getProject(""); //初始化实验项目
+      }
+
+      //选择实现项目 获取实验内容
+      form.on("select(projectName)", function (data) {
+        var categray = $("#categoryName").val();
+        getContent(data.value, categray);
+        form.render("select");
+      });
+
+      //实验项目
+      function getProject(category) {
+        var url = api_url + "/api/data/getProject";
+        var data = {
+          category: category,
+        };
+        ajaxReq(url, "get", data, getProjectCallback);
+      }
+
+      //实验项目 回调函数
+      function getProjectCallback(res) {
+        var data = res.data;
+        var format_data = Array();
+        for (var i in data) {
+          if (i.indexOf("projectName") !== -1 && $.trim(data[i]) !== "") {
+            format_data.push({ projectName: data[i] });
+          }
+        }
+        selectHtml(format_data, "#projectName", "projectName", "projectName");
+        getContent("", ""); //初始化实验内容
+        clearSyNumber(); //清除实验编号
+      }
+
+      //选择实现内容 获取实验内容的实验参数
+      form.on("select(contentName)", function (data) {
+        getData(data.value);
+        form.render("select");
+      });
+
+      //实验内容
+      function getContent(project, category) {
+        var url = api_url + "/api/data/getContent";
+        var data = {
+          project: project,
+          category: category,
+        };
+        ajaxReq(url, "get", data, getContentCallback);
+      }
+
+      //实验内容 回调函数
+      function getContentCallback(res) {
+        var data = res.data;
+        var format_data = Array();
+        for (var i in data) {
+          if (i.indexOf("content") !== -1 && $.trim(data[i]) !== "") {
+            format_data.push({ contentName: data[i] });
+          }
+        }
+        selectHtml(format_data, "#contentName", "contentName", "contentName");
+        getData(""); //初始化实验内容的实验参数
+        clearSyNumber(); //清除实验编号
+      }
+
+      //获取实验内容的实验参数
+      function getData(contentName) {
+        var url = api_url + "/api/data/getData";
+        var data = {
+          data: contentName,
+        };
+        //选择不同的录入表格
+        switch (contentName) {
+          case "坚固性":
+            data2Html(true, "#paramList");
+            break;
+          case "黏附性":
+            data3Html(true, "#paramList");
+            break;
+          case "聚合物改性沥青离析":
+            data4Html(true, "#paramList");
+            break;
+          case "粒子电荷":
+            data5Html(true, "#paramList");
+            break;
+          case "与粗集料的黏附性":
+            data6Html(true, "#paramList");
+            break;
+          case "破乳速度":
+            data7Html(true, "#paramList");
+            break;
+          default:
+            ajaxReq(url, "get", data, getDataCallback);
+            break;
+        }
+        return false;
+      }
+
+      //实验内容的实验参数 回调函数
+      function getDataCallback(res) {
+        var data = res.data;
+        var format_data = Array();
+        for (var i in data) {
+          if (i !== "id" && i !== "content" && $.trim(data[i]) !== "") {
+            format_data.push({ key_desc: data[i], key_name: i, value: "" }); //参数键值、参数值
+          }
+        }
+        //console.log(format_data);
+        data1Html(format_data, "#paramList", "key_desc", "key_name", "value");
+      }
+
+      //选择实验分组 获取已录入的实验内容
+      form.on("select(typeNumber)", function () {
+        getSyData();
+        form.render("select");
+      });
+
+      //实验参数
+      function getSyData() {
+        var url = api_url + "/api/data/getSyData";
+        var data = {
+          syNumber: $("#syNumber").val(),
+          category: $("#categoryName").val(),
+          project: $("#projectName").val(),
+          content: $("#contentName").val(),
+        };
+        ajaxReq(url, "get", data, getSyDataCallback);
+      }
+
+      //实验参数 回调函数
+      function getSyDataCallback(res) {
+        var typeNumber = $("#typeNumber").val();
+        if (res.code === 200) {
+          //等于200时获取返回的数据
+          var syData = res.data.syData; //获取已录入的参数
+
+          //展示录入了多少组
+          if ($.trim(syData) !== "") {
+            var count = 0;
+            for (var i in syData) {
+              count++;
+            }
+            //展示已录入了多少组数据
+            console.log(count);
+            $("#typeNumberCount").text(count).show();
+          }
+
+          //展示的具体数据
+          var syDataGroup = syData[typeNumber];
+          console.log(syDataGroup);
+          if ($.trim(syDataGroup) !== "") {
+            for (var i in syDataGroup) {
+              console.log(i);
+              var obj = $('input[name="syData_' + i + '"]');
+              if (obj.length > 0) {
+                obj.val(syDataGroup[i]);
+              }
+            }
+          } else {
+            $('input[name^="syData_"]').val(""); //清空数据
+          }
+        }
+      }
+
+      //请求数据
+      function ajaxReq(url, type, data = {}, callback, headers = {}) {
+        $.ajax({
+          headers: headers,
+          url: url,
+          type: type,
+          data: data,
+          success: function (res) {
+            callback(res);
+          },
+        });
+      }
+
+      //渲染 下拉选择框
+      function selectHtml(data, select_obj, option_val, option_name) {
+        var html = '<option value="">请选择</option>';
+        if ($.trim(data) !== "") {
+          for (var i in data) {
+            html += '<option value="' + data[i][option_val] + '">' + data[i][option_name] + "</option>";
+          }
+        }
+        $(select_obj).html(html);
+        layui.form.render("select");
+      }
+
+      //实验内容的实验参数
+      function data1Html(data, param_obj, key_desc, key_name, key_value) {
+        var html = "";
+        if ($.trim(data) !== "") {
+          for (var i in data) {
+            html +=
+              '     <div class="layui-form-item layui-row m-b-5">' +
+              '                <div class="layui-col-md6">' +
+              '                    <label class="layui-form-label"></label>' +
+              '                    <div class="layui-input-block">' +
+              '                        <label class="layui-input" title="' +
+              data[i][key_desc] +
+              '" style="line-height: 38px;">' +
+              data[i][key_desc] +
+              "</label>" +
+              "                    </div>" +
+              "                </div>" +
+              '                <div class="layui-col-md6">' +
+              '                    <label class="layui-form-label text-center text-muted">------</label>' +
+              '                    <div class="layui-input-block">' +
+              '                        <input name="syData_' +
+              data[i][key_name] +
+              '" placeholder="请输入' +
+              data[i][key_desc] +
+              '" value="' +
+              data[i][key_value] +
+              '" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+              "                    </div>" +
+              "                </div>" +
+              "            </div>";
+          }
+        }
+        $(param_obj).html(html);
+      }
+
+      //实验内容的实验参数
+      function data2Html(data, param_obj) {
+        var html = "";
+        if ($.trim(data) !== "") {
+          html +=
+            '<div class="data2">' +
+            '            <div class="layui-form-item layui-row m-b-5">' +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md12 p-10" style="background-color: #dddedf;">' +
+            '                            <div class="layui-col-md3 text-center" >' +
+            '                                <label class="grid-demo" title="公称粒级（方孔筛，mm）">公称粒级（方孔筛，mm）</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label class="grid-demo" title="各粒级实验前烘干量Mi(g)">各粒级实验前烘干量Mi(g)</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label class="grid-demo" title="溶液法实验后筛余颗粒的烘干质量mi(g)">溶液法实验后筛余颗粒的烘干质量mi(g)</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label title="各粒级的分计质量损失百比Qi(%)">各粒级的分计质量损失百比Qi(%)</label>' +
+            "                            </div>" +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="2.36 ~ 4.75">2.36 ~ 4.75</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gj2d4" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ry2d4" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gq2d4" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="4.75 ~ 9.5">4.75 ~ 9.5</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gj4d9" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ry4d9" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gq4d9" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="9.5 ~ 19">9.5 ~ 19</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gj9d19" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ry9d19" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gq9d19" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="19 ~ 37.5">19 ~ 37.5</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gj19d37" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ry19d37" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gq19d37" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="37.5 ~ 63">37.5 ~ 63</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gj37d63" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ry37d63" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gq37d63" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="63 ~ 75">63 ~ 75</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gj63d75" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ry63d75" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_gq63d75" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            "            </div>" +
+            "        </div>";
+        }
+        $(param_obj).html(html);
+      }
+
+      //实验内容的实验参数
+      function data3Html(data, param_obj) {
+        var html = "";
+        if ($.trim(data) !== "") {
+          html +=
+            '<div class="data3">' +
+            '            <div class="layui-form-item layui-row m-b-5">' +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md12 p-10" style="background-color: #dddedf;">' +
+            '                            <div class="layui-col-md6 text-center" >' +
+            '                                <label class="grid-demo">&nbsp;&nbsp;</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label class="grid-demo" title="水煮法">水煮法</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label class="grid-demo" title="水浸发">水浸发</label>' +
+            "                            </div>" +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="评定等级-第1粒">评定等级-第1粒</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_sz1" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_sq1" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="评定等级-第2粒">评定等级-第2粒</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_sz2" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_sq2" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="评定等级-第3粒">评定等级-第3粒</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_sz3" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_sq3" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="评定等级-第4粒">评定等级-第4粒</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_sz4" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_sq4" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="评定等级-第5粒">评定等级-第5粒</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_sz5" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_sq5" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="剥离面积百分率 分别鉴定">剥离面积百分率 分别鉴定</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_szb" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_sqb" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            "            </div>" +
+            "        </div>";
+        }
+        $(param_obj).html(html);
+      }
+
+      //实验内容的实验参数
+      function data4Html(data, param_obj) {
+        var html = "";
+        if ($.trim(data) !== "") {
+          html +=
+            '<div class="data4">' +
+            '            <div class="layui-form-item layui-row m-b-5">' +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md12 p-10" style="background-color: #dddedf;">' +
+            '                            <div class="layui-col-md6 text-center" >' +
+            '                                <label class="grid-demo">&nbsp;&nbsp;</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label class="grid-demo" title="SBS/SBR类">SBS/SBR类</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label class="grid-demo" title="PE/EVA类">PE/EVA类</label>' +
+            "                            </div>" +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="软化点实验-单值（顶部）">软化点实验-单值（顶部）</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ss1" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_pe1" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="软化点实验-单值（底部）">软化点实验-单值（底部）</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ss2" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_pe2" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="均匀的，无结皮和沉淀">均匀的，无结皮和沉淀</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ss3" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_pe3" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="在杯边缘有轻微的聚合物结皮">在杯边缘有轻微的聚合物结皮</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ss4" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_pe4" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="在整个表面有薄的聚合物结皮">在整个表面有薄的聚合物结皮</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ss5" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_pe5" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="在整个表面有厚的聚合物结皮（>0.8mm）">在整个表面有厚的聚合物结皮（>0.8mm）</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ss6" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_pe6" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="无表面结皮但容器底部有薄的沉淀">无表面结皮但容器底部有薄的沉淀</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ss7" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_pe7" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="无表面结皮但容器底部有厚的沉淀（>6mm）">无表面结皮但容器底部有厚的沉淀（>6mm）</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ss8" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_pe8" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            "            </div>" +
+            "        </div>";
+        }
+        $(param_obj).html(html);
+      }
+
+      //实验内容的实验参数
+      function data5Html(data, param_obj) {
+        var html = "";
+        if ($.trim(data) !== "") {
+          html +=
+            ' <div class="data5">' +
+            '            <div class="layui-form-item layui-row m-b-5">' +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md12 p-10" style="background-color: #dddedf;">' +
+            '                            <div class="layui-col-md6 text-center" >' +
+            '                                <label class="grid-demo" title="电极板情况">电极板情况</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label class="grid-demo" title="微粒子电荷性质">微粒子电荷性质</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label class="grid-demo" title="判断结果">判断结果</label>' +
+            "                            </div>" +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="负极板上吸附有大量沥青微粒，说明沥青微粒带正电荷">负极板上吸附有大量沥青微粒，说明沥青微粒带正电荷</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="阳离子乳化沥青（+）">阳离子乳化沥青（+）</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_r1" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md6">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="正极板上吸附有大量沥青微粒，说明沥青微粒带负电荷">正极板上吸附有大量沥青微粒，说明沥青微粒带负电荷</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="阴离子乳化沥青（-）">阴离子乳化沥青（-）</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_r2" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            "            </div>" +
+            "        </div>";
+        }
+        $(param_obj).html(html);
+      }
+
+      //实验内容的实验参数
+      function data6Html(data, param_obj) {
+        var html = "";
+        if ($.trim(data) !== "") {
+          html +=
+            '<div class="data6">' +
+            '            <div class="layui-form-item layui-row m-b-5">' +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md12 p-10" style="background-color: #dddedf;">' +
+            '                            <div class="layui-col-md4 text-center" >' +
+            '                                <label class="grid-demo">&nbsp;&nbsp;</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md4 text-center">' +
+            '                                <label class="grid-demo" title="阳离子乳化沥青">阳离子乳化沥青</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md4 text-center">' +
+            '                                <label class="grid-demo" title="阴离子乳化沥青或非离子乳化沥青">阴离子乳化沥青或非离子乳化沥青</label>' +
+            "                            </div>" +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md4">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="集料规格(mm)">集料规格(mm)</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md4">' +
+            '                            <input name="syData_ylz" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md4">' +
+            '                            <input name="syData_yz" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md4">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="第1粒">第1粒</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md4">' +
+            '                            <input name="syData_ylzOne" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md4">' +
+            '                            <input name="syData_yzOne" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md4">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="第2粒">第2粒</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md4">' +
+            '                            <input name="syData_ylzTwo" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md4">' +
+            '                            <input name="syData_yzTwo" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md4">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="第3粒">第3粒</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md4">' +
+            '                            <input name="syData_ylzThree" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md4">' +
+            '                            <input name="syData_yzThree" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md4">' +
+            '                            <label class="layui-input" style="line-height: 38px;" title="第4粒">第4粒</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md4">' +
+            '                            <input name="syData_ylzFour" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md4">' +
+            '                            <input name="syData_yzFour" placeholder="" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            "            </div>" +
+            "        </div>";
+        }
+        $(param_obj).html(html);
+      }
+
+      //实验内容的实验参数
+      function data7Html(data, param_obj) {
+        var html = "";
+        if ($.trim(data) !== "") {
+          html +=
+            '<div class="data7">' +
+            '            <div class="layui-form-item layui-row m-b-5">' +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md12 p-10" style="background-color: #dddedf;">' +
+            '                            <div class="layui-col-md3 text-center" >' +
+            '                                <label class="grid-demo" title="A组矿料拌和结果">A组矿料拌和结果</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label class="grid-demo" title="B组矿料拌和结果">B组矿料拌和结果</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label class="grid-demo" title="破乳速度">破乳速度</label>' +
+            "                            </div>" +
+            '                            <div class="layui-col-md3 text-center">' +
+            '                                <label class="grid-demo" title="试验结果">试验结果</label>' +
+            "                            </div>" +
+            "" +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="height: 77px;" title="混合料呈松散状态，一部分矿料颗粒未裹覆沥青，沥青分布不够均匀，有些凝聚成固块">混合料呈松散状态，一部分矿料颗粒未裹覆沥青，沥青分布不够均匀，有些凝聚成固块</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="height: 77px;" title="乳液中的沥青拌和后立即凝聚成团块，不能拌和">乳液中的沥青拌和后立即凝聚成团块，不能拌和</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="height: 77px;" title="快裂RS">快裂RS</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_rs" placeholder="" style="height: 77px;"  type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="height: 77px;" title="混合料混合均匀">混合料混合均匀</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="height: 77px;" title="混合料呈松散状态，沥青分布不均，并可见凝聚的团块">混合料呈松散状态，沥青分布不均，并可见凝聚的团块</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="height: 77px;" title="中裂MS">中裂MS</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ms" placeholder="" style="height: 77px;" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            '                <div class="layui-col-md12">' +
+            '                    <div class="layui-input-block">' +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="height: 77px;">&nbsp;&nbsp;</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="height: 77px;" title="混合料呈糊状，沥青乳液分布均匀">混合料呈糊状，沥青乳液分布均匀</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <label class="layui-input" style="height: 77px;" title="慢裂SS">慢裂SS</label>' +
+            "                        </div>" +
+            '                        <div class="layui-col-md3">' +
+            '                            <input name="syData_ss" placeholder="" style="height: 77px;" type="text" class="layui-input" lay-verType="tips" lay-verify="required" required/>' +
+            "                        </div>" +
+            "                    </div>" +
+            "                </div>" +
+            "            </div>" +
+            "        </div>";
+        }
+        $(param_obj).html(html);
+      }
+
+      stateSelect(); //实验状态列表
+
+      // 获取项目选择
+      function projData(lurl, dom) {
+        $.ajax({
+          url: lurl,
+          type: "get",
+          data: { "idzhandian": localStorage.getItem("station_id") },
+          success: function (res) {
+            var data = res;
+            var html = '<option value="">请选择</option>';
+            data.forEach(function (item) {
+              html += '<option value="' + item.project_name + '">' + item.project_name + "</option>";
+            });
+            $(dom).html(html);
+            layui.form.render("select");
+          },
+        });
+      }
+
+      projData(url + "production/getProjectList", "#project");
+
+      //渲染 状态列表
+      function stateSelect() {
+        var state_list = stateList();
+        var html = '<option value=""> 请选择</option>';
+        for (var i in state_list) {
+          html += '<option value="' + i + '">' + state_list[i] + "</option>";
+        }
+        $("#state").html(html);
+      }
+
+      //实验状态
+      function stateList(state) {
+        var stateObj = {
+          0: "进行中",
+          1: "录入结束",
+          2: "已完成",
+        };
+        if ($.trim(state) === "") {
+          return stateObj;
+        }
+        state = parseInt(state);
+        if ($.trim(stateObj[state]) !== "") {
+          return stateObj[state];
+        }
+        return state;
+      }
+
+      //结束实验
+      $("body").on("click", "#finishSy", function () {
+        var syNumber = $("#syNumber").val();
+        if ($.trim(syNumber) === "") {
+          $("#syNumber").focus();
+          layer.msg("请先输入有效的实验编号", {
+            icon: 2,
+          });
+          return false;
+        }
+        var data = {
+          syNumber: syNumber,
+        };
+        finishSy(data, finishSyCallback);
+      });
+
+      //结束实验数据的录入
+      function finishSy(data, callback) {
+        console.log(data);
+        var url = api_url + "/api/data/finishSy";
+        data = JSON.stringify(data);
+        var headers = {
+          "Content-Type": "application/json; charset=utf-8",
+        };
+        ajaxReq(url, "post", data, callback, headers);
+      }
+
+      //结束实验数据的录入的回调函数
+      function finishSyCallback(res) {
+        layer.closeAll("loading");
+        if (res.code === 200) {
+          layer.msg("实验结束成功", {
+            icon: 1,
+          });
+          insTb.reload();
+        } else {
+          layer.msg(res.msg, {
+            icon: 2,
+          });
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

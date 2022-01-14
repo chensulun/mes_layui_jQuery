@@ -1,0 +1,1673 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>参数设置</title>
+		<link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+		<link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+		<link rel="stylesheet" href="../../assets/css/common_likui.css?v=314" />
+		<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style>
+			.search-container {
+            height: 144px;
+            padding: 57px 0 57px 100px;
+            box-sizing: border-box;
+        }
+        .search-container .layui-form-radio { 
+            margin: 0 30px 0 0 ;
+        }
+        .project-setting-table {
+            padding: 30px 20px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0;
+        }
+        .form-title {
+          padding-left: 20px;
+        }
+        .form-title {
+          color: #56b69c;
+        }
+    </style>
+	</head>
+	<body>
+
+		<!-- 页面加载loading -->
+		<div class="page-loading">
+			<div class="ball-loader">
+				<span></span><span></span><span></span><span></span>
+			</div>
+		</div>
+
+		<!-- 正文开始 -->
+		<div class="layui-fluid">
+			<div class="layui-card" style="background-color: initial;">
+				<div class="layui-card-body">
+					<div class="layui-form toolbar">
+						<div class="layui-form-item">
+							<div class="search-container bg-white">
+								<div class="layui-inline">
+									<label class="layui-form-label w-auto">站点:</label>
+									<div class="layui-input-inline mr0" style="width: 140px;">
+										<select name="allauditstate" id="zd_list" class="zd_list" lay-verType="zd" lay-filter="demo">
+										</select>
+									</div>
+								</div>
+								<div class="layui-inline">
+									<label class="layui-form-label w-auto">设备名称:</label>
+									<div class="layui-input-inline mr0" style="width: 140px;">
+										<select name="allauditstate" id="sb_list" class="sb_list" lay-verType="sb">
+										</select>
+									</div>
+								</div>
+								<div class="layui-inline" style="margin-right: 15px;">
+									<button id="btnSearch" class="layui-btn layui-btn-green3">查询</button>
+								</div>
+								<div class="layui-inline" style="margin-right: 15px;">
+									<a id="btnAddProject" class="layui-btn layui-btn-red">新增</a>
+								</div>
+								<div class="layui-inline" style="margin-right: 15px;">
+									<a id="btnAddProjectType" class="layui-btn layui-btn-red">新增混合料</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="project-setting-table bg-white mt-20">
+						<div class="layui-tab layui-tab-brief" lay-filter="projectSetting">
+							<ul class="layui-tab-title">
+								<li class="layui-this">参数信息</li>
+								<li>混合料类型</li>
+							</ul>
+							<div class="layui-tab-content">
+								<div class="layui-tab-item layui-show">
+									<table class="layui-table" id="tableProject" lay-filter="tableProject"></table>
+								</div>
+								<div class="layui-tab-item">
+									<table class="layui-table" id="tableProjectType" lay-filter="tableProjectType"></table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- 表格操作列 -->
+		<script type="text/html" id="tableBarProject">
+			<a class="layui-btn layui-btn-xs table-btn btn-look" lay-event="look"><span class="btn-icon"></span>查看</a>
+		    <a class="layui-btn layui-btn-xs table-btn btn-edit" lay-event="edit"><span class="btn-icon"></span>修改</a>
+		    <a class="layui-btn layui-btn-xs table-btn btn-del" lay-event="del"><span class="btn-icon"></span>删除</a>
+		</script>
+		<script type="text/html" id="tableBarProjectType">
+			<a class="layui-btn layui-btn-xs table-btn btn-look" lay-event="typelook"><span class="btn-icon"></span>查看</a>
+		    <a class="layui-btn layui-btn-xs table-btn btn-edit" lay-event="typeedit"><span class="btn-icon"></span>修改</a>
+		    <a class="layui-btn layui-btn-xs table-btn btn-del" lay-event="typedel"><span class="btn-icon"></span>删除</a>
+		</script>
+
+		<script type="text/html" id="modelHHLType">
+			<form id="modelHHLTypeForm" lay-filter="modelHHLTypeForm" class="layui-form model-form">
+			<div class="layui-form-item layui-row">
+				<div class="layui-col-md12">
+				    <label class="layui-form-label">混合料类型</label>
+				    <div class="layui-input-block">
+						<input type="hidden" id="hhlid" />
+				        <input name="hhl_name" id="hhl_name" placeholder="请输入混合料类型" type="text" class="layui-input"
+				               lay-verType="tips" lay-verify="required" required/>
+				    </div>
+				</div>
+		        <div class="layui-form-item text-center p-30">
+		            <button id="btn_hhltype" class="layui-btn layui-btn-primary mr-10" type="button" lay-filter="modelSubmitAddhhlType" lay-submit>保存</button>
+		            <button class="layui-btn" type="button" ew-event="closePageDialog">取消</button>
+		        </div>
+			</div>
+			</form>
+		</script>
+
+		<script type="text/html" id="modelParams">
+			<form id="modelParamsForm" lay-filter="modelParamsForm" class="layui-form model-form">
+        <div class="form-title">参数信息</div>
+		<input type="hidden" name="id" id="id" />
+        <div class="layui-row">
+          <div class="layui-col-sm3">
+            <div class="layui-form-item">
+              <label class="layui-form-label">站点</label>
+              <div class="layui-input-block">
+                <select name="zd" id="add_zd_list" class="zd_list" lay-verType="tips" lay-filter="newdemo">
+                    <option value="">请选择</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-sm3">
+            <div class="layui-form-item">
+              <label class="layui-form-label">设备名称</label>
+              <div class="layui-input-block">
+                <select name="zd" id="add_sb_list" class="sb_list" lay-verType="tips">
+                    <option value="">请选择</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-sm3">
+            <div class="layui-form-item">
+              <label class="layui-form-label">混合料类型</label>
+              <div class="layui-input-block">
+                <select name="zd" id="add_hhl_list" class="sb_list" lay-verType="tips">
+                    <option value="">请选择</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-sm3">
+            <div class="layui-form-item">
+              <label class="layui-form-label">异常程度</label>
+              <div class="layui-input-block">
+                <select name="zd" id="yccd_list" class="yccd_list" lay-verType="tips">
+						<option value="一般">一般</option>
+						<option value="严重">严重</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-title">报警类型</div>
+        <div style="padding-left: 20px;">
+          <div class="form-title">配比</div>
+          <div class="layui-row" id="pb-container">
+            <div class="pb-item">
+              <div class="layui-col-sm4">
+                <div class="layui-form-item">
+                  <label class="layui-form-label">材料名称</label>
+                  <div class="layui-input-block">
+                      <input name="setting_name" type="text"" lay-verType="tips" lay-verify="required"  placeholder="请输入" class="layui-input"/>
+                  </div>
+                </div>
+              </div>
+              <div class="layui-col-sm2">
+                <div class="layui-form-item" style="text-align: center;">
+                  <div class="layui-inline">
+                    <input name="bg_size" type="text" placeholder="请输入" class="layui-input" style="width: 70px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="ed_size" type="text" placeholder="请输入" class="layui-input" style="width: 70px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+				  
+				  <div class="layui-inline">
+				  </div>
+                </div>
+              </div>
+              <div class="layui-col-sm3">
+				  <div class="layui-form-item" style="text-align: left;">
+				  <label>判断类型</label>
+                  <div class="layui-inline">
+					<select name="pb_sg" lay-verType="tips" lay-filter="newdemo">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+				  </div>
+              </div>
+              <div class="layui-col-sm2" style="margin-left:20px;">
+                <a class="layui-btn layui-btn-yellow" onclick="deletePb(this)">删除</a>
+              </div>
+            </div>
+          </div>
+          <div class="layui-row">
+            <div class="layui-col-sm5">
+              <label class="layui-form-label"></label>
+              <div class="layui-input-block">
+                  <button type="button" id="addPb" class="layui-btn layui-btn-green3">新增</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-title">温度</div>
+          <div class="layui-row" name="wd_list">
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="wd_name">骨料</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="wd_bg" id="wd_glbg" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="wd_ed" id="wd_gled" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;" name="yccz">
+					<select name="wd_sg"  id="wd_glsg" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="wd_name">RAP</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="wd_bg" id="wd_rapbg" type="text" placeholder="请输入" class="layui-input" style="width: 60px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="wd_ed" id="wd_raped" type="text" placeholder="请输入" class="layui-input" style="width: 60px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;" name="yccz">
+					<select name="wd_sg" id="wd_rapsg" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="wd_name">混合料出料</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="wd_bg" id="wd_hhlclbg" type="text" placeholder="请输入" class="layui-input" style="width: 60px;" lay-verType="tips" lay-verify="required" required  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="wd_ed" id="wd_hhlcled" type="text" placeholder="请输入" class="layui-input" style="width: 60px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;" name="yccz">
+					<select name="wd_sg" id="wd_hhlclsg" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-title">油石比</div>
+          <div class="layui-row" name="ysb_list">
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="ysb_name">油石比</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="ysb_bg" id="ysb_bg" type="text" placeholder="请输入" class="layui-input" style="width: 110px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="ysb_ed" id="ysb_ed" type="text" placeholder="请输入" class="layui-input" style="width: 110px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                </div>
+              </div>
+            </div>
+			<div class="layui-col-sm4" name="yccz">
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">判断类型</label>
+				<div class="layui-input-block">
+				  					<select name="ysb_sg" id="ysb_sg" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+				  					</select>
+									 </div>
+				  </div>
+			    </div>
+			  </div>
+			</div>
+          <div class="layui-row">
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">是否语音播报</label>
+                <div class="layui-input-block" style="margin-left: 120px;">
+                  <input type="radio" name="sex" value="是" title="是">
+                  <input type="radio" name="sex" value="否" title="否" checked>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item text-center">
+            <button class="layui-btn layui-btn-primary mr-10" lay-filter="modelSubmitUser" lay-submit>保存</button>
+            <button class="layui-btn" type="button" id="btn_cancel" ew-event="closePageDialog">取消</button>
+        </div>
+    </form>
+</script>
+
+		<!-- 弹窗-新增客户 -->
+		<script type="text/html" id="modelczParams">
+			<form id="modelczParamsForm" lay-filter="modelczParamsForm" class="layui-form model-form">
+        <div class="form-title">参数信息</div>
+		<input type="hidden" name="czid" id="czid" />
+        <div class="layui-row">
+          <div class="layui-col-sm3">
+            <div class="layui-form-item">
+              <label class="layui-form-label">站点</label>
+              <div class="layui-input-block">
+                <select name="zd" id="add_czzd_list" class="czzd_list" lay-verType="tips" lay-filter="newdemo">
+                    <option value="">请选择</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-sm3">
+            <div class="layui-form-item">
+              <label class="layui-form-label">设备名称</label>
+              <div class="layui-input-block">
+                <select name="zd" id="add_czsb_list" class="czsb_list" lay-verType="tips">
+                    <option value="">请选择</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-sm3">
+            <div class="layui-form-item">
+              <label class="layui-form-label">混合料类型</label>
+              <div class="layui-input-block">
+                <select name="zd" id="add_czhhl_list" class="czhhl_list" lay-verType="tips">
+                    <option value="">请选择</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-sm3">
+            <div class="layui-form-item">
+              <label class="layui-form-label">异常程度</label>
+              <div class="layui-input-block">
+                <select name="zd" id="czyccd_list" class="czyccd_list" lay-verType="tips">
+						<option value="一般">一般</option>
+						<option value="严重">严重</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-title">报警类型</div>
+        <div>
+          <div class="form-title">配比</div>
+          <div class="layui-row" name="czpb_list">
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czcl_name">仓1</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czcl_pbbg" id="cl_bg1" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czcl_pbed" id="cl_ed1" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;">
+					<select name="czcl_pbbl"  id="cl_bl1" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czcl_name">仓2</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czcl_pbbg" id="cl_bg2" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czcl_pbed" id="cl_ed2" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;">
+					<select name="czcl_pbbl"  id="cl_bl2" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czcl_name">仓3</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czcl_pbbg" id="cl_bg3" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czcl_pbed" id="cl_ed3" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;">
+					<select name="czcl_pbbl"  id="cl_bl3" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+			  
+            </div>
+          </div>
+        <div>
+          <div class="layui-row" name="czpb_list">
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czcl_name">仓4</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czcl_pbbg" id="cl_bg4" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czcl_pbed" id="cl_ed4" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;">
+					<select name="czcl_pbbl"  id="cl_bl4" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czcl_name">仓5</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czcl_pbbg" id="cl_bg5" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czcl_pbed" id="cl_ed5" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;">
+					<select name="czcl_pbbl"  id="cl_bl5" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czcl_name">仓6</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czcl_pbbg" id="cl_bg6" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czcl_pbed" id="cl_ed6" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;">
+					<select name="czcl_pbbl"  id="cl_bl6" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+			  
+            </div>
+        </div>
+        <div>
+          <div class="layui-row" name="czpb_list">
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czcl_name">仓7</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czcl_pbbg" id="cl_bg7" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czcl_pbed" id="cl_ed7" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;">
+					<select name="czcl_pbbl"  id="cl_bl7" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czcl_name">回收料</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czcl_pbbg" id="clhsl_bg" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czcl_pbed" id="clhsl_ed" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;">
+					<select name="czcl_pbbl"  id="clhsl_bl" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czcl_name">粉料1</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czcl_pbbg" id="clfl_bg1" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czcl_pbed" id="clfl_ed1" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;">
+					<select name="czcl_pbbl"  id="clfl_bl1" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+		</div>
+        </div>  
+		  <div>
+          <div class="layui-row" name="czpb_list">
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czcl_name">粉料2</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czcl_pbbg" id="clfl_bg2" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czcl_pbed" id="clfl_ed2" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;">
+					<select name="czcl_pbbl"  id="clfl_bl2" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+			  
+			    <div class="layui-col-sm4">
+			      <div class="layui-form-item">
+			        <label class="layui-form-label" name="czcl_name">回收粉</label>
+			        <div class="layui-input-block">
+			          <div class="layui-inline">
+			            <input name="czcl_pbbg" id="clhsf_bg" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+			          </div>
+			          -
+			          <div class="layui-inline">
+			            <input name="czcl_pbed" id="clhsf_ed" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+			          </div>
+			          <div class="layui-inline" style="width: 75px;">
+			  					<select name="czcl_pbbl"  id="clhsf_bl" lay-verType="tips">
+			  						<option value="LEFT">重量</option>
+			  						<option value="RIGHT">比例</option>
+			  					</select>
+			          </div>
+			          </div>
+			        </div>
+			      </div>
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czcl_name">沥青</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czcl_pbbg" id="cllq_bg" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czcl_pbed" id="cllq_ed" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;">
+					<select name="czcl_pbbl"  id="cllq_bl" lay-verType="tips">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+		  </div>
+          <div class="form-title">油石比</div>
+          <div class="layui-row" name="czysb_list">
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czysb_name">油石比</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czysb_bg" id="czysb_bg" type="text" placeholder="请输入" class="layui-input" style="width: 110px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czysb_ed" id="czysb_ed" type="text" placeholder="请输入" class="layui-input" style="width: 110px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                </div>
+              </div>
+            </div>
+			<div class="layui-col-sm4" style="width: 75px;display:none;">
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">判断类型</label>
+				<div class="layui-input-block">
+				  					<select name="czysb_sg" id="czysb_sg" lay-verType="tips">
+						<option value="RIGHT">比例</option>
+				  					</select>
+									 </div>
+				  </div>
+			    </div>
+			  </div>
+          <div class="form-title">温度</div>
+          <div class="layui-row" name="czwd_list">
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czwd_name">骨料</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czwd_bg" id="czwd_glbg" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;"  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czwd_ed" id="czwd_gled" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 60px;" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;display:none;">
+					<select name="czwd_sg"  id="czwd_glsg" lay-verType="tips">
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czwd_name">RAP</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czwd_bg" id="czwd_rapbg" type="text" placeholder="请输入" class="layui-input" style="width: 60px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czwd_ed" id="czwd_raped" type="text" placeholder="请输入" class="layui-input" style="width: 60px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;display:none;">
+					<select name="czwd_sg" id="czwd_rapsg" lay-verType="tips">
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" name="czwd_name">混合料出料</label>
+                <div class="layui-input-block">
+                  <div class="layui-inline">
+                    <input name="czwd_bg" id="czwd_hhlclbg" type="text" placeholder="请输入" class="layui-input" style="width: 60px;" lay-verType="tips" lay-verify="required" required  />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="czwd_ed" id="czwd_hhlcled" type="text" placeholder="请输入" class="layui-input" style="width: 60px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                  <div class="layui-inline" style="width: 75px;display:none;">
+					<select name="czwd_sg" id="czwd_hhlclsg" lay-verType="tips">
+						<option value="RIGHT">比例</option>
+					</select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="layui-row">
+            <div class="layui-col-sm4">
+              <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">是否语音播报</label>
+                <div class="layui-input-block" style="margin-left: 120px;">
+                  <input type="radio" name="czsex" value="是" title="是">
+                  <input type="radio" name="czsex" value="否" title="否" checked>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item text-center">
+            <button class="layui-btn layui-btn-primary mr-10" lay-filter="modelczSubmitUser" lay-submit>保存</button>
+            <button class="layui-btn" type="button" id="czbtn_cancel" ew-event="closePageDialog">取消</button>
+        </div>
+    </form>
+</script>
+		<!-- js部分 -->
+		<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+		<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+		<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+		<script>
+			function bindShebeiList(zd_id, sb_id) {
+				$.ajax({
+					type: "get",
+					url: url + '/zhandian/getSheBeiList',
+					data: {
+						zd_id: $("#" + zd_id).val()
+					},
+					async: false,
+					success: function(res) {
+						var html = '';
+						$.each(res.list, function(index, item) {
+							html += ' <option value="' + item.id + '">' + item.shebei_name + '</option>';
+						})
+						$("#" + sb_id).html(html);
+						layui.form.render("select");
+					}
+				})
+			}
+
+			function bindzdList(zd_id) {
+				$.ajax({
+					type: "get",
+					url: url + '/zhandian/getZhandian',
+					data: {
+						pageIndex: 1,
+						pageSize: 999
+					},
+					async: false,
+					success: function(res) {
+						var html = '';
+						if (zd_id == "zd_list") {
+							html += ' <option value="">请选择</option>';
+						}
+						$.each(res.list, function(index, item) {
+							html += ' <option value="' + item.idzhandian + '">' + item.zdname + '</option>';
+						})
+						$("#" + zd_id).html(html);
+						layui.form.render("select");
+					}
+				})
+			}
+
+			function bindhhlList() {
+				$.ajax({
+					type: "get",
+					url: url + '/setting/getallhhlList',
+					data: {
+						zd_id: localStorage.getItem("station_id")
+					},
+					async: false,
+					success: function(res) {
+						var html = '';
+						html += ' <option value="">请选择</option>';
+						$.each(res.list, function(index, item) {
+							html += ' <option value="' + item.hhl_name + '">' + item.hhl_name + '</option>';
+						})
+						$("#add_hhl_list").html(html);
+						$("#add_czhhl_list").html(html);
+						layui.form.render("select");
+					}
+				})
+			}
+			layui.use(['layer', 'form', 'table', 'util', 'laydate', 'admin', 'element'], function() {
+				var $ = layui.jquery;
+				var layer = layui.layer;
+				var form = layui.form;
+				var table = layui.table;
+				var util = layui.util;
+				var laydate = layui.laydate;
+				var admin = layui.admin;
+				var element = layui.element;
+				var insTb = table.render({
+					elem: '#tableProject',
+					url: url + '/setting/getList',
+					page: true,
+					limits: [2, 10, 100],
+					limit: 10, //每页默认显示的数量
+					cellMinWidth: 100,
+					cols: [
+						[{
+								field: 'zhandian_name',
+								align: 'center',
+								title: '站点'
+							},
+							{
+								field: 'shebei_name',
+								align: 'center',
+								title: '设备类型'
+							},
+							{
+								field: 'hhl_type',
+								align: 'center',
+								title: '混合材料型'
+							},
+							{
+								field: 'st_details',
+								align: 'center',
+								title: '材料'
+							},
+							{
+								field: 'is_yybj',
+								align: 'center',
+								title: '是否语音报警',
+								templet: function(data) {
+									return data.is_yybj == 0 ? "否" : "是"
+								}
+							},
+							{
+								field: 'yccd',
+								align: 'center',
+								title: '异常程度'
+							},
+							{
+								align: 'center',
+								toolbar: '#tableBarProject',
+								title: '操作',
+								minWidth: 160,
+								fixed: 'right'
+							}
+						]
+					],
+					request: {
+						pageName: 'pageIndex', //页码的参数名称，默认：page
+						limitName: 'pageSize' //每页数据量的参数名，默认：limit
+					},
+					where: {
+						sb_id: $('#sb_list').val(),
+						zd_id: $('#zd_list').val()
+					},
+					response: {
+						countName: 'totalCount', //数据总数的字段名称，默认：count
+						dataName: 'list' //数据列表的字段名称，默认：data
+					}
+				});
+
+				var insTb1 = table.render({
+					elem: '#tableProjectType',
+					url: url + '/setting/getHHLTypeList',
+					page: true,
+					cellMinWidth: 100,
+					cols: [
+						[{
+								field: 'hhl_name',
+								align: 'center',
+								title: '类型名称'
+							},
+							{
+								field: 'create_date',
+								align: 'center',
+								title: '创建时间'
+							},
+							{
+								align: 'center',
+								toolbar: '#tableBarProjectType',
+								title: '操作',
+								minWidth: 200,
+								fixed: 'right'
+							}
+						]
+					],
+					request: {
+						pageName: 'pageIndex', //页码的参数名称，默认：page
+						limitName: 'pageSize' //每页数据量的参数名，默认：limit
+					},
+					where: {
+						zd_id: localStorage.getItem("station_id")
+					},
+					response: {
+						countName: 'totalCount', //数据总数的字段名称，默认：count
+						dataName: 'list' //数据列表的字段名称，默认：data
+					}
+				});
+				form.on('select(demo)', function(data) {
+					bindShebeiList("zd_list", "sb_list");
+				});
+				bindzdList("zd_list");
+				bindShebeiList("zd_list", "sb_list");
+				//查询
+				$('#btnSearch').on('click', (e) => {
+					insTb.reload({
+						where: {
+							sb_id: $('#sb_list').val(),
+							zd_id: $('#zd_list').val()
+						},
+						page: {
+							curr: 1
+						}
+					});
+				});
+
+				// 显示表单弹窗
+				function showEditModel(mUser, oType) {
+					admin.open({
+						type: 1,
+						area: '1200px',
+						title: (mUser ? '修改' : '新增') + '参数',
+						content: $('#modelParams').html(),
+						success: function(layero, dIndex) {
+							// 获取下拉列表数据
+							// getRoleList(mUser);
+							form.on('select(newdemo)', function(data) {
+								bindShebeiList("add_zd_list", "add_sb_list");
+							});
+							bindzdList("add_zd_list");
+							bindShebeiList("add_zd_list", "add_sb_list");
+							bindhhlList();
+							if (projectName == 'cangzhou') {
+								$("[name='yccz']").hide();
+							}
+							if (mUser != null) {
+								$.ajax({
+									type: "get",
+									url: url + '/setting/getSettingDetails',
+									data: {
+										setting_id: mUser.id
+									},
+									async: false,
+									success: function(res) {
+										var data = res.data;
+										$("#add_zd_list").val(data.zd_id);
+										bindShebeiList("add_zd_list", "add_sb_list");
+										$("#add_sb_list").val(data.sb_id);
+										$("#add_hhl_list").val(data.hhl_type);
+										$("#yccd_list").val(data.yccd);
+										$("#id").val(data.id);
+										$("input[name='sex'][value=" + (data.is_yybj == "1" ? "是" : "否") + "]").attr("checked", true)
+										var html = '';
+										var Arra = new Array();
+										var details = data.list.sort(function(a, b) {
+											if (a.sort < b.sort) return 1 //交换位置
+											if (a.sort > b.sort) return -1 //不要交换位置
+
+										});
+
+										$('#pb-container').empty();
+										$.each(details, function(index, item) {
+											Arra[index] = index;
+											if (item.setting_type == "配比") {
+												var str =
+													`<div class="pb-item">
+		 				  <div class="layui-col-sm4">
+		 				    <div class="layui-form-item">
+		 				      <label class="layui-form-label">材料名称</label>
+		 				      <div class="layui-input-block">
+		 				          <input name="setting_name" type="text" placeholder="请输入" class="layui-input" value="${item.setting_name}" lay-verType="tips" lay-verify="required" required />
+		 				      </div>
+		 				    </div>
+		 				  </div>
+		 				  <div class="layui-col-sm2">
+		 				    <div class="layui-form-item" style="text-align: center;">
+		 				      <div class="layui-inline">
+		 				        <input name="bg_size" type="text" placeholder="请输入" class="layui-input" style="width: 70px;" value="${item.bg_size}" lay-verType="tips" lay-verify="required" required />
+		 				      </div>
+		 				      -
+		 				      <div class="layui-inline">
+		 				        <input name="ed_size" type="text" placeholder="请输入" class="layui-input" style="width: 70px;" value="${item.ed_size}" lay-verType="tips" lay-verify="required" required />
+		 				      </div>
+		 					  
+		 					  <div class="layui-inline">
+		 					  </div>
+		 				    </div>
+		 				  </div>`;
+
+												str += '<div class="layui-col-sm3">';
+												str += '<div class="layui-form-item" style="text-align: left;">';
+												str += '<label>判断类型</label>';
+												str += '<div class="layui-inline">';
+												str += '<select name="pb_sg" id="' + item.id + '" lay-verType="tips" lay-filter="newdemo">';
+												str += '<option value="LEFT">重量</option>';
+												str += '<option value="RIGHT">比例</option>';
+												str += '</select>';
+												str += '</div>';
+												str += '</div>';
+												str += '</div>';
+												str +=
+													`<div class="layui-col-sm2" style="margin-left:20px;">
+		 				    <a class="layui-btn layui-btn-yellow" name="detail_cancel" onclick="deletePb(this)">删除</a>
+		 				  </div>`;
+												str += '</div>';
+												$('#pb-container').append(str);
+												$("#" + item.id).val(item.settingGroup);
+											}
+											if (item.setting_type == "温度") {
+												switch (item.setting_name) {
+													case ("骨料"):
+														$("#wd_glbg").val(item.bg_size);
+														$("#wd_gled").val(item.ed_size);
+														$("#wd_glsg").val(item.settingGroup);
+														break;
+													case ("RAP"):
+														$("#wd_rapbg").val(item.bg_size);
+														$("#wd_raped").val(item.ed_size);
+														$("#wd_rapsg").val(item.settingGroup);
+														break;
+													case ("混合料出料"):
+														$("#wd_hhlclbg").val(item.bg_size);
+														$("#wd_hhlcled").val(item.ed_size);
+														$("#wd_hhlclsg").val(item.settingGroup);
+														break;
+													default:
+														break;
+												}
+											}
+											if (item.setting_type == "油石比") {
+												$("#ysb_bg").val(item.bg_size);
+												$("#ysb_ed").val(item.ed_size);
+												$("#ysb_sg").val(item.settingGroup);
+
+											}
+
+										});
+										debugger;
+										console.log($('#pb-container').html());
+										if ($('#pb-container').html() == "null") {
+											var str =
+												`<div class="pb-item">
+					  <div class="layui-col-sm4">
+					    <div class="layui-form-item">
+					      <label class="layui-form-label">材料名称</label>
+					      <div class="layui-input-block">
+					          <input name="setting_name" type="text" placeholder="请输入" class="layui-input" lay-verType="tips" lay-verify="required" required />
+					      </div>
+					    </div>
+					  </div>
+					  <div class="layui-col-sm2">
+					    <div class="layui-form-item" style="text-align: center;">
+					      <div class="layui-inline">
+					        <input name="bg_size" type="text" placeholder="请输入" class="layui-input" style="width: 70px;" lay-verType="tips" lay-verify="required" required />
+					      </div>
+					      -
+					      <div class="layui-inline">
+					        <input name="ed_size" type="text" placeholder="请输入" class="layui-input" style="width: 70px;" lay-verType="tips" lay-verify="required" required />
+					      </div>
+						  
+						  <div class="layui-inline">
+						  </div>
+					    </div>
+					  </div>
+					  <div class="layui-col-sm3">
+						  <div class="layui-form-item" style="text-align: left;">
+						  <label>判断类型</label>
+					      <div class="layui-inline">
+							<select name="pb_sg" lay-verType="tips" lay-filter="newdemo">
+								<option value="LEFT">重量</option>
+								<option value="RIGHT">比例</option> 
+							</select>
+					      </div>
+						  </div>
+					  </div>
+					  <div class="layui-col-sm2" style="margin-left:20px;">
+					    <a class="layui-btn layui-btn-yellow" onclick="deletePb(this)">删除</a>
+					  </div>
+					</div>`
+											$('#pb-container').append(str);
+										}
+									}
+								});
+							}
+							form.render();
+							if (oType == 'detail') {
+								$("[type='button']").hide();
+								$("[name='detail_cancel']").hide();
+								$("[lay-filter='modelSubmitUser']").hide();
+								$("#btn_cancel").show();
+								$("[type='text']").attr("readonly", "readonly");
+							}
+							// 表单提交事件
+							form.on('submit(modelSubmitUser)', function(data) {
+								layer.load(2);
+								var listval = new Array();
+								var setting_name = $(".pb-item").find("[name='setting_name']");
+								var pblist = $(".pb-item").find("[name='bg_size']");
+								var ed_size = $(".pb-item").find("[name='ed_size']");
+								var pbsg = $(".pb-item").find("[name='pb_sg']");
+								var sort = 0;
+								for (var i = 0; i < pblist.length; i++) {
+									if (pblist[i].value != "" && ed_size[i].value != "" && setting_name[i].value != "") {
+										listval[sort] = {
+											bg_size: pblist[i].value,
+											ed_size: ed_size[i].value,
+											id: "",
+											settingGroup: pbsg[i].value,
+											setting_id: $("#id").val(),
+											setting_name: setting_name[i].value,
+											setting_type: "配比",
+											sortCode: (i + 1)
+										};
+										sort = sort + 1;
+									}
+								}
+								var wdlist = $("[name='wd_list']").find("[name='wd_name']");
+								var wdbg = $("[name='wd_list']").find("[name='wd_bg']");
+								var wded = $("[name='wd_list']").find("[name='wd_ed']");
+								var wdsg = $("[name='wd_list']").find("[name='wd_sg']");
+								for (var i = 0; i < wdlist.length; i++) {
+									if (wdbg[i].value != "" && wded[i].value != "") {
+										listval[sort] = {
+											bg_size: wdbg[i].value,
+											ed_size: wded[i].value,
+											id: "",
+											settingGroup: wdsg[i].value,
+											setting_id: $("#id").val(),
+											setting_name: wdlist[i].innerHTML,
+											setting_type: "温度",
+											sortCode: 1
+										};
+										sort = sort + 1;
+									}
+								}
+								var ysblist = $("[name='ysb_list']").find("[name='ysb_name']");
+								var ysbbg = $("[name='ysb_list']").find("[name='ysb_bg']");
+								var ysbed = $("[name='ysb_list']").find("[name='ysb_ed']");
+								var ysbsg = $("[name='ysb_list']").find("[name='ysb_sg']");
+								for (var i = 0; i < ysblist.length; i++) {
+									if (ysbbg[i].value != "" && ysbed[i].value != "") {
+										listval[sort] = {
+											bg_size: ysbbg[i].value,
+											ed_size: ysbed[i].value,
+											id: "",
+											settingGroup: ysbsg[i].value,
+											setting_id: $("#id").val(),
+											setting_name: ysblist[i].innerHTML,
+											setting_type: "油石比",
+											sortCode: 1
+										};
+										sort = sort + 1;
+									}
+								}
+
+								var alldata = {
+									yccd: $("#yccd_list").val(),
+									hhl_type: $("#add_hhl_list").val(),
+									id: $("#id").val(),
+									is_yybj: $("input[name='sex']:checked").val() == "是" ? 1 : 0,
+									list: listval,
+									sb_id: $("#add_sb_list").val(),
+									zd_id: $("#add_zd_list").val()
+								};
+								debugger;
+								console.log(JSON.stringify(alldata));
+								$.ajax({
+									type: "post",
+									url: url + '/setting/addSetting',
+									async: false,
+									contentType: 'application/json;utf-8',
+									datatype: 'json',
+									data: JSON.stringify(alldata),
+									success: function(res) {
+										layer.closeAll('loading');
+										debugger;
+										if (res.code == 0) {
+											layer.close(dIndex);
+											layer.msg(res.msg, {
+												icon: 1
+											});
+											insTb.reload({}, 'data');
+										} else {
+											layer.msg(res.msg, {
+												icon: 2
+											});
+										}
+									}
+								});
+								return false;
+							});
+							$('#addPb').on('click', () => {
+								var str =
+									`<div class="pb-item">
+              <div class="layui-col-sm4">
+                <div class="layui-form-item">
+                  <label class="layui-form-label">材料名称</label>
+                  <div class="layui-input-block">
+                      <input name="setting_name" type="text" placeholder="请输入" class="layui-input" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                </div>
+              </div>
+              <div class="layui-col-sm2">
+                <div class="layui-form-item" style="text-align: center;">
+                  <div class="layui-inline">
+                    <input name="bg_size" type="text" placeholder="请输入" class="layui-input" style="width: 70px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+                  -
+                  <div class="layui-inline">
+                    <input name="ed_size" type="text" placeholder="请输入" class="layui-input" style="width: 70px;" lay-verType="tips" lay-verify="required" required />
+                  </div>
+				  
+				  <div class="layui-inline">
+				  </div>
+                </div>
+              </div>
+              <div class="layui-col-sm3">
+				  <div class="layui-form-item" style="text-align: left;">
+				  <label>判断类型</label>
+                  <div class="layui-inline">
+					<select name="pb_sg" lay-verType="tips" lay-filter="newdemo">
+						<option value="LEFT">重量</option>
+						<option value="RIGHT">比例</option> 
+					</select>
+                  </div>
+				  </div>
+              </div>
+              <div class="layui-col-sm2" style="margin-left:20px;">
+                <a class="layui-btn layui-btn-yellow" onclick="deletePb(this)">删除</a>
+              </div>
+            </div>`
+								$('#pb-container').append(str);
+								layui.form.render();
+							})
+						}
+					});
+				}
+				// 新增类型弹窗
+				function showTypeEditModel(mUser,otype) {
+					admin.open({
+						type: 1,
+						area: '460px',
+						title: mUser == '添加' ? '添加' : '修改',
+						content: $('#modelHHLType').html(),
+						success: function(layero, dIndex) {
+							if (mUser != null) {
+								$("#hhlid").val(mUser.id);
+								$('#hhl_name').val(mUser.hhl_name);
+							}
+							if(otype=='look'){$("#btn_hhltype").hide();}
+							// 表单提交事件
+							form.on('submit(modelSubmitAddhhlType)', function(data) {
+								layer.load(2);
+
+								var json = JSON.stringify({
+									hhl_name: $('#hhl_name').val(),
+									zd_id: localStorage.getItem("station_id"),
+									id: (mUser == null ? 0 : mUser.id)
+								});
+								$.ajax({
+									url: url + '/setting/addhhltype',
+									type: 'post',
+									async: false,
+									contentType: 'application/json;utf-8',
+									dataType: 'json',
+									data: json,
+									success: function(res) {
+										debugger;
+										layer.closeAll('loading');
+										if (res.code == 0) {
+											layer.close(dIndex);
+											layer.msg(res.msg, {
+												icon: 1
+											});
+											insTb.reload();
+										} else {
+											layer.msg(res.msg, {
+												icon: 2
+											});
+										}
+										insTb1.reload();
+									}
+								});
+								return false;
+
+							});
+						}
+					});
+				}
+
+
+				// 显示表单弹窗
+				function showczEditModel(mUser, oType) {
+					admin.open({
+						type: 1,
+						area: '1200px',
+						title: (mUser ? '修改' : '新增') + '参数',
+						content: $('#modelczParams').html(),
+						success: function(layero, dIndex) {
+							// 获取下拉列表数据
+							// getRoleList(mUser);
+							form.on('select(newdemo)', function(data) {
+								bindShebeiList("add_czzd_list", "add_czsb_list");
+							});
+							bindzdList("add_czzd_list");
+							bindShebeiList("add_czzd_list", "add_czsb_list");
+							bindhhlList();
+							if (mUser != null) {
+								$.ajax({
+									type: "get",
+									url: url + '/setting/getSettingDetails',
+									data: {
+										setting_id: mUser.id
+									},
+									async: false,
+									success: function(res) {
+										var data = res.data;
+										$("#add_czzd_list").val(data.zd_id);
+										bindShebeiList("add_czzd_list", "add_czsb_list");
+										$("#add_czsb_list").val(data.sb_id);
+										$("#add_czhhl_list").val(data.hhl_type);
+										$("#czyccd_list").val(data.yccd);
+										$("#czid").val(data.id);
+										$("input[name='czsex'][value=" + (data.is_yybj == "1" ? "是" : "否") + "]").attr("checked", true)
+										var html = '';
+										var Arra = new Array();
+										var details = data.list.sort(function(a, b) {
+											if (a.sort < b.sort) return 1 //交换位置
+											if (a.sort > b.sort) return -1 //不要交换位置
+
+										});
+
+										$.each(details, function(index, item) {
+											Arra[index] = index;
+											if (item.setting_type == "配比") {
+												switch (item.setting_name) {
+													case ("仓1"):
+														$("#cl_bg1").val(item.bg_size);
+														$("#cl_ed1").val(item.ed_size);
+														$("#cl_bl1").val(item.settingGroup);
+														break;
+													case ("仓2"):
+														$("#cl_bg2").val(item.bg_size);
+														$("#cl_ed2").val(item.ed_size);
+														$("#cl_bl2").val(item.settingGroup);
+														break;
+													case ("仓3"):
+														$("#cl_bg3").val(item.bg_size);
+														$("#cl_ed3").val(item.ed_size);
+														$("#cl_bl3").val(item.settingGroup);
+														break;
+													case ("仓4"):
+														$("#cl_bg4").val(item.bg_size);
+														$("#cl_ed4").val(item.ed_size);
+														$("#cl_bl4").val(item.settingGroup);
+														break;
+													case ("仓5"):
+														$("#cl_bg5").val(item.bg_size);
+														$("#cl_ed5").val(item.ed_size);
+														$("#cl_bl5").val(item.settingGroup);
+														break;
+													case ("仓6"):
+														$("#cl_bg6").val(item.bg_size);
+														$("#cl_ed6").val(item.ed_size);
+														$("#cl_bl6").val(item.settingGroup);
+														break;
+													case ("仓7"):
+														$("#cl_bg7").val(item.bg_size);
+														$("#cl_ed7").val(item.ed_size);
+														$("#cl_bl7").val(item.settingGroup);
+														break;
+													case ("回收料"):
+														$("#clhsl_bg").val(item.bg_size);
+														$("#clhsl_ed").val(item.ed_size);
+														$("#clhsl_bl").val(item.settingGroup);
+														break;
+													case ("粉料1"):
+														$("#clfl_bg1").val(item.bg_size);
+														$("#clfl_ed1").val(item.ed_size);
+														$("#clfl_bl1").val(item.settingGroup);
+														break;
+													case ("粉料2"):
+														$("#clfl_bg2").val(item.bg_size);
+														$("#clfl_ed2").val(item.ed_size);
+														$("#clfl_bl2").val(item.settingGroup);
+														break;
+													case ("回收粉"):
+														$("#clhsf_bg").val(item.bg_size);
+														$("#clhsf_ed").val(item.ed_size);
+														$("#clhsf_bl").val(item.settingGroup);
+														break;
+													case ("沥青"):
+														$("#cllq_bg").val(item.bg_size);
+														$("#cllq_ed").val(item.ed_size);
+														$("#cllq_bl").val(item.settingGroup);
+														break;
+													default:
+														break;
+													}
+											}
+											if (item.setting_type == "温度") {
+												switch (item.setting_name) {
+													case ("骨料"):
+														$("#czwd_glbg").val(item.bg_size);
+														$("#czwd_gled").val(item.ed_size);
+														$("#czwd_glsg").val(item.settingGroup);
+														break;
+													case ("RAP"):
+														$("#czwd_rapbg").val(item.bg_size);
+														$("#czwd_raped").val(item.ed_size);
+														$("#czwd_rapsg").val(item.settingGroup);
+														break;
+													case ("混合料出料"):
+														$("#czwd_hhlclbg").val(item.bg_size);
+														$("#czwd_hhlcled").val(item.ed_size);
+														$("#czwd_hhlclsg").val(item.settingGroup);
+														break;
+													default:
+														break;
+												}
+											}
+											if (item.setting_type == "油石比") {
+												$("#czysb_bg").val(item.bg_size);
+												$("#czysb_ed").val(item.ed_size);
+												$("#czysb_sg").val(item.settingGroup);
+
+											}
+
+										});
+									}
+								});
+							}
+							form.render();
+							
+							if (oType == 'look') {
+								$("[type='button']").hide();
+								$("[name='detail_cancel']").hide();
+								$("[lay-filter='modelczSubmitUser']").hide();
+								$("#czbtn_cancel").show();
+								$("[type='text']").attr("readonly", "readonly");
+							}
+							// 表单提交事件
+							form.on('submit(modelczSubmitUser)', function(data) {
+								layer.load(2);
+								var listval = new Array();
+								var setting_name = $("[name='czpb_list']").find("[name='czcl_name']");
+								var pblist = $("[name='czpb_list']").find("[name='czcl_pbbg']");
+								var ed_size = $("[name='czpb_list']").find("[name='czcl_pbed']");
+								var pbsg = $("[name='czpb_list']").find("[name='czcl_pbbl']");
+								var sort = 0;
+								debugger;
+								for (var i = 0; i < setting_name.length; i++) {
+									if (pblist[i].value != "" && ed_size[i].value != "") {
+										listval[sort] = {
+											bg_size: pblist[i].value,
+											ed_size: ed_size[i].value,
+											id: "",
+											settingGroup: pbsg[i].value,
+											setting_id: $("#id").val(),
+											setting_name: setting_name[i].innerHTML,
+											setting_type: "配比",
+											sortCode: (i + 1)
+										};
+										sort = sort + 1;
+									}
+								}
+								var wdlist = $("[name='czwd_list']").find("[name='czwd_name']");
+								var wdbg = $("[name='czwd_list']").find("[name='czwd_bg']");
+								var wded = $("[name='czwd_list']").find("[name='czwd_ed']");
+								var wdsg = $("[name='czwd_list']").find("[name='czwd_sg']");
+								for (var i = 0; i < wdlist.length; i++) {
+									if (wdbg[i].value != "" && wded[i].value != "") {
+										listval[sort] = {
+											bg_size: wdbg[i].value,
+											ed_size: wded[i].value,
+											id: "",
+											settingGroup: wdsg[i].value,
+											setting_id: $("#id").val(),
+											setting_name: wdlist[i].innerHTML,
+											setting_type: "温度",
+											sortCode: 1
+										};
+										sort = sort + 1;
+									}
+								}
+								var ysblist = $("[name='czysb_list']").find("[name='czysb_name']");
+								var ysbbg = $("[name='czysb_list']").find("[name='czysb_bg']");
+								var ysbed = $("[name='czysb_list']").find("[name='czysb_ed']");
+								var ysbsg = $("[name='czysb_list']").find("[name='czysb_sg']");
+								for (var i = 0; i < ysblist.length; i++) {
+									if (ysbbg[i].value != "" && ysbed[i].value != "") {
+										listval[sort] = {
+											bg_size: ysbbg[i].value,
+											ed_size: ysbed[i].value,
+											id: "",
+											settingGroup: ysbsg[i].value,
+											setting_id: $("#id").val(),
+											setting_name: ysblist[i].innerHTML,
+											setting_type: "油石比",
+											sortCode: 1
+										};
+										sort = sort + 1;
+									}
+								}
+
+								var alldata = {
+									yccd: $("#czyccd_list").val(),
+									hhl_type: $("#add_czhhl_list").val(),
+									id: $("#czid").val(),
+									is_yybj: $("input[name='czsex']:checked").val() == "是" ? 1 : 0,
+									list: listval,
+									sb_id: $("#add_czsb_list").val(),
+									zd_id: $("#add_czzd_list").val()
+								};
+								debugger;
+								console.log(JSON.stringify(alldata));
+								$.ajax({
+									type: "post",
+									url: url + '/setting/addSetting',
+									async: false,
+									contentType: 'application/json;utf-8',
+									datatype: 'json',
+									data: JSON.stringify(alldata),
+									success: function(res) {
+										layer.closeAll('loading');
+										debugger;
+										if (res.code == 0) {
+											layer.close(dIndex);
+											layer.msg(res.msg, {
+												icon: 1
+											});
+											insTb.reload({}, 'data');
+										} else {
+											layer.msg(res.msg, {
+												icon: 2
+											});
+										}
+									}
+								});
+								return false;
+							});
+							layui.form.render();
+						}
+					});
+				}
+				//客户操作
+				table.on('tool(tableProject)', function(obj) {
+					var data = obj.data;
+					console.log(data);
+					var layEvent = obj.event;
+					if (layEvent === 'del') {
+						layer.confirm('确定要删除站点参数“' + data.zhandian_name + '”吗？', {
+							skin: 'layui-layer-admin',
+							shade: .1
+						}, function(i) {
+							layer.close(i);
+							layer.load(2);
+							$.post(url + '/setting/delete', {
+								id: data.id
+							}, function(res) {
+								layer.closeAll('loading');
+								if (res.code == 0) {
+									layer.msg(res.msg, {
+										icon: 1
+									});
+									insTb.reload();
+								} else {
+									layer.msg(res.msg, {
+										icon: 2
+									});
+								}
+							}, 'json');
+						});
+					} else if (layEvent === 'edit') {
+						if (projectName == 'cangzhou') {
+							showczEditModel(data, 'edit');
+						} else {
+							showEditModel(data, 'edit');
+						}
+					} else if (layEvent === 'look') {
+						if (projectName == 'cangzhou') {
+							showczEditModel(data, 'look');
+						} else {
+							showEditModel(data, 'look');
+						}
+					}
+				});
+				table.on('tool(tableProjectType)', function(obj) {
+					var data = obj.data;
+					var layEvent = obj.event;
+					if (layEvent === 'typedel') {
+						layer.confirm('确定要删除站点混合料参数“' + data.hhl_name + '”吗？', {
+							skin: 'layui-layer-admin',
+							shade: .1
+						}, function(i) {
+							layer.close(i);
+							layer.load(2);
+							$.post(url + '/shebei/delete', {
+								id: data.id,
+								table_name: 'zhandian_hhl'
+							}, function(res) {
+								layer.closeAll('loading');
+								if (res.code == 0) {
+									layer.msg(res.msg, {
+										icon: 1
+									});
+									insTb1.reload();
+								} else {
+									layer.msg(res.msg, {
+										icon: 2
+									});
+								}
+							}, 'json');
+						});
+					} else if (layEvent === 'typeedit') {
+						showTypeEditModel(data,'edit');
+					} else if (layEvent === 'typelook') {
+						showTypeEditModel(data,'look');
+					}
+				});
+
+				$("#btnAddProject").click(function() {
+						if (projectName == 'cangzhou') {
+					showczEditModel(null, 'add');
+						} else {
+					showEditModel(null, 'add');
+						}
+				})
+				$("#btnAddProjectType").click(function() {
+					showTypeEditModel(null);
+				})
+			});
+
+			function deletePb(ii) {
+				ii.parentNode.parentNode.parentNode.removeChild(ii.parentNode.parentNode);
+			}
+		</script>
+
+	</body>
+</html>

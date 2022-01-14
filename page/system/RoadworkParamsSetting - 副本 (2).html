@@ -1,0 +1,516 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>生产参数设置</title>
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=314"/>
+    <link rel="stylesheet" href="../../assets/css/common_likui.css?v=314"/>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .search-container {
+            height: 144px;
+            padding: 57px 0 57px 100px;
+            box-sizing: border-box;
+        }
+        .search-container .layui-form-radio { 
+            margin: 0 30px 0 0 ;
+        }
+        .project-setting-table {
+            padding: 30px 20px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0;
+        }
+        .form-title {
+          padding-left: 20px;
+        }
+        .form-title {
+          color: #56b69c;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 页面加载loading -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card" style="background-color: initial;">
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="search-container bg-white">
+                        <div class="layui-inline">
+                           <label class="layui-form-label w-auto">项目名称:</label>
+                           <div class="layui-input-inline mr0" style="width: 140px;">
+                            <select name="allauditstate" id="xm_list" class="xm_list" lay-verType="sb">
+                            </select>
+                           </div>
+                        </div>
+                        <div class="layui-inline">
+                           <label class="layui-form-label w-auto">混合料类型:</label>
+                           <div class="layui-input-inline mr0" style="width: 140px;">
+                            <select name="allauditstate" id="hhl_list" class="hhl_list" lay-verType="zd" lay-filter="demo">
+                            </select>
+                           </div>
+                        </div>
+                        <div class="layui-inline" style="margin-right: 15px;">
+                            <button id="btnSearch" class="layui-btn layui-btn-green3">查询</button>
+                        </div>
+                        <div class="layui-inline" style="margin-right: 15px;">
+                            <a id="btnAddProject" class="layui-btn layui-btn-red">新增</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-setting-table bg-white mt-20">
+                <table class="layui-table" id="tableProject" lay-filter="tableProject" style="margin: 0;"></table>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarProject">
+    <a class="layui-btn layui-btn-xs table-btn btn-look" lay-event="detail"><span class="btn-icon"></span>查看</a>
+    <a class="layui-btn layui-btn-xs table-btn btn-edit" lay-event="edit"><span class="btn-icon"></span>修改</a>
+    <a class="layui-btn layui-btn-xs table-btn btn-del" lay-event="del"><span class="btn-icon"></span>删除</a>
+</script>
+
+<!-- 弹窗-新增客户 -->
+<script type="text/html" id="modelParams">
+    <form id="modelParamsForm" lay-filter="modelParamsForm" class="layui-form model-form">
+		<input type="hidden" name="id" id="id" />
+        <div class="layui-row">
+          <div class="layui-col-sm6">
+            <div class="layui-form-item">
+              <label class="layui-form-label">项目名称</label>
+              <div class="layui-input-block">
+                <select name="zd" id="add_xm_list" class="xm_list" lay-verType="tips" lay-filter="newdemo">
+                    <option value="">请选择</option>
+                </select>
+              </div>
+            </div>
+          </div>
+		  <div class="layui-col-sm6">
+		    <div class="layui-form-item">
+		      <label class="layui-form-label">混合料类型</label>
+		      <div class="layui-input-block">
+		        <select name="zd" id="add_hhl_list" class="hhl_list" lay-verType="tips" lay-filter="newdemo">
+		            <option value="">请选择</option>
+		        </select>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<div class="layui-row">
+		  <div class="layui-col-sm6">
+		    <div class="layui-form-item">
+		      <label class="layui-form-label" name="wd_name">摊铺温度</label>
+		      <div class="layui-input-block">
+		        <div class="layui-inline">
+		          <input name="min_value" id="min_tpwd" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 140px;"  />
+		        </div>
+		        -
+		        <div class="layui-inline">
+		          <input name="max_value" id="max_tpwd" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 140px;" lay-verify="required" required />
+		        </div>
+		        </div>
+		      </div>
+		    </div>
+		  <div class="layui-col-sm6">
+		    <div class="layui-form-item">
+		      <label class="layui-form-label" name="wd_name">摊铺速度</label>
+		      <div class="layui-input-block">
+		        <div class="layui-inline">
+		          <input name="min_value" id="min_tpsd" type="text" placeholder="请输入" class="layui-input" style="width: 140px;" lay-verType="tips" lay-verify="required" required />
+		        </div>
+		        -
+		        <div class="layui-inline">
+		          <input name="max_value" id="max_tpsd" type="text" placeholder="请输入" class="layui-input" style="width: 140px;" lay-verType="tips" lay-verify="required" required />
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<div class="layui-row" name="wd_list">
+		  <div class="layui-col-sm6">
+		    <div class="layui-form-item">
+		      <label class="layui-form-label" name="wd_name">碾压温度</label>
+		      <div class="layui-input-block">
+		        <div class="layui-inline">
+		          <input name="min_value" id="min_nywd" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 140px;"  />
+		        </div>
+		        -
+		        <div class="layui-inline">
+		          <input name="max_value" id="max_nywd" type="text"lay-verify="required" lay-verType="tips" required placeholder="请输入" class="layui-input" style="width: 140px;" lay-verify="required" required />
+		        </div>
+		        </div>
+		      </div>
+		    </div>
+		  <div class="layui-col-sm6">
+		    <div class="layui-form-item">
+		      <label class="layui-form-label" name="wd_name">碾压速度</label>
+		      <div class="layui-input-block">
+		        <div class="layui-inline">
+		          <input name="min_value" id="min_nysd" type="text" placeholder="请输入" class="layui-input" style="width: 140px;" lay-verType="tips" lay-verify="required" required />
+		        </div>
+		        -
+		        <div class="layui-inline">
+		          <input name="max_value" id="max_nysd" type="text" placeholder="请输入" class="layui-input" style="width: 140px;" lay-verType="tips" lay-verify="required" required />
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<div class="layui-row" name="wd_list">
+		  <div class="layui-col-sm6">
+		    <div class="layui-form-item">
+		      <label class="layui-form-label" name="wd_name">碾压遍数</label>
+		      <div class="layui-input-block">
+		        <div class="layui-inline">
+		          <input name="min_value" id="min_nybs" type="text" placeholder="请输入" class="layui-input" style="width: 140px;" lay-verType="tips" lay-verify="required" required />
+		        </div>
+		        -
+		        <div class="layui-inline">
+		          <input name="max_value" id="max_nybs" type="text" placeholder="请输入" class="layui-input" style="width: 140px;" lay-verType="tips" lay-verify="required" required />
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="layui-col-sm6">
+		    <div class="layui-form-item">
+		      <label class="layui-form-label" name="wd_name">振动参数</label>
+		      <div class="layui-input-block">
+		        <div class="layui-inline">
+		          <input name="min_value" id="min_zdcs" type="text" placeholder="请输入" class="layui-input" style="width: 140px;" lay-verType="tips" lay-verify="required" required />
+		        </div>
+		        -
+		        <div class="layui-inline">
+		          <input name="max_value" id="max_zdcs" type="text" placeholder="请输入" class="layui-input" style="width: 140px;" lay-verType="tips" lay-verify="required" required />
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+          <div class="layui-row">
+            <div class="layui-col-sm6">
+              <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">是否语音播报</label>
+                <div class="layui-input-block" style="margin-left: 120px;">
+                  <input type="radio" name="sex" value="是" title="是">
+                  <input type="radio" name="sex" value="否" title="否" checked>
+                </div>
+              </div>
+            </div>
+            <div class="layui-col-sm6">
+              <div class="layui-form-item">
+                <label class="layui-form-label">异常程度</label>
+                <div class="layui-input-block">
+                  <select name="zd" id="czyccd_list" class="czyccd_list" lay-verType="tips">
+                						<option value="一般">一般</option>
+                						<option value="严重">严重</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item text-center">
+            <button class="layui-btn layui-btn-primary mr-10" lay-filter="modelSubmitUser" lay-submit>保存</button>
+            <button class="layui-btn" type="button" id="btn_cancel" ew-event="closePageDialog">取消</button>
+        </div>
+    </form>
+</script>
+<!-- js部分 -->
+<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+<script>
+	function bindxmList(xm_id){
+		$.ajax({
+			type: "get",
+			url: url + '/property/getBdProjectList',
+			data: {
+				currentIndex:1,
+				pageSize:999,
+				key: "",
+				project_state:"",
+				zhanidanid:localStorage.getItem("station_id")
+			},
+			async: false,
+			success: function(res) {
+				var html='';
+				if(xm_id=="xm_list")
+				{
+					html+=' <option value="">请选择</option>';
+				}
+				$.each(res.list,function(index,item){
+					html+=' <option value="'+item.project_id+'">'+item.project_name+'</option>';
+				})
+				$("#"+xm_id).html(html);
+				   layui.form.render("select");
+			}
+		})
+	}
+	function bindhhlList(){
+		$.ajax({
+			type: "get",
+			url: url + '/setting/getTlxList',
+			async: false,
+			success: function(res) {
+				var html='';
+				html+=' <option value="">请选择</option>';
+				$.each(res.list,function(index,item){
+					html+=' <option value="'+item.qlx+'">'+item.qlx+'</option>';
+				})
+				$(".hhl_list").html(html);
+				   layui.form.render("select");
+			}
+		})
+	}
+  layui.use(['layer', 'form', 'table', 'util', 'laydate', 'admin', 'element'], function () {
+    var $ = layui.jquery;
+    var layer = layui.layer;
+    var form = layui.form;
+    var table = layui.table;
+    var util = layui.util;
+    var laydate = layui.laydate;
+    var admin = layui.admin;
+    var element = layui.element;
+    var insTb = table.render({
+      elem: '#tableProject',
+      url: url + '/roadwordParamsSetting/getRoadworkParamsList',
+      page: true,
+	  limits: [2,10,100],
+	  limit: 10, //每页默认显示的数量
+      cellMinWidth: 100,
+      cols: [[
+        {field: 'project_name', align: 'center', title: '项目名称'},
+        {field: 'hhl_type', align: 'center', title: '混合料类型'},
+        {field: 'is_yybj', align: 'center', title: '是否语音报警',templet:function(data){return data.is_yybj==0?"否":"是"}},
+        {field: 'yccd', align: 'center', title: '异常程度'},
+        {align: 'center',toolbar: '#tableBarProject',title: '操作',minWidth: 160, fixed: 'right'}
+      ]],
+      request: {
+          pageName: 'pageIndex', //页码的参数名称，默认：page
+          limitName: 'pageSize' //每页数据量的参数名，默认：limit
+      },
+      where: {
+         sb_id:$('#sb_list').val(),
+         zd_id:$('#zd_list').val()
+      },
+      response: {
+          countName: 'totalCount', //数据总数的字段名称，默认：count
+          dataName: 'list' //数据列表的字段名称，默认：data
+      }
+    });
+	bindxmList("xm_list");
+	bindhhlList();
+		//查询
+		$('#btnSearch').on('click', (e) => {
+			insTb.reload({
+				where: {
+         sb_id:$('#sb_list').val(),
+         zd_id:$('#zd_list').val()
+				},
+				page: {
+					curr: 1
+				}
+			});
+		});
+	
+    // 显示表单弹窗
+    function showEditModel(mUser,oType) {
+      admin.open({
+        type: 1,
+        area: '900px',
+        title: (mUser ? '修改' : '新增') + '参数',
+        content: $('#modelParams').html(),
+        success: function(layero, dIndex) {
+          // 获取下拉列表数据
+          // getRoleList(mUser);
+		bindxmList("add_xm_list"); 
+		 bindhhlList();
+		 if(mUser!=null){
+		 $.ajax({
+		 	type: "get",
+		 	url: url + '/roadwordParamsSetting/getRoadwordRWSettingDetails',
+		 	data: {
+		 		setting_id: mUser.id
+		 	},
+		 	async: false,
+		 	success: function(res) {
+		 		var data = res.data;
+		 		$("#add_xm_list").val(data.zd_id);
+		 		$("#add_hhl_list").val(data.hhl_type);
+		 		$("#czyccd_list").val(data.yccd);
+		 		$("#id").val(data.id);
+				$("input[name='sex'][value="+(data.is_yybj=="1"?"是":"否")+"]").attr("checked",true)
+		 		var html = '';
+		 		var Arra = new Array();
+				var details = data.list.sort(function(a,b) {
+														　　　　if(a.sort < b.sort) return 1 //交换位置
+														　　　　if(a.sort > b.sort) return -1 //不要交换位置
+														　　　　
+														　　});
+														
+		 		$('#pb-container').empty();
+		 		$.each(details, function(index, item) {
+		 			Arra[index] = index;
+						switch (item.setting_name) {
+							case ("碾压温度"):
+							$("#min_nywd").val(item.bg_size);
+							$("#max_nywd").val(item.ed_size);
+								break;
+							case ("摊铺温度"):
+							$("#min_tpwd").val(item.bg_size);
+							$("#max_tpwd").val(item.ed_size);
+								break;
+							case ("摊铺速度"):
+							$("#min_tpsd").val(item.bg_size);
+							$("#max_tpsd").val(item.ed_size);
+								break;
+							case ("碾压速度"):
+							$("#min_nysd").val(item.bg_size);
+							$("#max_nysd").val(item.ed_size);
+								break;
+							case ("振动参数"):
+							$("#min_zdcs").val(item.bg_size);
+							$("#max_zdcs").val(item.ed_size);
+								break;
+							case ("碾压遍数"):
+							$("#min_nybs").val(item.bg_size);
+							$("#max_nybs").val(item.ed_size);
+								break;
+							default:
+								break;
+						}
+		 			
+		 		});
+		 	}
+		 });
+		 }
+		  	if(oType=='detail')
+		  	 {
+		  				  $("[type='button']").hide();
+		  				  $("[name='detail_cancel']").hide();
+		  				  $("[lay-filter='modelSubmitUser']").hide();
+		  				  $("#btn_cancel").show();
+						  $("[type='text']").attr("readonly","readonly");
+		  	 }
+          form.render();
+          // 表单提交事件
+          form.on('submit(modelSubmitUser)', function(data) {
+            layer.load(2);
+			var listval=new Array();
+			var snameList=$("[name='wd_name']");
+			for(var i=0;i<snameList.length;i++){
+					listval[i]={
+					bg_size:$(snameList[i]).parent().find("[name='min_value']").val(),
+					ed_size:$(snameList[i]).parent().find("[name='max_value']").val(),
+					id:"",
+					setting_id:$("#id").val(),
+					setting_name:snameList[i].innerHTML,
+					sortCode:1
+					};
+			}
+			
+			var alldata={
+				hhl_type:$("#add_hhl_list").val(),
+				id: $("#id").val(),
+				is_yybj:$("input[name='sex']:checked").val()=="是"?1:0,
+				yccd:$("#czyccd_list").val(),
+				list:listval,
+				xm_id:$("#add_xm_list").val(),
+				zd_id:localStorage.getItem("station_id")
+            };
+			debugger;
+			console.log(JSON.stringify(alldata));
+			$.ajax({
+				type: "post",
+				url: url + '/roadwordParamsSetting/addRoadwordParamsSettings',
+				async: false,
+				contentType: 'application/json;utf-8',
+				datatype:'json',
+				data:JSON.stringify(alldata),
+				success: function(res) {
+					debugger;
+							  layer.closeAll('loading');
+							  if (res.code == 0) {
+								layer.close(dIndex);
+								layer.msg(res.msg, {
+								  icon: 1
+								});
+								insTb.reload({}, 'data');
+							  } else {
+								layer.msg(res.msg, {
+								  icon: 2
+								});
+							  }
+				}
+			});
+            return false;
+          });
+      }
+          })
+    }
+    //客户操作
+    table.on('tool(tableProject)', function(obj) {
+     	var data = obj.data;
+     	console.log(data);
+     	var layEvent = obj.event;
+     	if (layEvent === 'del') {
+     		layer.confirm('确定要删除施工参数“' + data.hhl_type + '”吗？', {
+     			skin: 'layui-layer-admin',
+     			shade: .1
+     		}, function(i) {
+     			layer.close(i);
+     			layer.load(2);
+     			$.post(url + '/roadwordParamsSetting/deleteRoadwordParams', {
+     				id: data.id
+     			}, function(res) {
+     				layer.closeAll('loading');
+     				if (res.code == 0) {
+     					layer.msg(res.msg, {
+     						icon: 1
+     					});
+     					insTb.reload();
+     				} else {
+     					layer.msg(res.msg, {
+     						icon: 2
+     					});
+     				}
+     			}, 'json');
+     		});
+     	} else if (layEvent === 'edit') {
+     		showEditModel(data,'edit');
+     	}
+		else if (layEvent === 'detail') {
+			showEditModel(data,'detail');
+		}
+    });
+	
+		$("#btnAddProject").click(function(){
+			showEditModel(null,'add');
+		})
+	});
+  function deletePb (ii) {
+    ii.parentNode.parentNode.parentNode.removeChild(ii.parentNode.parentNode);
+  }
+</script>
+
+</body>
+</html>

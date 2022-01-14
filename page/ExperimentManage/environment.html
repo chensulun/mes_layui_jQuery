@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>环境监测</title>
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+    <link rel="stylesheet" href="../../assets/css/common_likui.css?v=314" />
+    <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+    <style>
+        .environment-data {
+            height: 604px;
+            padding-right: 300px;
+            position: relative;
+        }
+        #sjjc {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            z-index: 99;
+        }
+        .echarts-container {
+            height: 100%;
+            background-color: #fff;
+            box-shadow:0px 5px 11px 0px rgba(239,244,255,1);
+            border-radius:2px;
+        }
+        .data-container {
+            height: 100%;
+            width: 284px;
+            background-color: #fff;
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-radius:2px;
+            box-shadow:0px 5px 11px 0px rgba(239,244,255,1);
+            padding: 20px 15px;
+            box-sizing: border-box;
+        }
+        .data-item {
+            height:50px;
+            background:rgba(255,255,255,1);
+            border-radius:3px;
+            border:1px solid rgba(243,243,243,1);
+            padding: 12px 18px;
+            box-sizing: border-box;
+            font-size: 0;
+            margin-bottom: 14px;
+            display:flex;
+            align-items:center;/*垂直居中*/
+            cursor: pointer;
+        }
+        .data-item.active {
+            border: 2px solid rgba(26, 185, 155, 1);
+            background-color: rgba(26, 185, 155, 0.1);
+        }
+        .data-item:last-child {
+            margin-bottom: 0;
+        }
+        .data-item > div {
+            display: inline-block;
+            vertical-align: top;
+        }
+        .icon-img {
+            width: 24px;
+            height: 24px;
+            background: url(../../assets/images/pm.png) no-repeat center center;
+            background-size: 100% 100%;
+            margin-right: 20px;
+        }
+        .icons-pm2 {
+            background-image: url(../../assets/images/PM2.png);
+            
+        }
+        .icons-zs {
+            background-image: url(../../assets/images/zs.png);
+            
+        }
+        .icons-wd {
+            background-image: url(../../assets/images/wd.png);
+            
+        }
+        .icons-sd {
+            background-image: url(../../assets/images/sd.png);
+            
+        }
+        .icons-qy {
+            background-image: url(../../assets/images/qy.png);
+            
+        }
+        .icons-fs {
+            background-image: url(../../assets/images/fs.png);
+            
+        }
+        .icons-fx {
+            background-image: url(../../assets/images/fx.png);
+            
+        }
+        .icons-klw {
+            background-image: url(../../assets/images/klw.png);
+            
+        }
+        .data-val {
+            font-size: 16px;
+            margin-right: 20px;
+            width: 60px;
+            overflow: hidden;
+        }
+        .data-text {
+            font-size: 14px;
+            color: rgba(22, 22, 22, 1);
+            width: 92px;
+            overflow: hidden;
+            line-height: 16px;
+        }
+
+
+        .color-blue {
+            color: rgba(0, 164, 255, 1);
+        }
+        .color-red {
+            color: rgba(222, 15, 15, 1);
+        }
+        .color-orange {
+            color: rgba(255, 136, 0, 1);
+        }
+        .color-green {
+            color: rgba(26, 185, 155, 1);
+        }
+        .search-container {
+            height: 88px;
+            background-color: #fff;
+            margin-top: 18px;
+            box-shadow:0px 1px 11px 0px rgba(239,244,255,1);
+            border-radius:2px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 页面加载loading -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card-body">
+        <div class="environment-data clear">
+            <button type="button" id="sjjc" class="layui-btn layui-btn-green1" style="width: 114px;">数据监测</button>
+            <div class="echarts-container" id="echarts"></div>
+            <div class="data-container">
+                <div class="data-item active" data-value="noise">
+                    <div class="icon-img icon-zs"></div>
+                    <div id="noise" class="data-val color-blue">32</div>
+                    <div class="data-text">噪声</div>
+                </div>
+                <div class="data-item" data-value="temperature">
+                    <div class="icon-img icons-wd" ></div>
+                    <div id="temperature" class="data-val color-red">32℃</div>
+                    <div class="data-text">温度</div>
+                </div>
+                <div class="data-item" data-value="humidity">
+                    <div class="icon-img icons-sd"></div>
+                    <div id="humidity" class="data-val color-blue">87.8</div>
+                    <div class="data-text">湿度</div>
+                </div>
+                <div class="data-item" data-value="pressure">
+                    <div class="icon-img icons-qy"></div>
+                    <div id="pressure" class="data-val color-orange">98.5P</div>
+                    <div class="data-text">气压</div>
+                </div>
+                <div class="data-item" data-value="windSpd">
+                    <div class="icon-img icons-fs"></div>
+                    <div id="windSpd" class="data-val color-blue">65</div>
+                    <div class="data-text">风速</div>
+                </div>
+                <div class="data-item" data-value="windDin">
+                    <div class="icon-img icons-fx"></div>
+                    <div id="windDin" class="data-val color-blue">67'73.9</div>
+                    <div class="data-text">风向</div>
+                </div>
+                <div class="data-item" data-value="tsp">
+                    <div class="icon-img icons-klw"></div>
+                    <div id="tsp" class="data-val color-green">8.90</div>
+                    <div class="data-text">总悬浮颗粒物 TSP</div>
+                </div>
+                <div class="data-item" data-value="pm25">
+                    <div class="icon-img icons-pm2"></div>
+                    <div id="pm25" class="data-val color-green">76.00</div>
+                    <div class="data-text">细微颗粒物 PM2.5</div>
+                </div>
+                <div class="data-item" data-value="pm10">
+                    <div class="icon-img"></div>
+                    <div id="pm10" class="data-val color-green">38.93</div>
+                    <div class="data-text">可吸入颗粒物 PM10</div>
+                </div>
+            </div>
+        </div>
+        <div class="center search-container">
+            <div class="clear">
+                <label class="layui-form-label w-auto">选择日期:</label>
+                <div class="layui-input-inline" style="width: 216px; margin-right: 24px;">
+                    <input type="text" name="taskStartTime" class="layui-input" id="begin" placeholder="开始日期" lay-key="1">
+                </div>
+                <div class="layui-input-inline" style="width: 216px;margin-right: 52px;">
+                    <input type="text" name="taskEndTime" class="layui-input" id="end" placeholder="结束日期" lay-key="2">
+                </div>
+                <div class="layui-inline">
+                    <button type="button" id="btnSearch" class="layui-btn layui-btn-green1" style="width: 80px;">查询</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- js部分 -->
+<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+<script type="text/javascript" src="../../assets/libs/echarts/echarts.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../assets/js/jquery.qrcode.min.js"></script>
+<script>
+    var zdId=localStorage.getItem("station_id");
+    layui.use(['layer', 'form', 'table', 'util', 'laydate', 'admin', 'element', 'upload'], function() {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var laydate = layui.laydate;
+        var admin = layui.admin;
+        var element = layui.element;
+        //日期
+        laydate.render({
+            elem: '#begin',
+            trigger: 'click',
+            format: 'yyyy-MM-dd',
+            done: function(value, date, endDate) {
+                var startDate = new Date(value).getTime();
+                var endTime = new Date($('#end').val()).getTime();
+                if (endTime < startDate) {
+                    layer.msg('开始时间不能大于结束时间');
+                    $('#begin').val($('#end').val());
+                }
+            }
+        });
+
+        laydate.render({
+            elem: '#end',
+            trigger: 'click',
+            format: 'yyyy-MM-dd',
+            done: function(value, date, endDate) {
+                var startDate = new Date($('#begin').val()).getTime();
+                var endTime = new Date(value).getTime();
+                if (endTime < startDate) {
+                    layer.msg('结束时间不能小于开始时间');
+                    $('#end').val($('#begin').val());
+                }
+                getData();
+            }
+        });
+        $('#btnSearch').click(function () {
+            getData();
+        })
+        $('#begin').val(getNow());
+        $('#end').val(getNow());
+        $('.data-item').on('click', (e) => {
+            $('.data-item').removeClass('active');
+            console.log($(e.currentTarget))
+            $(e.currentTarget).addClass('active');
+            getData();
+        });
+        var timer;
+        function getData(){
+            var data={
+                type :$('.data-container .active').attr('data-value'),
+                begin:$('#begin').val(),
+                end:$('#end').val(),
+                zdId:zdId
+            }
+            var name=$('.data-container .active .data-text').html();
+            $.post( url+"/huanjing/getData",data,function (res) {
+                console.info(res);
+                if(res.code==0){
+                    var time=[];
+                    var value=[];
+                    for(var i=0;i<res.list.length;i++){
+                        time[i]=res.list[i].addTime;
+                        value[i]=res.list[i].value;
+                    }
+                    drawEcharts(time,value,name);
+                    $("#noise").html(res.data.noise);
+                    $("#temperature").html(res.data.temperature+'℃');
+                    $("#humidity").html(res.data.humidity);
+                    $("#pressure").html(res.data.pressure+'P');
+                    $("#windSpd").html(res.data.windSpd);
+                    $("#windDin").html(res.data.windDin);
+                    $("#tsp").html(res.data.tsp);
+                    $("#pm25").html(res.data.pm25);
+                    $("#pm10").html(res.data.pm10);
+                }
+            })
+            clearInterval(timer);
+            timer=setInterval(getData,1000*60);
+        }
+        function drawEcharts(time,value,name) {
+            var container = echarts.init(document.getElementById("echarts"));
+            var option = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                grid: {
+                    show: true,
+                    left: 40,
+                    top: 130,
+                    right: 40,
+                    bottom: 30,
+                    containLabel: true,
+                    borderColor: 'transparent'
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: time,
+                    axisLine: {
+                        lineStyle: {
+                            color: "#999"
+                        }
+                    }
+                }],
+                yAxis: [{
+                    type: 'value',
+                    splitNumber: 5,
+                    splitLine: {
+                        lineStyle: {
+                            type: 'solid',
+                            color: 'rgba(240, 240, 240, 1)'
+                        }
+                    },
+                    axisLine: {
+                        show: false,
+                        lineStyle: {
+                            color: "#333"
+                        },
+                    },
+                    nameTextStyle: {
+                        color: "#999"
+                    },
+                    splitArea: {
+                        show: false
+                    }
+                }],
+                series: [{
+                    name: name,
+                    type: 'line',
+                    data: value,
+                    lineStyle: {
+                        normal: {
+                            width: 4,
+                            color: 'rgba(80, 167, 255, 1)'
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#fff',
+                            borderWidth: 6,
+                            /*shadowColor: 'rgba(72,216,191, 0.3)',
+                            shadowBlur: 100,*/
+                            borderColor: "rgba(80, 167, 255, 1)"
+                        }
+                    },
+                    smooth: true
+                }]
+            };
+            container.setOption(option);
+
+        }
+        getData();
+
+        function getNow(nowDate) {
+            var char = "-";
+            if(nowDate == null){
+                nowDate = new Date();
+            }
+            var day = nowDate.getDate();
+            var month = nowDate.getMonth() + 1;//注意月份需要+1
+            var year = nowDate.getFullYear();
+            //补全0，并拼接
+            return year + char + completeDate(month) + char +completeDate(day);
+        }
+        function completeDate(value) {
+            return value < 10 ? "0"+value:value;
+        }
+
+
+    });
+
+
+</script>
+
+</body>
+</html>

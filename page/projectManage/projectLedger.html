@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>项目台账</title>
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=314"/>
+    <link rel="stylesheet" href="../../assets/css/common_likui.css?v=314"/>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .search-container {
+            height: 144px;
+            padding: 57px 0 57px 100px;
+            box-sizing: border-box;
+        }
+        .search-container .layui-form-radio {
+            margin: 0 30px 0 0 ;
+        }
+        .project-setting-table {
+            padding: 30px 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 页面加载loading -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card" style="background-color: initial;">
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="search-container bg-white">
+						<div class="layui-inline">
+						    <!-- <label class="layui-form-label w-auto">日&emsp;期：</label> -->
+						    <div class="layui-input-inline" style="width: 140px;">
+						        <input type="text" name="beginTime" class="layui-input" id="test-laydate-start" placeholder="开始日期" lay-key="1">
+						    </div>
+						    <div class="layui-form-mid"> - </div>
+						    <div class="layui-input-inline" style="width: 140px;">
+						        <input type="text" name="endTime" class="layui-input" id="test-laydate-end" placeholder="结束日期" lay-key="2">
+						    </div>
+						
+						</div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label w-auto">项目名称：</label>
+                            <div class="layui-input-inline mr0">
+                        		<select lay-filter="xmnoList" id="xmnoList" lay-verType="tips" >
+                        		    <option value="">请选择</option>
+                        		</select>
+                               <!-- <input name="zhandian" id="zhandian" class="layui-input" type="text" placeholder="请输入站点名称"/> -->
+                            </div>
+                        </div>
+						<input type="hidden" id="projectName" name="projectName" />
+                        <div class="layui-inline" style="margin-right: 22px;">
+                            <button id="btnSearch" lay-filter="formSubSearch"  lay-submit  class="layui-btn layui-btn-green3">查询</button>
+                        </div>
+						
+						<button type="button" lay-submit="" class="layui-btn layui-btn-warm" lay-filter="uploadImg">
+						    <i class="layui-icon"></i>导出Excel</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-setting-table bg-white mt-20">
+                <div class="layui-tab layui-tab-brief" lay-filter="projectSetting">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">成本消耗</li>
+                        <!-- <li>销售发货</li> -->
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <table class="layui-table" id="tableMaterialType1" lay-filter="tableMaterialType1"></table>
+                        </div>
+                       <!-- <div class="layui-tab-item">
+                            <table class="layui-table" id="tableMaterialType5" lay-filter="tableMaterialType5"></table>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/server.js"></script>
+<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../assets/layui-excel-master/layui_exts/excel.min.js"></script>
+<script>
+	var station = localStorage.getItem("station");
+	//url="http://localhost:8080/";
+    layui.use(['layer', 'form', 'table', 'util', 'admin', 'element','laydate'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var admin = layui.admin;
+        var element = layui.element;
+		
+		var laydate = layui.laydate;
+		laydate.render({
+			elem: '#test-laydate-start',
+			value: new Date()
+		});
+				
+		laydate.render({
+			elem: '#test-laydate-end',
+			value: new Date()
+		});
+		//日期
+		laydate.render({
+		    elem: '#test-laydate-start',
+		    trigger: 'click',
+		    format: 'yyyy-MM-dd',
+		    done: function (value, date, endDate) {
+		        var startDate = new Date(value).getTime();
+		        var endTime = new Date($('#test-laydate-end').val()).getTime();
+		        if (endTime < startDate) {
+		            layer.msg('开始时间不能大于结束时间');
+		            $('#test-laydate-start').val($('#test-laydate-end').val());
+		        }
+		    }
+		
+		});
+		laydate.render({
+		    elem: '#test-laydate-end',
+		    trigger: 'click',
+		    format: 'yyyy-MM-dd',
+		    done: function (value, date, endDate) {
+		        var startDate = new Date($('#test-laydate-start').val()).getTime();
+		        var endTime = new Date(value).getTime();
+		        if (endTime < startDate) {
+		            layer.msg('结束时间不能小于开始时间');
+		            $('#test-laydate-end').val($('#test-laydate-start').val());
+		        }
+		    }
+		});
+		
+		setXmnoListInit();
+		
+		//项目下拉监听事件
+		form.on('select(xmnoList)', function(data){
+			$("#projectName").val(data.value);
+			
+		});
+		var time = timeFn();
+		var startTime = time.y + '-' + time.m + '-' + time.d;
+		
+        var insTb = table.render({
+            elem: '#tableMaterialType1',
+            url: getServerUrl(station) + '/api/data/getTzInfo',
+            cellMinWidth: 100,
+            cols: [[
+                {field: 'clName', align: 'center', title: '材料名称', rowspan: 2},
+                {field: 'unit', align: 'center', title: '单位', rowspan: 2},
+                {align: 'center', title: '耗用', colspan: 2},
+				{field: 'countPrice', align: 'center', title: '合计金额', rowspan: 2}
+            ],[
+            	{field: 'number', align: 'center', title: '数量'},
+				{field: 'price', align: 'center', title: '金额'},
+            ]],
+            where: {
+               projectName:$('[name="#projectName"]').val(),
+			    beginTime:startTime,
+			  	endTime:startTime
+            },
+            response: {
+				statusName: 'errno' //数据状态的字段名称，默认：code
+					,
+				statusCode: 0 //成功的状态码，默认：0
+					,
+				msgName: 'error', //状态信息的字段名称，默认：msg
+                countName: 'num', //数据总数的字段名称，默认：count
+                dataName: 'list' //数据列表的字段名称，默认：data
+            },
+			
+			 done: function (res, curr, count) {
+			  var datalists=res.list;
+				 if(datalists!=null && datalists.length>0){
+					 $(".layui-table-body>.layui-table").find("tr").eq(0).find("td").eq(4).find(".layui-table-cell").text(datalists[0].price);
+				 }
+				merge(res, curr, count);
+				
+			} 
+        });
+   
+		function merge(res, curr, count) {
+			            
+			        var data = res.list;
+			        var mergeIndex = 0;//定位需要添加合并属性的行数
+			        var mark = 1; //这里涉及到简单的运算，mark是计算每次需要合并的格子数
+					var columsName = ['clName'];//需要合并的列名称
+					var columsIndex = [0,4];//需要合并的列索引值
+					var htqsrow=0;
+			        for (var k = 0; k < columsName.length; k++) { //这里循环所有要合并的列
+						var sumPrice=0;
+			            var trArr = $(".layui-table-body>.layui-table").find("tr");//所有行
+			                for (var i = 1; i < res.list.length; i++) { //这里循环表格当前的数据
+			                    var tdCurArr = trArr.eq(i).find("td").eq(columsIndex[k]);//获取当前行的当前列
+			                    var tdPreArr = trArr.eq(mergeIndex).find("td").eq(columsIndex[k]);//获取相同列的第一列
+			                    var lastCurArr = trArr.eq(i).find("td").eq(4);//获取当前行的最后列
+								var lastPreArr = trArr.eq(mergeIndex).find("td").eq(4);//获取相同列的第一列
+								sumPrice=data[i]["price"];
+								if (data[i][columsName[k]] === data[i-1][columsName[k]] && data[i][columsName[0]] === data[i-1][columsName[0]]) { //后一行的值与前一行的值做比较，相同就需要合并
+			                        mark += 1;
+									
+			                        tdPreArr.each(function () {//相同列的第一列增加rowspan属性
+			                            $(this).attr("rowspan", mark);
+			                        });
+			                        tdCurArr.each(function () {//当前行隐藏
+			                            $(this).css("display", "none");
+			                        });
+									lastPreArr.each(function () {//相同列的第一列增加rowspan属性
+									    $(this).attr("rowspan", mark);
+									});
+									lastCurArr.each(function () {//当前行隐藏
+									    $(this).css("display", "none");
+									});
+									
+			                    }else {
+									htqsrow+=1;
+			                        mergeIndex = i;
+			                        mark = 1;//一旦前后两行的值不一样了，那么需要合并的格子数mark就需要重新计算
+									$(".layui-table-body>.layui-table").find("tr").eq(htqsrow).find("td").eq(4).find(".layui-table-cell").text(sumPrice);
+									sumPrice=0;
+			                    }
+			                }
+						
+			            mergeIndex = 0;
+			            mark = 1;
+			        }
+					
+			    }
+			
+		//查询
+		form.on('submit(formSubSearch)', function (data) {
+		    var datafield= data.field;
+		    
+		    insTb.reload({where: datafield},'data');
+		});
+		//查询
+		// $('#btnSearch').on('click',(e)=>{
+		// 	 insTb.reload();
+		// 	 insTb1.reload();
+		// });
+        
+       var index=0;
+        //一些事件监听
+        element.on('tab(projectSetting)', function(data){
+            console.log(data);
+			index=data.index;
+        });
+		
+		
+		form.on('submit(uploadImg)', function(data){
+		
+			var json = {
+				'projectName':$('[name="#projectName"]').val(),
+				'beginTime':$("#test-laydate-start").val(),
+				'endTime':$("#test-laydate-end").val()
+			}
+			$.ajax({
+			    type: "get",
+			    url: getServerUrl(station) + '/api/data/excelInfo',
+				data: json,
+			    success: function(res) {
+						var urlload=getServerUrl(station) + '/api/data/downloadtZFile/'+res.obj;
+						window.open(urlload);
+			    }
+			});
+		});
+		
+		
+			
+	});
+	
+	
+	function setXmnoListInit(){
+		$.ajax({
+		    type: "get",
+		    url: getServerUrl(station) + '/api/data/getProjectName',
+		    success: function(res) {
+		        var str = '';
+		        for (var i = 0; i < res.list.length; i++) {
+					str += '<option value=' + res.list[i] + '>' + res.list[i]+ '</option>';
+		        }
+		        str = '<option value="" selected="selected">请选择</option>' + str;
+		        $('#xmnoList').html(str);
+		        layui.form.render("select");
+		    }
+		});
+	}
+</script>
+
+</body>
+</html>

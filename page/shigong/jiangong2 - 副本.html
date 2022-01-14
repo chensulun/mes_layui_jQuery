@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>设备监控</title>
+  <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+  <link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+  <link rel="stylesheet" href="../../assets/css/common_likui.css?v=314" />
+  <link rel="stylesheet" href="../shigong/css/draw-map.css" />
+
+  <script src="./js/hammer.min.js"></script>
+  <!-- <script src="./js/mock-new.js"></script> -->
+  <script src="./js/draw-map.js"></script>
+  <script src="./js/lonlatGC.js"></script>
+
+  <style>
+    .jiangong-page-wrap {
+      width: 100%;
+      height: 100%;
+    }
+
+    .jiangong-container-wrap {
+      width: 98%;
+      margin: 0 auto;
+    }
+
+    .jiangong-top {
+      background: #FFFFFF;
+      box-sizing: border-box;
+      padding-top: 40px;
+      padding-right: 40px;
+      padding-left: 0px;
+    }
+
+    .jiangong-top .layui-form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+    }
+
+
+
+    .jiangong-top .layui-form .layui-form-item {
+      display: flex;
+      margin-bottom: 28px;
+    }
+
+    .jiangong-top .layui-form .layui-form-item .layui-input-block {
+      margin-left: 0px;
+    }
+
+    .jiangong-top .layui-form-item .layui-form-label {
+      width: 123px
+    }
+
+    .jiangong-top .layui-form-select .layui-edge {
+      border-top-color: #1AB99B;
+    }
+
+    .jiangong-content {
+      margin-top: 14px;
+      display: flex;
+      min-height: 620px;
+    }
+
+    .janggong-right {
+      flex: 1;
+      min-height: 450px;
+      font-size: 12px;
+      background: #e7d47d;
+      position: relative;
+    }
+
+    .janggong-left {
+      width: 293px;
+      margin-left: 14px;
+    }
+
+    .janggong-left .janggong-left-top {
+      height: 186px;
+      background: #fff;
+      padding: 13px 0 17px 20px;
+      box-sizing: border-box;
+      font-size: 12px;
+
+    }
+
+    .janggong-left .janggong-left-top .weather {
+      margin-top: 33px;
+      display: flex;
+      padding: 0 10px;
+      justify-content: space-around;
+    }
+
+    .janggong-left .janggong-left-top .weather .weather-left img {
+      width: 70px;
+      height: 70px;
+    }
+
+    .janggong-left .janggong-left-top .weather .weather-left span {
+      font-size: 12px;
+      color: #888;
+      display: block;
+      text-align: center;
+    }
+
+    .janggong-left .janggong-left-top .weather .weather-left p {
+      height: 81px;
+    }
+
+    .janggong-left .janggong-left-top .weather .weather-left p .number {
+      font-size: 40px;
+      color: #05b8ee;
+    }
+
+
+    .janggong-left .janggong-left-top .weather .weather-right p {
+      height: 81px;
+    }
+
+    .janggong-left .janggong-left-top .weather .weather-right p .number {
+      font-size: 40px;
+      color: #19B99B;
+      padding-left: 12px;
+    }
+
+    .janggong-left .janggong-left-top .weather .weather-right p i {
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      border: 1px solid #19B99B;
+      border-radius: 50%;
+      vertical-align: top;
+
+    }
+
+    .janggong-left .janggong-left-top .weather .weather-right p .wd {
+      display: block;
+      font-size: 10px;
+      text-align: center;
+      color: #ccc;
+    }
+
+    .janggong-left .janggong-left-top .weather .weather-right p .fs {
+      color: #333333;
+    }
+
+    .janggong-left .janggong-left-bottom {
+      background: #fff;
+      padding: 13px 0 17px 20px;
+      box-sizing: border-box;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+
+    .janggong-left .janggong-left-bottom .title {
+      font-size: 17px;
+      color: #383838;
+      margin-top: 0px;
+      line-height: 40px;
+      border-bottom: 1px solid #CBDFF1;
+      padding-top: 0;
+      padding-bottom: 6px;
+      margin-bottom: 16px;
+    }
+
+    .janggong-left .janggong-left-bottom ul li {
+      font-size: 14px;
+      color: #383838;
+      margin-top: 0px;
+      line-height: 30px;
+    }
+
+    .janggong-left .janggong-left-bottom ul li .car-item {
+      padding-left: 10px;
+    }
+
+    .janggong-left .janggong-left-bottom ul li .car-item p {
+      color: #9B9B9B;
+    }
+
+    .janggong-left .janggong-left-bottom ul li .car-item div {
+      color: #9B9B9B;
+    }
+
+    .janggong-left .janggong-left-bottom ul li .car-item div .running {
+      color: #fff;
+      width: 69px;
+      height: 17px;
+      background: #3AD48A;
+      padding: 3px 4px;
+      display: inline-block;
+      border-radius: 13px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 12px;
+      line-height: 17px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="jiangong-page-wrap">
+    <div class="jiangong-container-wrap">
+      <div class="jiangong-top">
+        <form class="layui-form">
+
+          <div class="layui-form-item" style="width: 40%;">
+            <label class="layui-form-label">时间段：</label>
+            <div class="layui-input-block" style="width: 66%;">
+              <input type="text" name="date" readonly="readonly" class="layui-input" id="jongkongdata"
+                placeholder="请选择时间" value="2021-08-10 18:30:00 ~ 2021-08-10 23:00:00" />
+            </div>
+          </div>
+          <!-- 2021-06-06 00:00:00 ~ 2021-06-07 00:00:00 -->
+
+          <!-- <div class="layui-form-item">
+                        <label class="layui-form-label">施工项目部名称：</label>
+                        <div class="layui-input-block">
+                            <select name="customId" id="customId" lay-filter="customName" placeholder="请选择施工项目部名称">
+                            </select>
+                        </div>
+                    </div> -->
+
+          <div class="layui-form-item">
+            <label class="layui-form-label">工程项目名称：</label>
+            <div class="layui-input-block">
+              <select name="projectId" id="projectId" lay-filter="projectName" placeholder="请选择工程项目名称">
+
+              </select>
+            </div>
+          </div>
+
+
+
+
+
+
+          <!-- 					<div class="layui-form-item">
+					    <label class="layui-form-label">桩号：</label>
+					    <div class="layui-input-block">
+					        <select name="zz" id="zz" lay-filter="zz" placeholder="请选择桩号">
+					        </select>
+					    </div>
+					</div> -->
+
+
+
+
+          <!-- <div class="layui-form-item">
+                        <label class="layui-form-label">任务：</label>
+                        <div class="layui-input-block">
+                            <select name="task" id="task" lay-filter="task" placeholder="请选择任务">
+                                <option value="1" selected>初压</option>
+                                <option value="2">复压</option>
+                                <option value="3">终压</option>
+                            </select>
+                        </div>
+                    </div> -->
+
+          <!-- <div class="layui-form-item">
+                        <label class="layui-form-label">幅数：</label>
+                        <div class="layui-input-block">
+                            <select name="fs" id="fs" lay-filter="fs" placeholder="请选择幅数">
+                            </select>
+                        </div>
+                    </div> -->
+          <div class="layui-form-item">
+            <label class="layui-form-label">类型：</label>
+            <div class="layui-input-block">
+              <select name="type" id="type" lay-filter="type" placeholder="请选择类型">
+                <option value="" selected>全部</option>
+                <option value="1">摊铺</option>
+                <option value="2">碾压</option>
+                <!-- <option value="3">图谱</option> -->
+              </select>
+            </div>
+          </div>
+
+
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+              <button type="submit" class="layui-btn" lay-submit="" lay-filter="seachsb" id="search">查询</button>
+            </div>
+          </div>
+
+          <div class="layui-form-item" style="width: 45%;">
+
+            <div class="layui-input-block">
+
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">参数：</label>
+            <div class="layui-input-block">
+              <select name="paramete" id="param" lay-filter="param" placeholder="请选择参数">
+                <option value="2">速度</option>
+                <option value="3">遍数</option>
+                <option value="4" selected>震动</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <label class="layui-form-label">中心设备：</label>
+            <div class="layui-input-block">
+              <select name="sb" id="sb" lay-filter="sb" placeholder="请选择设备">
+              </select>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <label class="layui-form-label">绘制模式：</label>
+            <div class="layui-input-block">
+              <select name="mode" id="mode" lay-filter="mode" placeholder="请选择参数">
+                <option value="1" selected>正常</option>
+                <option value="2">快速</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="jiangong-content">
+        <div class="janggong-right">
+          <div class="paly-back">
+            <div class="map-info">
+              <div class="canvas-map">
+                <div id="drawMap" class="map">
+                </div>
+                <div class="topMap" id="topMap"></div>
+                <div class="zoom-buttom">
+                  <button type="button" data-type="small" class="zoom-btn"><span>放<br />大</span></button>
+                  <button type="button" data-type="big" class="zoom-btn"><span>缩<br />小</span></button>
+                </div>
+              </div>
+
+
+
+
+              <div class="technics-tip" data-index="0" style="display: none;">
+                <div class="el-row" style="text-align: center;"><span>温度</span></div>
+                <div class="tip">
+                  <div>
+                    <span style="width: 30px;display: inline-block;text-align: center;">1+</span>
+                    <span style="width: 30px;display: inline-block;text-align: center;">100+</span>
+                    <span style="width: 30px;display: inline-block;text-align: center;">110+</span><span
+                      style="width: 30px;display: inline-block;text-align: center;">120+</span><span
+                      style="width: 30px;display: inline-block;text-align: center;">130+</span><span
+                      style="width: 30px;display: inline-block;text-align: center;">140+</span><span
+                      style="width: 30px;display: inline-block;text-align: center;">150+</span><span
+                      style="width: 30px;display: inline-block;text-align: center;">160+</span><span
+                      style="width: 30px;display: inline-block;text-align: center;">170+</span><span
+                      style="width: 30px;display: inline-block;text-align: center;">180+</span>
+                  </div>
+                  <div>
+
+                    <span class="tip-item" style="width: 30px;background-color: #93f4e0;">&nbsp;</span><span
+                      class="tip-item" style="width: 30px;background-color: #3ce2c1;">&nbsp;</span>
+                    <span class="tip-item" style="width: 30px;background-color: #0e9a7e;">&nbsp;</span><span
+                      class="tip-item" style="width: 30px;background-color: #0b7b65;">&nbsp;</span><span
+                      class="tip-item" style="width: 30px;background-color: #07604f;">&nbsp;</span><span
+                      class="tip-item" style="width: 30px;background-color: #044437;">&nbsp;</span><span
+                      class="tip-item" style="width: 30px;background-color: #e8b26f;">&nbsp;</span><span
+                      class="tip-item" style="width: 30px;background-color: #d89542;">&nbsp;</span><span
+                      class="tip-item" style="width: 30px;background-color: #e8850b;">&nbsp;</span><span
+                      class="tip-item" style="width: 30px;background-color: #e45d29;">&nbsp;</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="technics-tip" data-index="1" style="display: none;">
+                <div class="el-row" style="text-align: center;"><span>速度(Km/h)</span></div>
+                <div class="tip">
+                  <div>
+                    <span class="tip-num">0+</span>
+                    <span class="tip-num">10+</span>
+                  </div>
+                  <div style="clear: both;">
+                    <span class="tip-item" style="background-color: #3ce2c1;">&nbsp;</span>
+                    <span class="tip-item" style="background-color: #ef562d;">&nbsp;</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="technics-tip" data-index="2">
+                <div class="el-row" style="text-align: center;"><span>遍</span></div>
+                <div class="tip">
+                  <div>
+                    <span class="tip-num">1</span>
+                    <span class="tip-num">2</span>
+                    <span class="tip-num">3</span>
+                    <span class="tip-num">4</span>
+                    <span class="tip-num">5</span>
+                    <span class="tip-num">6</span>
+                    <span class="tip-num">7</span>
+                    <span class="tip-num">8</span>
+                    <span class="tip-num">9</span>
+                    <span class="tip-num">10</span>
+                  </div>
+                  <div style="clear: both;">
+                    <span class="tip-item" style="background-color: rgb(186,244,249);">&nbsp;</span>
+                    <span class="tip-item" style="background-color: rgb(41,213,20);">&nbsp;</span>
+                    <span class="tip-item" style="background-color:  rgb(255,226,198);">&nbsp;</span>
+                    <span class="tip-item" style="background-color:  rgb(255,173,152);">&nbsp;</span>
+                    <span class="tip-item" style="background-color:  rgb(254 158 134);">&nbsp;</span>
+                    <span class="tip-item" style="background-color:  rgb(227 141 119);">&nbsp;</span>
+                    <span class="tip-item" style="background-color:  rgb(213 115 90);">&nbsp;</span>
+                    <span class="tip-item" style="background-color:  rgb(255,68,61);">&nbsp;</span>
+                    <span class="tip-item" style="background-color:  rgb(255,15,15);">&nbsp;</span>
+                    <span class="tip-item" style="background-color:  rgb(199 41 0);">&nbsp;</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="technics-tip" data-index="3" style="display: none;">
+                <div class="el-row" style="text-align: center;"><span>震动</span></div>
+                <div class="tip">
+                  <div>
+                    <span class="tip-num">0+</span>
+                    <span class="tip-num">0.4+</span>
+                  </div>
+                  <div style="clear: both;">
+                    <span class="tip-item" style="background-color: #a675e0;">&nbsp;</span>
+                    <span class="tip-item" style="background-color: #6e09e6;">&nbsp;</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        <div class="janggong-left">
+          <div class="janggong-left-top">
+            <p>气象信息</p>
+
+            <div class="weather">
+
+              <div class="weather-left">
+                <!-- <img>
+                                <span>多云转阴</span> -->
+                <p>
+                  <span class="number" id="shidu">...</span>
+                  <i></i>
+
+                  <span class="wd">湿度</span>
+                </p>
+              </div>
+
+              <div class="weather-right">
+                <p>
+                  <span class="number" id="wendu">...</span>
+                  <i></i>
+
+                  <span class="wd">温度</span>
+                </p>
+
+                <span clsss="fs">风速: <span id="fengsu">...</span> km/h</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="janggong-left-bottom">
+            <p class="title">作业设备</p>
+
+            <ul id="sbs" style="height: 340px;overflow:auto;">
+              <li class="sb-car-data">
+                <div class="car-item">
+                  <img id="sb-img" style="width: 256px;height: 138px;margin-bottom: 14px;" src="./images/shebei.png" />
+                  <p>设备编号: <span style="color: #19B99B;font-weight: 600;" id="sb-id-car">--</span></p>
+                  <p>设备名称: <span style="color: #383838;" id="sb-name-car">--</span></p>
+                  <div>温度: <img src="./images/wendu.png" style="width: 10px;height: 20px;">
+                    <span style="color: red;vertical-align: middle;" id="sb-wendu-car">--</span>
+                  </div>
+                  <div>速度: <img src="./images/sudu.png" style="width: 19px;height: 16px;"> <span
+                      style="color: #333;vertical-align: middle;" id="sb-sudu-car">--</span>
+                  </div>
+                  <div>状态: <span class="running">--</span></div>
+                </div>
+              </li>
+            </ul>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+  <script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+  <script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=CKozdeH8v9XoTyaFB5slrpMMwzzIvvs0"></script>
+  <script>
+    //url="http://localhost:8080/";
+    var table;
+    var form;
+    var type = 2; // 1:摊铺 2:压路机  筛选项 类型
+    var task = 1; //任务
+    var topMap, marker, _projection, sbDataList;
+    //dataIndex=[0：温度，1：速度，2：遍速，3：震动]
+    var zhandianId = 5 || localStorage.getItem("station_id");
+    window.carGPSList = [];
+    var carFilterGPSList = [];
+    var sbIds = [];
+    var sbs;
+    //类型映射 机器类型 任务 参数
+    var typeMapTaskAndParam = [{
+      type: 1,
+      typeName: '摊铺', //类型
+      name: '摊铺机',
+      //taskList: [{ id: 1, name: "摊铺" }], //任务
+      paramList: [{ id: 1, name: "温度" }, { id: 2, name: "速度" }, { id: 3, name: "轨迹" }]
+    }, {
+      type: 2,
+      typeName: '碾压',
+      name: '压路机',
+      //taskList: [{ id: 1, name: "初压" }, { id: 2, name: "复压" }, { id: 3, name: "终压" }],  //任务
+      paramList: [{ id: 2, name: "速度" }, { id: 3, name: "遍数" }, { id: 4, name: "震动" }, { id: 1, name: "温度" }] //参数
+    }]
+
+    layui.use(['layer', 'form', 'table', 'util', 'laydate', 'admin', 'element'], function () {
+      var $ = layui.jquery;
+      var layer = layui.layer;
+      form = layui.form;
+      var util = layui.util;
+      var laydate = layui.laydate;
+      var admin = layui.admin;
+      var element = layui.element;
+      var flow = layui.flow;
+      initMap();
+      function ajaxDefer(type, url, data) {
+        var defer = $.Deferred();
+        $.ajax({
+          type: type,
+          url: url,
+          data: data
+        }).done(function (res) {
+          defer.resolve(res);
+        }).fail(function (err) {
+          defer.resolve(err);
+        })
+
+        return defer;
+      }
+
+      var tipHtml = function () {
+        $('.technics-tip').hide();
+        $('.technics-tip[data-index=' + T.dataIndex + ']').show();
+      }
+
+      function initMap() {
+        // 地图初始化
+        topMap = new BMap.Map("topMap"); // 创建Map实例
+        topMap.centerAndZoom('沧州', 17); // 初始化地图,设置中心点坐标和地图级别
+
+      }
+
+      /**
+          *在每个点的真实步骤中设置转动的角度
+          *@param{BMap.Point} curPos 起点
+           *@param{BMap.Point} targetPos 终点
+          */
+      function setRotation(curPos, targetPos, marker) {
+        var deg = 0;
+        curPos = topMap.pointToPixel(curPos);
+        targetPos = topMap.pointToPixel(targetPos);
+        if (targetPos.x != curPos.x) {
+          var tan = (targetPos.y - curPos.y) / (targetPos.x - curPos.x),
+            atan = Math.atan(tan);
+          deg = atan * 360 / (2 * Math.PI);
+          if (targetPos.x < curPos.x) {
+            deg = -deg + 90 + 90;
+          } else {
+            deg = -deg;
+          }
+          marker.setRotation(-deg);
+
+        } else {
+          var disy = targetPos.y - curPos.y;
+          var bias = 0;
+          if (disy > 0)
+            bias = -1
+          else
+            bias = 1
+          marker.setRotation(-bias * 90);
+        }
+        return;
+      }
+
+      var sbMarkerMap = new Map();
+      function updateMarkerPoint(sbCode, lng, lat) {
+        if (!lng || !lat) {
+          return;
+        }
+        var point = new BMap.Point(lng, lat);
+        var convertor = new BMap.Convertor();
+        var pointArr = [];
+        pointArr.push(point);
+        convertor.translate(pointArr, 1, 5, function (data) {
+          if (data.status === 0) {
+            let sbMarker = sbMarkerMap.get(sbCode);
+            if (!sbMarker) {
+              // 创建自定义图标
+              let myIcon = new BMap.Icon("../shigong/images/marker-loc.png", new BMap.Size(32, 32), { //自定义图片
+                imageOffset: new BMap.Size(0, 0) //图片的偏移量。为了是图片底部中心对准坐标点。
+              });
+              // 创建Marker标注，使用自定义图标
+              sbMarker = new BMap.Marker(data.points[0], {
+                icon: myIcon
+              });
+              topMap.addOverlay(sbMarker);
+              sbMarkerMap.set(sbCode, sbMarker);
+            }
+            let oldPoints = sbMarker.getPosition();
+            sbMarker.setPosition(data.points[0]);
+
+            setRotation(oldPoints, data.points[0], sbMarker);
+          }
+        });
+      }
+      //更新地图聚焦
+      function mapcenterAndZoom() {
+        let monitorSbId = $('#sb option:selected').val();
+        if (monitorSbId && monitorSbId.length > 0 && sbMarkerMap.get(monitorSbId)) {
+          let sb = sbMarkerMap.get(monitorSbId);
+          topMap.centerAndZoom(sb.getPosition(), 17);
+        }
+      }
+      //更新监控车辆信息
+      function updateCarInfos(item) {
+        let monitorSbId = $('#sb option:selected').val();
+        if (monitorSbId && monitorSbId.length > 0 && monitorSbId === item['sb_code']) {
+
+          if (type == 2) {
+            $("#sb-name-car").text("压路机")
+            $('#sb-img')[0].src = '../shigong/images/shebei.png';
+            $("#sb-wendu-car").text(Number(item['temperature']).toFixed(2))
+          } else {
+            if (type == 1) {
+              $("#sb-name-car").text("摊铺机")
+              $('#sb-img')[0].src = '../shigong/images/shebei2.png';
+              $("#sb-wendu-car").text(Number(item['vibrate_max']).toFixed(2))
+            }
+          }
+          $("#sb-id-car").text(item['sb_code'] || '--')
+          $("#sb-sudu-car").text(item['speed'])
+        }
+      }
+
+
+      laydate.render({
+        elem: '#jongkongdata',
+        type: 'datetime',
+        range: '~',//或 range: '~' 来自定义分割字符
+        change: function (value, date, endDate) {
+          console.log(value); //得到日期生成的值，如：2017-08-18
+          console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+          console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+        }
+      });
+
+      //getSgxmbmcList 获取施工项目部名称
+      function getSgxmbmcList(callback) {
+        ajaxDefer('get', url + '/sysConstruction/getSgxmbmcList', {
+          zhandianId: zhandianId
+        }).then(function (res) {
+          callback && callback(res);
+        })
+      }
+
+      //项目列表 customId- 施工项目部ID
+      function getProjectList(customId, callback) {
+        ajaxDefer('get', url + '/sysConstruction/getProjectList1', {
+          customId: customId,
+          zhandianId: zhandianId
+        }).then(function (res) {
+          callback && callback(res);
+        })
+      }
+
+
+      //桩号
+      //sysConstruction/getZH
+      function getZH(projectId, callback) {
+        ajaxDefer('get', url + '/sysConstruction/getZH', {
+          projectId: projectId,
+          zhandianId: zhandianId
+        }).then(function (res) {
+          callback && callback(res);
+        })
+      }
+
+      //绑定桩号数据
+      function ZH(projectId) {
+        getZH(projectId, function (res) {
+          var _data = res.data;
+          $('#zz').empty();
+          if (_data && _data.length > 0) {
+            //console.log(_data);
+            var options = '<option value="">全部</option>';
+            $.each(_data, function (key, val) {
+              var option = '<option value="' + val.stakemark + '">' + val.stakemark + '</option>';
+              options += option;
+            })
+          }
+          $('#zz').append(options);
+          form.render('select');
+        });
+      };
+
+      //福数与桩号 
+      //sysConstruction/getZHFS
+      function getZHFS(projectId, callback) {
+        ajaxDefer('get', url + '/sysConstruction/getProjectList', {
+          projectId: projectId,
+          zhandianId: zhandianId
+        }).then(function (res) {
+
+          callback && callback(res);
+        })
+      }
+
+
+      //获取回放设备列表
+      function getgetSb(data, callback) {
+        ajaxDefer('get', url + '/sysConstruction/getSb', data).then(function (res) {
+          callback && callback(res);
+        })
+      }
+
+      //获取回放设备列表
+      function getgetHfSb(data, callback) {
+        ajaxDefer('get', url + '/sysConstruction/getHfSb', data).then(function (res) {
+          callback && callback(res);
+        })
+      }
+
+      //获取回放设备列表
+      function getgetHfSbList(projectId, callback) {
+        ajaxDefer('get', url + '/sysConstruction/getSbList', {
+          projectId: projectId
+        }).then(function (res) {
+          callback && callback(res);
+        })
+      }
+
+      //绑定右边显示数据
+      function dynamicData(sb) {
+        var sbCode = sb['sb_code'];
+        var temperature = $('#' + sbCode + 'temperature');
+        var speed = $('#' + sbCode + 'speed');
+        temperature[0].innerHTML = Number(sb['temperature']).toFixed(2);
+        var s = Number(sb['speed']);
+        let type = sb['type'];
+        if (type && type === '摊铺机') {
+          s = s * 1000 / 60;
+          s = s.toFixed(2);
+          speed[0].innerHTML = s + 'm/min';
+        } else {
+          s = s.toFixed(2);
+          speed[0].innerHTML = s + 'km/h';
+        }
+      };
+
+      function addSbImg(sbs, sbId) {
+        var html = '';
+        for (var i = 0; i < sbs.length; i++) {
+          var sb = sbs[i]
+          let src = sb.type == '摊铺机' ? '../shigong/images/shebei2.png' : '../shigong/images/shebei.png';
+          if (sbId && sbId == sb.code) {
+            html = '<li class="sb-car-data">' +
+              '<div class="car-item">' +
+              '<img class="car-img" style="width: 256px;height: 138px;margin-bottom: 14px;" src="' + src + '" />' +
+              '<div class="car-info">' +
+              '<p>设备编号: <span style="color: #19B99B;font-weight: 600;">' + sb.code + '</span></p>' +
+              '<p>设备名称: <span style="color: #383838;">' + sb.name + '</span></p>' +
+              '<div>温度: <img src="./images/wendu.png" style="width: 10px;height: 20px;">' +
+              '<span style="color: red;vertical-align: middle;" id="' + sb.code + 'temperature">--</span>' +
+              '</div>' +
+              '<div>速度: <img src="./images/sudu.png" style="width: 19px;height: 16px;"> <span' +
+              'style="color: #333;vertical-align: middle;" id="' + sb.code + 'speed">--</span></div>' +
+              '<div>状态: <span class="running">运行中&gt;&gt;&gt;</span></div>' +
+              '</div>' +
+              '</div>' +
+              '</li>' + html;
+          } else {
+            html += '<li class="sb-car-data">' +
+              '<div class="car-item">' +
+              '<img class="car-img" style="width: 256px;height: 138px;margin-bottom: 14px;" src="' + src + '" />' +
+              '<div class="car-info">' +
+              '<p>设备编号: <span style="color: #19B99B;font-weight: 600;">' + sb.code + '</span></p>' +
+              '<p>设备名称: <span style="color: #383838;">' + sb.name + '</span></p>' +
+              '<div>温度: <img src="./images/wendu.png" style="width: 10px;height: 20px;">' +
+              '<span style="color: red;vertical-align: middle;" id="' + sb.code + 'temperature">--</span>' +
+              '</div>' +
+              '<div>速度: <img src="./images/sudu.png" style="width: 19px;height: 16px;"> <span' +
+              'style="color: #333;vertical-align: middle;" id="' + sb.code + 'speed">--</span></div>' +
+              '<div>状态: <span class="running">运行中&gt;&gt;&gt;</span></div>' +
+              '</div>' +
+              '</div>' +
+              '</li>';
+          }
+        }
+        $('#sbs').empty();
+        $('#sbs').append(html);
+      };
+
+      function sbList(projectId) {
+        getgetHfSbList(projectId, function (res) {
+          var _data = res.data;
+          sbDataList = _data;
+          addSbImg(_data, null);
+          $('#sb').empty();
+          sbIds = [];
+          if (_data && _data.length > 0) {
+            console.log(_data);
+            sbs = _data;
+            var options = '<option value="">全部</option>';
+            $.each(_data, function (key, val) {
+              var option = '<option value="' + val.code + '">' + val.name + '</option>';
+              options += option;
+              sbIds.push(val.code);
+            })
+          }
+          $('#sb').append(options);
+          form.render('select');
+        });
+      }
+
+      function getLocation(data, callback) {
+        ajaxDefer('get', url + '/sysConstruction/getLocation', data).then(function (res) {
+          callback && callback(res);
+        })
+      }
+
+      function getLocation2(data, callback) {
+        ajaxDefer('get', url + '/sysConstruction/getLocation2', data).then(function (res) {
+          callback && callback(res);
+        })
+      }
+
+      //获取设备状态 sbId
+      function getSbState(data, callback) {
+        ajaxDefer('get', url + '/sysConstruction/getSbState', data).then(function (res) {
+          callback && callback(res);
+        })
+      }
+      //获取天气 projectId
+      function getWeather(data, callback) {
+        ajaxDefer('get', url + '/sysConstruction/getWeather', data).then(function (res) {
+          callback && callback(res);
+        })
+      }
+      function getSb(filterObj, callback) {
+        ajaxDefer('get', url + 'sysConstruction/getSb', {
+          projectId: projectId,
+          zhandianId: zhandianId
+        }).then(function (res) {
+
+          callback && callback(res);
+        })
+      }
+
+      //添加机器
+      function addNewMache(addMacheID, callback) {
+        carInfos[addMacheID] = {
+          "id": addMacheID,
+          "type": type, //车类型 1：摊铺机， 2:压路机
+          "isPaver": type == 1,
+          "width": 2,
+          "lon": '',
+          "lat": '',
+          "name": type == 2 ? "压路机" : "摊铺机",
+        };
+
+        var img = new Image;
+
+        if (type == 2) {
+          img.src = '../shigong/images/shebei3.png';
+          $('#sb-img')[0].src = '../shigong/images/shebei.png';
+        } else {
+          if (type == 1) {
+            img.src = '../shigong/images/shebei4.png';
+            $('#sb-img')[0].src = '../shigong/images/shebei2.png';
+          }
+        }
+
+        img.onload = function () {
+          carInfos[addMacheID]['img'] = img;
+          T.addMachine(carInfos);
+          callback && callback()
+        }
+      }
+
+      function addNewMache2(sbs, callback) {
+        var imgLoadCount = 0;
+
+        let sgkd
+        $.get({
+          async: false,
+          url: 'http://test.zgdrkj.cn:8081/CjManager/sysConstruction/getSbInfo?sbCode=90ffa6e6-7e19-497c-bb4f-e2cee5f026f1',
+          success({ data }) {
+            console.log('datadata', data)
+            sgkd = data.sgkd
+          }
+        })
+
+        for (var i = 0; i < sbs.length; i++) {
+          var sb = sbs[i];
+          var type = sb.type == '摊铺机' ? 1 : 2;
+          // let width = sb.type == '摊铺机' ? sgkd : 2;
+          let width = sgkd
+          let sb_code = sb.code;
+          carInfos[sb_code] = {
+            "id": sb_code,
+            "type": type, //车类型 1：摊铺机， 2:压路机
+            "isPaver": true,
+            "width": width,
+            "lon": '',
+            "lat": '',
+            "name": sb.type,
+          };
+
+          let img = new Image;
+
+          if (type == 1) {
+            img.src = '../shigong/images/shebei4.png';
+          } else {
+            if (type == 2) {
+              img.src = '../shigong/images/shebei3.png';
+            }
+          }
+          img.onload = function () {
+            carInfos[sb_code]['img'] = img;
+            imgLoadCount++;
+            if (imgLoadCount == sbs.length) {
+              T.addMachine(carInfos);
+              T.monitoringCar = addMacheID[0];
+              callback && callback();
+            }
+          }
+        }
+      };
+
+      //初始施工项目列表
+      function initSgLimitSelected() {
+        getSgxmbmcList(function (res) {
+          if (res.data && res.data.length > 0) {
+            //过滤去重
+            var sgxmbmcList = res.data.filter(function (item) {
+              return item.id && item.name
+            })
+            var ids = Array.from(new Set(sgxmbmcList.map(function (item) {
+              return item.id
+            })))
+            var newSgxmbmcList = [];
+            ids.forEach(function (id) {
+              var item = sgxmbmcList.find(function (item) {
+                return id == item.id;
+              })
+              newSgxmbmcList.push(item)
+            })
+
+            if (newSgxmbmcList) {
+              $('#customId').html('');
+              $('#projectId').html('');
+              var options = '<option value=""></option>';
+              $.each(newSgxmbmcList, function (key, val) {
+                var option = '<option value="' + val.id + '">' + val.name + '</option>';
+                options += option;
+              })
+              $('#projectId').html('<option value=""></option>');
+              $('#customId').append(options);
+              form.render('select');
+            }
+          }
+        })
+      }
+
+      //初始化项目列表
+      function initProjectSelected() {
+        getProjectList("", function (res) {
+          var _data = res.data;
+          if (_data && _data.length > 0) {
+            var options = '<option value="">全部</option>';
+            $.each(_data, function (key, val) {
+              var option = '<option value="' + val.id + '">' + val.name + '</option>';
+              options += option;
+            })
+            $('#projectId').empty();
+            $('#projectId').append(options);
+            form.render('select');
+          }
+        });
+      }
+
+      //初始化桩号
+      function initZH() {
+        ZH("");
+      }
+
+      //初始化设备
+      function initSB() {
+        sbList("");
+      }
+
+      //初始画布
+      function initFnCanvas() {
+        //初始化画布环境
+        var initCanvasEnv = function (htmlId) {
+          var $containerCanvas = $('#' + htmlId);
+          var conainerDocument = document.getElementById(htmlId);
+          var canvasWHStr = "width=" + conainerDocument.clientWidth + " height=" + conainerDocument.clientHeight;
+          var $canvasListContainer = $('<div id="divCanvasList"></div>');
+          $canvasListContainer.append("<canvas " + canvasWHStr + ' id="canvasBottom" class="canvas">no support CANVAS</canvas>');
+          $canvasListContainer.append("<canvas " + canvasWHStr + ' id="canvasCalc"   class="canvas" style="display:none;">no support CANVAS</canvas>');
+          $canvasListContainer.append("<canvas " + canvasWHStr + ' id="canvasMain"   class="canvas">no support CANVAS</canvas>');
+          $containerCanvas.append($canvasListContainer);
+
+          $containerCanvas.append('<div id="divRule"><span>15米</span></div>'),
+            $containerCanvas.attr("unselectable", "on").css({
+              "-moz-user-select": "none",
+              "-o-user-select": "none",
+              "-khtml-user-select": "none",
+              "-webkit-user-select": "none",
+              "-ms-user-select": "none",
+              "user-select": "none"
+            }).bind("selectstart", function () {
+              return !1
+            }),
+            $containerCanvas.css("backgroundColor", "#fff"),
+            $containerCanvas.css("color", "#000")
+        }
+        //初始化
+        initCanvasEnv("drawMap")
+        var mapDocumentObj = document.getElementById("drawMap");
+        drawMap = new draw(mapDocumentObj.clientWidth, mapDocumentObj.clientHeight, {
+          canDrag: true,
+          zoomRateMin: .01,
+          gpsDistMax: 20,
+          isGpsFilter: true
+        })
+
+        //放大 缩小
+        $(document).on("click", ".zoom-btn", function () {
+
+          if ($(this).attr("data-type") == "small") {
+            drawMap.setZoom(.8 * drawMap.getZoom())
+          } else {
+            drawMap.setZoom(1.2 * drawMap.getZoom())
+          }
+        })
+
+        //鼠标键盘，滑轮
+        $("#drawMap").bind("mousewheel wheel", function (e) {
+          var event = e.originalEvent;
+          event.stopPropagation();
+          event.preventDefault();
+          if (drawMap.isInit) {
+
+            if (Object.keys(T.machineDic).length > 0) {
+              new mapToObjectXY(event.clientX, event.clientY);
+              if (event.wheelDelta > 0) {
+                drawMap.setZoom(.8 * drawMap.getZoom())
+              } else {
+                drawMap.setZoom(1.2 * drawMap.getZoom())
+              }
+            }
+
+          }
+
+        });
+
+        //屏幕尺寸变化
+        $(window).resize(function () {
+          console.log("窗口尺寸改变");
+          var drawMapHTMLDocument = document.getElementById("drawMap");
+          var newClientWidth = drawMapHTMLDocument.clientWidth;
+          var newClientHeight = drawMapHTMLDocument.clientHeight;
+
+          var oldHW = drawMap.getClientHW();
+          if (oldHW.clientWidth == newClientWidth && oldHW.clientHeight == newClientHeight) {
+            console.log("窗口变化，画布没有变化...")
+          } else {
+            console.log("画布大小发生变化...")
+            var $drawMap = $("#drawMap");
+            $drawMap.width = newClientWidth;
+            $drawMap.height = newClientHeight;
+            drawMap.setClientWH({
+              W: newClientWidth,
+              H: newClientHeight
+            })
+            var elementCanvasBottom = document.getElementById("canvasBottom");
+            var elementCanvasMain = document.getElementById("canvasMain");
+            var elementCanvasCalc = document.getElementById("canvasCalc");
+
+            elementCanvasBottom.setAttribute("width", newClientWidth);
+            elementCanvasBottom.setAttribute("height", newClientHeight);
+
+            elementCanvasMain.setAttribute("width", newClientWidth);
+            elementCanvasMain.setAttribute("height", newClientHeight);
+
+            elementCanvasCalc.setAttribute("width", newClientWidth);
+            elementCanvasCalc.setAttribute("height", newClientHeight);
+
+
+            drawMap.setCanvasBottomContxt(initCanvas('canvasBottom'));
+            drawMap.setCanvasCalcContxt(initCanvas('canvasCalc'));
+            drawMap.setCanvasCanvasMainContxt(initCanvas('canvasMain'));
+            // drawMap.setCenter(new mapToObjectXY(middle.x, middle.y));
+            drawMap.resetDraw(true)
+
+          }
+        })
+
+        //绘制地图拖拽-
+        $("#drawMap").bind("click", function (e) {
+          var event = e.originalEvent;
+          var xy = new mapToObjectXY(event.clientX, event.clientY);
+          var n = drawMap.MapToWorld(new mapToObjectXY(xy.x, xy.y));
+          console.log("mousept:" + xy.x + "," + xy.y + ";" + n.x + "," + n.y)
+        })
+
+        var drawMapApp = document.querySelector('#drawMap');
+        var hammerMap = new Hammer(drawMapApp);
+
+        hammerMap.on('panmove', function (event) {
+          //画布初始成功，
+          if (drawMap.isInit) {
+            drawMap.isDrag = true;
+            $("#divCanvasList").css({
+              "cursor": "move",
+              "top": event.deltaY + "px",
+              "left": event.deltaX + "px"
+            })
+          }
+
+        });
+
+        hammerMap.on('panend', function (event) {
+          if (drawMap.isInit) {
+            drawMap.isDrag = false;
+            var t = new mapToObjectXY(drawMap.totalWidth / 2 - event.deltaX, drawMap.totalHeight / 2 - event.deltaY)
+            var newCenter = drawMap.MapToWorld(t);
+            drawMap.setCenter(newCenter);
+            drawMap.setZoom(1 * drawMap.getZoom())
+            $("#divCanvasList").css({
+              "cursor": "default",
+              "top": "0px",
+              "left": "0px"
+            })
+          }
+
+        });
+
+      }
+
+      //初始化下拉框
+      function initSelectEvent() {
+
+        //选择项目部
+        form.on('select(customName)', function (data) {
+
+          var customId = data.value;
+
+          if (customId) {
+            getProjectList(customId, function (res) {
+              if (res.code == 0) {
+                var projectList = res.data.filter(function (item) {
+                  return item.id && item.name
+                })
+                if (projectList) {
+                  $('#projectId').html('');
+                  var options = '<option value=""></option>';
+                  $.each(projectList, function (key, val) {
+                    var option = '<option value="' + val.id + '">' + val.name + '</option>';
+                    options += option;
+                  })
+                  $('#projectId').append(options);
+                  form.render('select');
+                }
+              }
+            })
+          }
+        });
+        form.on('select(projectName)', function (data) {
+          var id = data.value;
+          sbList(id);
+          ZH(id);
+        });
+
+        form.on('select(sb)', function (data) {
+          const value = data.value
+          const filter = sbDataList.filter(v => v.code === value)[0]
+          if (!!filter) {
+            if (filter.type == '压路机') {
+              type = 2
+            } else {
+              type = 1
+            }
+          }
+          console.log('类型', type)
+          addSbImg(sbDataList, data.value);
+        });
+        form.on('select(zz)', function (data) {
+          console.log("选择桩号")
+          console.log(data)
+        });
+
+        //选择类型
+        form.on('select(type)', function (data) {
+          type = data.value;
+          if (!type) {
+            return;
+          }
+          //摊铺 type=1
+          var typinfo = typeMapTaskAndParam.find(function (t) { return t.type == type })
+          //更新 任务 与参数
+          var taskOptions = '';
+          var paramOptions = '';
+
+          $.each(typinfo.paramList, function (index, val) {
+            var optionParam = '';
+            if (index == 0) {
+              optionParam = '<option value="' + val.id + '" selected>' + val.name + '</option>';
+            } else {
+              optionParam = '<option value="' + val.id + '">' + val.name + '</option>';
+            }
+
+            paramOptions += optionParam;
+          })
+
+          $('#param').html(paramOptions);
+
+          //摊铺-只绘制 温度 参数
+          if (type == 1) {
+            T.dataIndex = 0;
+            tipHtml();
+          }
+
+          form.render('select');
+        });
+
+        //改变任务参数-筛选数据源
+        form.on('select(task)', function (data) {
+          task = data.value;
+
+          if (type == 2) {
+
+            carFilterGPSList = window.carGPSList.filter(function (item) {
+              if (task == 1) {
+                //初压
+                return item['sg_states'] == '初压'
+              }
+              if (task == 2) {
+                //复压
+                return item['sg_states'] == '复压'
+              }
+              if (task == 3) {
+                //终压
+                return item['sg_states'] == '终压'
+              }
+
+              return true
+            })
+            if (carFilterGPSList.length == 0) {
+              T.carGpsList = [];
+              drawMap.resetDraw(true)
+            } else {
+              T.carGpsList = [];
+              reStartInterval();
+            }
+          }
+        })
+
+        //改变渲染色系 
+        form.on('select(param)', function (data) {
+          T.dataIndex = data.value - 1;
+          tipHtml();
+        })
+      }
+
+      //初始化-设备操作对象
+      T.init();
+      T.carGpsList = [];
+      T.dataIndex = 2;
+      var carInfos = {}; //所有设备 'sbId':{name:xxx}
+      var drawMap; //数据对象
+      var addMacheID = '';
+      //转换GPS到平面坐标
+      var convertor = new lonlatGCConvertor(1, 120, 0, 500000, 0);
+
+      function reStartInterval() {
+        var n = 0;
+        //T.dataIndex=[0：温度，1：速度，2：遍速，3：震动]
+        var count = carFilterGPSList.length;
+        carFilterGPSList = carFilterGPSList.map(function (item) {
+          var newItem = {};
+
+          var gk = convertor.JWgetGK(item.longitude, item.latitude);
+          newItem['lng'] = item.latitude;
+          newItem['lat'] = item.longitude;
+          newItem["e"] = gk[0];
+          newItem["n"] = gk[1];
+
+          newItem["id"] = item["sb_code"];//车ID
+          newItem["pb_code"] = item["pb_code"];//车名称
+
+          newItem["dataType"] = 0;
+          newItem["temperature"] = item.temperature;
+          newItem["speed"] = item.speed;
+          newItem["vibrate_max"] = item["vibrate_max"];
+          newItem["data"] = [
+            item.temperature,
+            item.speed,
+            0, //遍数
+            Number(item["vibrate_max"])
+          ]
+
+          return newItem;
+        })
+
+        window.clearInterval(window.loopCar)
+        window.loopCar = setInterval(function () {
+          if (T.carGpsList.length == carFilterGPSList.length || n == carFilterGPSList.length || n > window.carGPSList.length) {
+            window.clearInterval(window.loopCar)
+          } else {
+
+            if (carFilterGPSList && carFilterGPSList.length > 0) {
+              var gps = carFilterGPSList.splice(n, 1);
+              if (gps && gps.length > 0) {
+
+                n = n + 1;
+                updateMarkerPoint(gps[0]['lng'], gps[0]['lat'])
+                T.appendGpsList(gps)
+                console.log('appendGpsList1')
+
+                $("#sb-id-car").text(gps[0]["pb_code"] || gps[0]["id"])
+                $("#sb-wendu-car").text(Number(gps[0]["temperature"]).toFixed(2))
+                $("#sb-sudu-car").text(gps[0]["speed"])
+
+
+                drawMap.resetDraw(true)
+              } else {
+                window.clearInterval(window.loopCar)
+              }
+            } else {
+              window.clearInterval(window.loopCar)
+            }
+
+          }
+
+        }, 1000)
+      }
+
+      form.on('select(mode)', function ({ value }) {
+        // T.drawCount = 0
+        // drawMap.refresh()
+        // reStartInterval2()
+        $('#search').click()
+      })
+
+      function reStartInterval2() {
+        window.mode = $('#mode option:selected').val()
+
+        var n = 0;
+        //T.dataIndex=[0：温度，1：速度，2：遍速，3：震动]
+        var count = carFilterGPSList.length;
+        window.clearInterval(window.loopCar)
+        window.loopCar = setInterval(function () {
+          if (T.carGpsList.length == carFilterGPSList.length || n == carFilterGPSList.length || n > window.carGPSList.length) {
+            window.clearInterval(window.loopCar)
+          } else {
+
+            if (carFilterGPSList && carFilterGPSList.length > 0) {
+              var gps = carFilterGPSList.splice(n, 1);
+              if (gps && gps.length > 0) {
+                n = n + 1;
+
+                var gpslist = gps[0].res;
+
+                var mapGPSData = [];
+
+
+                if (gpslist && gpslist.length > 0) {
+                  mapGPSData = gpslist.map(function (item) {
+                    let sbCode = item['sb_code'];
+                    var longitude = Number(item["longitude"] && item["longitude"].replace("/N", '').replace("/E", ''));
+                    var latitude = Number(item["latitude"] && item["latitude"].replace("/N", '').replace("/E", ''));
+                    var gk = convertor.JWgetGK(longitude, latitude);
+                    updateMarkerPoint(sbCode, latitude, longitude);
+                    item["id"] = item["sb_code"]
+                    item["e"] = Number(gk[0])
+                    item["n"] = Number(gk[1])
+                    item["type"] = item['type']
+                    item["data"] = [
+                      Number(item["temperature"]),
+                      Number(item["speed"]),
+                      0,
+                      Number(item["vibrate_max"])
+                    ]
+
+                    return item;
+                  })
+                  mapcenterAndZoom();
+                }
+
+                //更新车辆信息
+                for (var i = 0; i < mapGPSData.length; i++) {
+                  dynamicData(mapGPSData[i]);
+                  T.updateMachine(mapGPSData[i]["sb_code"], {
+                    show: true,
+                    isDraw: true,
+                    lon: Number(mapGPSData[i]["n"]),
+                    lat: Number(mapGPSData[i]["e"]),
+                    temp: Number(mapGPSData[i]["temperature"]),
+                    speed: Number(mapGPSData[i]["speed"]),
+                    vibrate: Number(mapGPSData[i]["vibrate_max"]),
+                    states: Number(mapGPSData[i]["sg_states"]),
+                  })
+                }
+                let monitorSbId = $('#sb option:selected').val();
+                if (monitorSbId && monitorSbId.length > 0) {
+                  T.monitoringCar = monitorSbId;
+                } else {
+                  T.monitoringCar = mapGPSData[0]['id'];
+                }
+                T.appendGpsList(mapGPSData)
+                console.log('appendGpsList2')
+                drawMap.resetGpsDraw()
+                drawMap.resetDraw(true)
+              } else {
+                window.clearInterval(window.loopCar)
+              }
+            } else {
+              window.clearInterval(window.loopCar)
+            }
+
+          }
+
+          // }, 4)
+        }, mode == 1 ? 1000 : 4)
+      }
+
+      $(function () {
+        //初始画布
+        initFnCanvas();
+
+        initSelectEvent();
+
+        //初始化selected 数据
+        //initSgLimitSelected();
+        initProjectSelected();
+        //初始化桩号
+        //initZH();
+        //初始化设备
+        initSB();
+
+        function renderWeather(projectId) {
+          getWeather({
+            projectId: projectId
+          }, function (res) {
+            if (res.code == 0) {
+              $("#shidu").text(res.data['hj_shidu'] || '--')
+              $("#wendu").text(res.data['hj_wendu'] || '--')
+              $("#fengsu").text(res.data['hj_fengsu'] || '--')
+            }
+          }
+          )
+        }
+
+        //搜索设备
+        form.on('submit(seachsb)', function (data) {
+
+          console.log('搜索设备')
+
+          T.init();
+          T.carGpsList = [];
+          carInfos = {}; //所有设备 'sbId':{name:xxx}
+          addMacheID = '';
+          window.clearInterval(window.loopCar);
+
+          var startDateArr = data.field.date;
+          var projectId = data.field.projectId;
+          var sbType = data.field.type;
+          sbType = sbType && sbType.length > 0 ? (sbType == 1 ? '摊铺机' : '压路机') : '';
+          var filterObj = {
+            objectId: projectId || '153', //项目ID
+            type: type == 2 ? '压路机' : '摊铺机'
+          }
+          var startDate, endDate;
+          if (startDateArr && startDateArr.indexOf('~') > -1) {
+            startDate = startDateArr.split('~')[0].trim();
+            endDate = startDateArr.split('~')[1].trim();
+          }
+          if (startDate) {
+            filterObj["startTime"] = startDate;
+          }
+          if (endDate) {
+            filterObj["endTime"] = endDate;
+          }
+          var sb = data.field.sb;
+          var zz = data.field.zz;
+
+          if (projectId && projectId.length > 0) {
+            //获取天气
+            window.clearInterval(window.loopWeather);
+            renderWeather(projectId);
+            window.loopWeather = setInterval(function () {
+              renderWeather(projectId);
+            }, 1000 * 60)
+          }
+          addNewMache2(sbs, function () {
+            //获取设备GPS
+            var filterLoaction = {
+              sbCodes: sbIds,
+              projectId: projectId
+            }
+            //sbType: sbType
+            if (startDate) {
+              filterLoaction["startTime"] = startDate;
+            }
+            if (endDate) {
+              filterLoaction["endTime"] = endDate;
+            }
+
+            getLocation2(filterLoaction, function (res) {
+
+              if (res.data && res.data.length > 0) {
+                var newArr = [];
+                res.data.forEach(function (oldData, i) {
+                  var index = -1;
+                  var createTime = oldData.createtime.substring(0, 19);
+                  var alreadyExists = newArr.some(function (newData, j) {
+                    if (oldData.createtime.substring(0, 19) === newData.createtime.substring(
+                      0, 19)) {
+                      index = j;
+                      return true;
+                    }
+                  });
+                  if (!alreadyExists) {
+                    var res = [];
+                    res.push(oldData);
+                    newArr.push({
+                      createtime: oldData.createtime,
+                      res: res
+                    });
+                  } else {
+                    newArr[index].res.push(oldData);
+                  }
+                });
+                window.carGPSList = newArr;
+                carFilterGPSList = JSON.parse(JSON.stringify(window.carGPSList));
+                reStartInterval2();
+              }
+            });
+          })
+
+          if (projectId && projectId.length > 0) {
+            //获取天气
+            window.clearInterval(window.loopWeather);
+            renderWeather(projectId);
+            window.loopWeather = setInterval(function () {
+              renderWeather(projectId);
+            }, 1000 * 60)
+          }
+          addNewMache2(sbs, function () {
+            //获取设备GPS
+            var filterLoaction = {
+              sbCodes: sbIds,
+              projectId: projectId,
+              sbType: sbType
+            }
+            if (startDate) {
+              filterLoaction["startTime"] = startDate;
+            }
+            if (endDate) {
+              filterLoaction["endTime"] = endDate;
+            }
+
+            getLocation2(filterLoaction, function (res) {
+
+              if (res.data && res.data.length > 0) {
+                var newArr = [];
+                res.data.forEach(function (oldData, i) {
+                  var index = -1;
+                  var createTime = oldData.createtime.substring(0, 19);
+                  var alreadyExists = newArr.some(function (newData, j) {
+                    if (oldData.createtime.substring(0, 19) === newData.createtime.substring(
+                      0, 19)) {
+                      index = j;
+                      return true;
+                    }
+                  });
+                  if (!alreadyExists) {
+                    var res = [];
+                    res.push(oldData);
+                    newArr.push({
+                      createtime: oldData.createtime,
+                      res: res
+                    });
+                  } else {
+                    newArr[index].res.push(oldData);
+                  }
+                });
+                window.carGPSList = newArr;
+                carFilterGPSList = JSON.parse(JSON.stringify(window.carGPSList));
+                reStartInterval2();
+              }
+            });
+            drawMap.setZoom(153.98935947593228)
+          })
+          return false;
+        })
+      });
+    });
+  </script>
+
+</body>
+
+</html>

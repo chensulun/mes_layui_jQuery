@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>提醒设置</title>
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=314"/>
+    <style>
+        #modelUserForm{
+            padding: 20px;
+        }
+        /*.layui-form-label{*/
+        /*    text-align: left;*/
+        /*}*/
+        .baoy{
+            color: #333;
+            font-size: 18px;
+            padding: 10px;
+        }
+        .layui-form-item {
+            margin-bottom: 10px;
+        }
+        .right_padding{
+            padding-right: 30px;
+        }
+  .layui-laypage-limits{
+     display: none !important;
+}
+        @media screen and (min-width: 992px){
+            /*body{*/
+            /*   font-size: 0.72916vw;*/
+            /*}*/
+            .right_padding{
+                padding-right:7px;
+            }
+            .layui-form-select .layui-input {
+                /*font-size:0.72916vw;*/
+            }
+            .layui-form-item  .classinline {
+                width: 50%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<!--正文-->
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-md4">
+            <div class="layui-card" style="  padding-bottom: 30px;">
+
+            <div class="layui-card-header">提醒设置</div>
+            <div class="layui-row layui-col-space15" style="padding:0 24px">
+                <form id="leftrForm" lay-filter="leftrForm" class="layui-form model-form layui-row" style="padding-right: 0">
+                    <!--                <div class="layui-col-xs3 layui-col-md3">-->
+                    <!--                    <div class="layui-inline right_padding" >-->
+                    <!--                        <div class="layui-input-inline mr0">-->
+                    <!--                            <select name="state_repair">-->
+                    <!--                                <option value=""> 请选择</option>-->
+                    <!--                                <option value="进行中">-&#45;&#45;1</option>-->
+                    <!--                                <option value="已完成">-&#45;&#45;2</option>-->
+                    <!--                                <option value="通过审批">-&#45;&#45;3</option>-->
+                    <!--                            </select>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <!--                </div>-->
+
+                    <div class="layui-col-xs7 layui-col-md7 ">
+                        <div class="layui-form-item ">
+                            <div class="layui-input-block"  style=" margin-left: 0">
+                                <input name="numberofimg" id="chaxun" placeholder="请输入关键字" type="text" class="layui-input" maxlength="20">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs2 layui-col-md2   text-right">
+                        <div class="layui-inline">
+<!--                            <input type='butto'class="layui-btn icon-btn layui-btn-green"lay-filter="formSubSearchUser" lay-submit />查询-->
+                            <span class="layui-btn icon-btn layui-btn-green" lay-filter="formSubSearchUser" lay-submit>
+                                <i class="layui-icon">&#xe615;</i>查询
+                            </span>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+                <table class="layui-table" id="lefttable" lay-filter="lefttable" lay-data="{id: 'LAY_TABLE_INDEX'}">
+
+                </table>
+        </div>
+
+        </div>
+<!--         右侧-->
+        <div class="layui-col-xs12 layui-col-md8">
+            <div class="layui-card layui-clear">
+                <div class="layui-col-md10">
+                <form id="modelUserForm" lay-filter="modelUserForm" action="javascript:jg()" method="post" class="layui-form model-form layui-row">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">站点:</label>
+                        <div class="layui-input-inline inputkuang required">
+                            <select disabled="disabled" name="site" id="site" lay-vertype="tips"   lay-search lay-filter="province" lay-verify="required" required="" >
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">类  别:</label>
+                        <div class="layui-input-inline inputkuang">
+                            <select name="categoryMaintenance"  id="categoryMaintenance"  class="select" lay-vertype="tips" lay-filter="categoryMaintenance"  lay-search lay-filter="city" lay-verify="required" required="">
+<!-- <option value="振动筛">振动筛</option>
+<option value="拌缸">拌缸</option>
+<option value="热料提升机">热料提升机</option>
+<option value="布袋除尘器">布袋除尘器</option>
+<option value="引风机">引风机</option>
+<option value="配电室及电箱">配电室及电箱</option>
+<option value="再生引风机及回风机">再生引风机及回风机</option>
+<option value="沥青烟处理设备">沥青烟处理设备</option>     
+<option value="锅炉">锅炉</option>
+<option value="烘干桐">烘干桐</option>
+<option value="环保设备">环保设备</option> -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">保养位置:</label>
+                        <div class="layui-input-inline inputkuang">
+                            <select name="pointMonitor" id="pointMonitor" class="select" lay-vertype="tips"  lay-filter="pointMonitor"lay-verify="required" required="" >
+                                <option value="">请输入</option>
+<!--                                <option value="监测点2">监测点2</option>-->
+<!--                                <option value="监测点">监测点</option>-->
+<!--                                <option value="监测点3">监测点：3</option>-->
+<!-- <option value="SH-ZDS-2019-1101">SH-ZDS-2019-1101</option>
+<option value="SH-JBG-2019-1102">SH-JBG-2019-1102</option>
+<option value="SH-RTS-2019-1103">SH-RTS-2019-1103</option>
+<option value="SH-CCQ-2019-1104">SH-CCQ-2019-1104</option>
+<option value="SH-YFJ-2019-1105">SH-YFJ-2019-1105</option>
+<option value="SH-PDS-2019-1106">SH-PDS-2019-1106</option>
+<option value="SH-RYFJ-2019-1107">SH-RYFJ-2019-1107</option>
+<option value="SH-LQY-2019-1108">SH-LQY-2019-1108</option>
+<option value="SH-GL-2019-1109">SH-GL-2019-1109</option>
+<option value="SH-HGT-2019-1110">SH-HGT-2019-1110</option>
+<option value="SH-HBSB-2019-1111">SH-HBSB-2019-1111</option> -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">类  型:</label>
+                        <div class="layui-input-block">
+                            <input type="radio" lay-filter="raQT" name="classification" value="日常检" title="日常检" checked=""><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>日常检</div></div>
+                            <input type="radio" lay-filter="raQT" name="classification" value="中保" title="中保"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>中保</div></div>
+                            <input type="radio" lay-filter="raQT" name="classification" value="大保" title="大保"><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon layui-anim-scaleSpring"></i><div>大保</div></div>
+                        </div>
+<!--                        <div class="layui-input-block">-->
+<!--                            <input type="radio" lay-filter="raQT" name="classification" value="日常检" title="日常检" checked=""><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>日常检</div></div>-->
+<!--                            <input type="radio" lay-filter="raQT" name="classification" value="中保" title="中保"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>中保</div></div>-->
+<!--                            <input type="radio" lay-filter="raQT" name="classification" value="大保" title="大保"><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon layui-anim-scaleSpring"></i><div>大保</div></div>-->
+<!--                        </div>-->
+                    </div>
+<!--                    <div class="layui-form-item">-->
+<!--                        <label class="layui-form-label">类  别:</label>-->
+<!--                        <div class="layui-input-inline">-->
+<!--                            <select name="categoryMaintenance" id="leibie" lay-vertype="tips" lay-verify="required" required="">-->
+<!--                                <option value="类别1">类别1</option>-->
+<!--                                <option value="类别2">类别2</option>-->
+<!--                                <option value="类别3">类别3</option>-->
+<!--                            </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit" style=""><dd lay-value="" class="layui-select-tips layui-this">请选择</dd><dd lay-value="1" class="">0.5</dd><dd lay-value="2" class="">1</dd></dl></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">保养要求:</label>
+                        <div class="layui-input-block required">
+                            <textarea name="project" placeholder=" 请输入保养要求" class="layui-textarea"lay-vertype="tips"  lay-verify="required" required=""></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-row">
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">保养人:</label>
+                                <div class="layui-input-block inputkuang required">
+<!--                                    <input name="inspectingofficer" placeholder="请输入" type="text" class="layui-input" maxlength="20" lay-vertype="tips" lay-verify="required" required="" >-->
+                                    <select name="inspectingofficer" id="inspectingofficer"lay-vertype="tips" class="selectclass" lay-filter="inspectingofficer" lay-verify="required" required="">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">电话:</label>
+                                <div class="layui-input-block inputkuang">
+<!--                                    <input name="phoneInspection" placeholder="请输入" type="tel" class="layui-input" min="1"  maxlength="11" lay-vertype="tips" lay-verify="required" required="" >-->
+                                    <select name="phoneInspection" id="phoneInspection"lay-vertype="tips" class="selectclass" lay-verify="required" required="">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row">
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">责任人:</label>
+                                <div class="layui-input-block inputkuang required">
+<!--                                    <input name="personresponsible" placeholder="请输入" type="text" class="layui-input" maxlength="20" lay-vertype="tips"lay-verify="required" required="" >-->
+                                    <select name="personresponsible" id="personresponsible" lay-filter="personresponsible"  lay-vertype="tips" class="selectclass" lay-verify="required" required="">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">电话:</label>
+                                <div class="layui-input-block inputkuang">
+<!--                                    <input name="phoneResponsible" placeholder="请输入" type="tel" class="layui-input" min="1"  maxlength="11" lay-vertype="tips" lay-verify="required" required="" >-->
+                                    <select name="phoneResponsible" id="phoneResponsible" lay-filter="personresponsible"  lay-vertype="tips" class="selectclass" lay-verify="required" required="">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+          <!--          <h3 class="baoy">保养周期</h3> -->
+					          <label class="layui-form-label">保养周期</label>
+                    <div class="layui-row">
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label ">生产量:</label>
+                                <div class="layui-input-block inputkuang required">
+                                    <input name="output" placeholder="请输入数量" type="number" class="layui-input" maxlength="20" lay-vertype="tips"  required="">
+                                </div>
+                            </div>
+<!--                            <div class="layui-form-item">-->
+<!--                                <label class="layui-form-label">生产量:</label>-->
+<!--                                <div class="layui-input-inline classinline">-->
+<!--                                    <select name="output" id="output" lay-vertype="tips" lay-verify="required" required="">-->
+<!--                                        <option value="5000">5000</option>-->
+<!--                                        <option value="4000">4000</option>-->
+<!--                                        <option value="3000">3000</option>-->
+
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">时间(小时):</label>
+                                <div class="layui-input-block inputkuang required">
+                                    <input name="period" placeholder="请输入" type="text" class="layui-input" lay-vertype="tips"  required="">
+                                </div>
+                            </div>
+<!--                            <div class="layui-form-item" >-->
+<!--                                <label class="layui-form-label" >时间(周):</label>-->
+<!--                                <div class="layui-input-inline classinline">-->
+<!--                                    <select name="period" id="period" lay-vertype="tips" lay-verify="required" required="">-->
+<!--                                        <option value="1">1</option>-->
+<!--                                        <option value="2">2</option>-->
+<!--                                        <option value="3">3</option>-->
+<!--                                        <option value="4">4</option>-->
+<!--                                        <option value="5">5</option>-->
+<!--                                        <option value="6">6</option>-->
+
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                        </div>
+<!--                        <div class="layui-col-md4">-->
+<!--                            <div class="layui-form-item">-->
+<!--                                <label class="layui-form-label">状态</label>-->
+<!--                                <div class="layui-input-block">-->
+<!--                                    <input name="numberofvideo" placeholder="请输入" type="text" class="layui-input"  lay-vertype="tips" required="">-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">保养标准:</label>
+                        <div class="layui-input-block inputkuang">
+                            <textarea name="standardMaintenance" placeholder=" 请输入维修说明" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <label class="layui-form-label">上传设置</label>
+                    <div class="layui-row">
+                        <div class="layui-col-md4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">图片数量:</label>
+                                <div class="layui-input-block inputkuang required">
+                                    <input name="numberofimg" placeholder="请输入数量" value="0" type="number"  min="0"max="10" class="layui-input" maxlength="20" lay-vertype="tips"  required="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">语音数量:</label>
+                                <div class="layui-input-block inputkuang required">
+                                    <input name="numberofvoice" placeholder="请输入数量"  min="0"max="10"  type="number"value="0"  class="layui-input" min="0"max="10" maxlength="11" lay-vertype="tips"  required="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">视频数量</label>
+                                <div class="layui-input-block inputkuang required">
+                                    <input name="numberofvideo" placeholder="请输入数量" value="0" type="number" class="layui-input" min="0"max="10" maxlength="11" lay-vertype="tips" required="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block text-right">
+
+                            <!--<button type="button" class="layui-btn layui-btn-warm" lay-filter="formSubmitAQddd"lay-submit >修改</button>-->
+                            <button type="button" class="layui-btn layui-btn-green" lay-filter="formsave" lay-submit>保存</button>
+                            <button  type="button" lay-filter="formadd" class="layui-btn" id="formadd" lay-submit>新增</button>
+                            <!--                <button ew-event="closeThisTabs" type="button" class="layui-btn layui-btn-primary">&emsp;取消&emsp;</button>-->
+                            <!--                <button class="layui-btn" lay-filter="formSubmitAQ" lay-submit >&emsp;保存&emsp;</button>-->
+                        </div>
+                    </div>
+
+            </form>
+
+                </div>
+            </div>
+            </div>
+
+    </div>
+</div>
+<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+<script type="text/javascript" src="../../assets/js/a.js"></script>
+<script>
+    layui.use(['layer', 'Split', 'form', 'table', 'util', 'admin','laydate'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var Split = layui.Split;
+        var laydate = layui.laydate;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var admin = layui.admin;
+    //  表格
+    //       var serverUrl='https://mes.cqzonjo.com/CjManager';
+       // var  serverUrl='http://192.168.0.16:8080';
+        //新接口
+        var userid=localStorage.getItem("userid");
+        var token=localStorage.getItem("token");
+        var obj={};
+        obj.userid=userid;
+        obj.token= token;
+		obj.site=localStorage.getItem("station");
+       	var flagsub="xinzeng";//保存按钮是修改还是新增
+        var insTb = table.render({
+            elem: '#lefttable',
+            url:serverUrl+"/setMaintenance/getSetMaintenance",
+            // page: true,
+            // toolbar: true,
+            // height: 575,
+            // limit:10,
+            page: true,
+            toolbar: false,
+            where:obj,
+            cellMinWidth: 100,
+            limit:10,
+            // where: {
+            //     userid:  userid,
+            //     token:token,
+            // },
+            cols: [[
+                {type: 'numbers', title: '编号'},
+                // {field: 'setid', title: '编号'},
+                {field: 'site', title: '站点'},
+                {field: 'categoryMaintenance', title: '类别'},
+                {field: 'maintenanceId',hide:true,title: 'id'},
+                {field: 'inspectingofficer', title: '保养人'},
+                {field: 'datePlan',hide:true ,title: '计划保养时间'},
+                {field: 'dateFinish',hide:true ,title: '实际保养日期'},
+                {field: 'stateMaintenance',hide:true ,title: '状态'},
+                {field: 'tasklevel',hide:true ,title: '任务紧急程度'},
+                {field: 'explainMaintenance',hide:true ,title: '保养说明/项目'},
+                {field: 'video',hide:true ,title: '音频'},
+                {field: 'voice',hide:true ,title: '视频'},
+            ]]
+            ,done: function(res){
+                 console.log(666666);
+                console.log(res);
+
+            }
+            ,response: {
+                "code": 0,
+                "msg": "",
+                "count": 1000,
+                "data": []
+            }
+            ,parseData: function(res){ //res 即为原始返回的数据
+                console.log(res);
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": "", //解析提示文本
+                    "count": res.data.totalCount, //解析数据长度
+                    "data": res.data.data //解析数据列表
+                };
+            }
+        });
+
+        // $('th').hide();
+
+        //查询按钮
+        form.on('submit(formSubSearchUser)', function (data) {
+            console.log(data);
+            console.log("00000");
+            var datafield={};
+            var input = $("#chaxun").val();
+            datafield.key= input;
+            datafield.userid=userid;
+            datafield.token= token;
+            console.log(datafield);
+            insTb.reload({where: datafield},'data');
+
+        });
+        //    拿到被选中的数据
+        table.on('row(lefttable)', function (obj) {
+        	flagsub='xiugai';
+        	console.log("xiugai")
+            var data = obj.data;
+            var layEvent = obj.event;
+            form.val("modelUserForm",{
+                // "site":data.site,
+                "pointMonitor":data.pointMonitor,
+                'categoryMaintenance':data.categoryMaintenance,
+                "project":data.project,
+                "inspectingofficer":data.inspectingofficer,
+                "phoneInspection":data.phoneInspection,
+                'personresponsible':data.personresponsible,
+                'phoneResponsible':data.phoneResponsible,
+                'output':data.output,
+                'period':data.period,
+                'classification':data.classification,
+                'site':data.site,
+                "state":data.state,   //状态
+                'standardMaintenance':data.standardMaintenance,
+                'numberofimg':data.numberofimg,
+                'numberofvoice':data.numberofvoice,
+                'numberofvideo':data.numberofvideo
+
+            });
+             getitem("#site",data.site);//站点
+            getitem('#pointMonitor',data.pointMonitor);//检测点
+            var categoryMaintenance=$('#categoryMaintenance').value;
+            categoryMaintenance=data.categoryMaintenance;//保养类别
+            $('#site').next().find('[lay-value="'+data.site+'"]').click();//默认点击了一下三级菜单的地址
+            $('#categoryMaintenance').next().find('[lay-value="'+data.categoryMaintenance+'"]').click();
+            $('#pointMonitor').next().find('[lay-value="'+data.pointMonitor+'"]').click();
+           sessionStorage.setItem("setid",data.setid);
+           function getitem(name,datas){
+               var dataname=$(name).value;
+                    dataname=datas;
+               //console.log(dataname);
+           }
+
+            form.render(null, 'modelUserForm');
+
+            //标注选中样式
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+            layui.form.render('select');
+
+        });
+        //二级菜单
+        var wxrenurl=url+"/user/getUserName";
+        function wxren(url,id){
+            $.ajax({
+                url:url,
+                type: "get",
+                dataType:"json",
+                async:false,
+                success:function(res){
+					console.log(res);
+                    var username='';
+                    for (var i = 0; i < res.length; i++) {
+                        username+= '<option value="'+res[i].realName+'" data-id=' + i + '>' + res[i].realName + '</option>'
+                    }
+                    $(id).append(username);
+                    layui.form.render("select");
+                }
+            });
+        }			  
+        form.on('select(inspectingofficer)', function(obj) {
+            getnuber(geturl,'#phoneInspection',"#inspectingofficer");
+
+        });
+        form.on('select(personresponsible)', function(obj) {
+            getnuber(geturl,'#phoneResponsible',"#personresponsible");
+        });
+        var geturl=url+"/user/getPhone";
+        function getnuber(url,id,name){
+            $.ajax({
+                url:url,
+                type: "get",
+                dataType:"json",
+                async:false,
+                data:{
+                    userName:$(name).val()
+                },
+                success:function(res){
+                    console.log(res);
+                    var str1='';
+                    if(res[0]==null){
+                        str1+= '<option data-id=' + i + '>暂无号码</option>'
+                    }else{
+                        for (var i = 0; i < res.length; i++) {
+                            str1+= '<option data-id=' + i + '>' + res[i].phonenumber + '</option>'
+                        }
+                    }
+
+                    $(id).html(str1);
+                    layui.form.render("select");
+                }
+            });
+
+        }
+        wxren(wxrenurl,'#inspectingofficer');
+        getnuber(geturl,'#phoneInspection',"#inspectingofficer");
+        wxren(wxrenurl,'#personresponsible');
+        getnuber(geturl,'#phoneResponsible',"#personresponsible");
+		
+        //结束
+		leibie();
+		form.on('select(province)', function(obj) {
+		leibie();		
+		});
+		function leibie(){
+			var siteName=localStorage.getItem("station");
+			// alert(siteName)
+			$.ajax({
+			    url:url+'/shebei/getleibieList',
+			    type: "get",
+			    dataType:"json",
+				async:false,
+				data:{siteName:siteName},
+			    success:function(res){
+                    console.log(222);
+                    console.log(res);
+			      var str1='';
+				   for (var i = 0; i < res.length; i++) {
+				   	str1+= '<option data-id=' + i + '>' + res[i].kemu + '</option>'
+				   }
+						$('#categoryMaintenance').html(str1);
+						layui.form.render("select");
+			    }
+			});
+		}
+		getchanges();
+		form.on('select(categoryMaintenance)', function(obj) {
+		getchanges();
+		});
+		function getchanges(){
+			$.ajax({
+			    url:url+'/shebei/getweizhiList',
+			    type: "get",
+			    dataType:"json",
+				async:false,
+				data:{
+					kemu:$("#categoryMaintenance").val()
+				},
+			    success:function(res){
+			        console.log(444);
+			        console.log(res);
+			      var str1='';
+				   for (var i = 0; i < res.length; i++) {
+				   	str1+= '<option data-id=' + i + '>' + res[i].weizhi + '</option>'
+				   }
+						$('#pointMonitor').html(str1);
+						layui.form.render("select");
+			    }
+			});
+
+		}
+	    //  新建按钮
+	    $("#formadd").click(function(){
+	    	console.log("xinzeng")
+            $(".inputkuang input[name='output']").val("");
+            $(".inputkuang input[name='period']").val("");
+            $(".inputkuang input[name='numberofimg']").val("");
+            $(".inputkuang input[name='numberofvideo']").val("");
+            $(".inputkuang input[name='numberofvoice']").val("");
+            $("textarea").val("");
+            flagsub='xinzeng'
+	    })
+
+        // 保存按钮
+        form.on('submit(formsave)', function (data) {
+			debugger;
+            data.field.site=localStorage.getItem("station");
+        	console.log(data.field);
+        	var userid=localStorage.getItem("userid");
+	        var token=localStorage.getItem("token");
+        	if(flagsub=='xiugai'){//修改
+	            var setMaintenanceJson ={};
+	            var setid= sessionStorage.getItem("setid");
+	            var setMaintenance= data.field;
+	            setMaintenance.setid= setid;
+	            setMaintenanceJson= JSON.stringify(setMaintenance);
+	            $.ajax({
+	                url:serverUrl+'/setMaintenance/updateSetMaintenance',
+	                type: "get",
+	                dataType:"json",
+	                data:{
+	                    'userid':userid,
+	                    'token': token,
+	                    'setMaintenanceJson':setMaintenanceJson
+	                },
+	                success:function(res){
+	                    layer.msg(res.msg);
+	                    table.reload('lefttable',{ });
+	
+	                },error:function (res) {
+	                    layer.msg(res.msg);
+	
+	                }
+	
+	            });
+        	}else if(flagsub=="xinzeng"){//新增
+	            var setMainJson= data.field;
+	            console.log(setMainJson);
+	            var setMaintenanceJson ={};
+	            setMaintenanceJson= JSON.stringify(setMainJson);
+	            $.ajax({
+                    url:serverUrl+'/setMaintenance/addSetMaintenance',
+                    type: "get",
+                    dataType:"json",
+                    data:{
+                        'userid':userid,
+                        'token': token,
+                        'setMaintenanceJson': setMaintenanceJson
+                    },
+                    success:function(res){
+                        layer.msg(res.msg);
+                        table.reload('lefttable',{ });
+
+                    },error:function (res) {
+                        layer.msg(res.msg);
+                        layer.msg("请求错误");
+
+                    }
+
+                });
+        	}
+        	
+        	flagsub='xiugai';//提交之后保存按钮设为修改功能
+        });
+// 三级联动菜单
+        var province = $("#site"),
+            city = $("#categoryMaintenance"),
+            district = $("#pointMonitor");
+        for (var i = 0; i < provinceList.length; i++) {
+            addEle(province, provinceList[i].name);
+        }
+        form.render('select');
+        function addEle(ele, value) {
+            var optionStr = "";
+            optionStr = "<option value=" + value + " >" + value + "</option>";
+            ele.append(optionStr);
+        }
+		$("#site").val(localStorage.getItem('station'));
+		form.render('select');
+    });
+    
+</script>
+</body>
+</html>

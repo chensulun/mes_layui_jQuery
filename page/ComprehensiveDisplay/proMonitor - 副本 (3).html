@@ -1,0 +1,756 @@
+<!doctype html>
+<html class="no-js" style="background-color: #f2f2f2;">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>重交沥青搅拌站智慧生产管控系统</title>
+		<link rel="stylesheet" type="text/css" href="../../assets/layui/css/layui.css?12" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common1.css?12" /> 
+		<!--<link rel="stylesheet" type="text/css" href="../../assets/css/zhutuo.css" /> -->
+		<link href="http://vjs.zencdn.net/5.19/video-js.min.css" rel="stylesheet" />
+		<script src="http://vjs.zencdn.net/5.19/video.min.js"></script>
+		<script src="https://unpkg.com/flv.js/dist/flv.min.js"></script>
+    <script src="https://unpkg.com/videojs-flvjs/dist/videojs-flvjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.12.2/videojs-contrib-hls.js"></script>
+	<style>
+		.container{
+			width: 100%;
+		    padding-left: 30px; 
+		    padding-right: 30px;
+		  overflow: hidden;
+		  box-sizing: border-box;
+		}
+		.header{
+			height:auto;
+			background:none;
+		}
+		.jiankong-top-item{
+			background: #FFFFFF;
+			margin-right:2.5rem;
+		}
+		.jiankong-top-item p span{
+			font-size: 1rem;
+		}
+		.jiankong-main .section .section1 .peibi .layui-table-view .layui-table td, .layui-table-view .layui-table th{
+    height: 38px;
+    line-height: 38px;
+    	padding: 0;
+    	    text-align: center;
+		}
+		.layui-table-cell{
+			/*width: 102px;
+    	height: 48px;*/
+    	padding: 0;
+    	    text-align: center;
+		}
+		.layui-table, .layui-table-view{
+			margin: 0;
+		}
+		.layui-table-body{
+			    border-width: 0.1px;
+    border-style: solid;
+    border-color: #e6e6e6;
+		}
+		.layui-table td, .layui-table th, .layui-table-fixed-r, .layui-table-header, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row]{
+			 border-width: 0.1px;
+		}
+		.zexian-chart{
+			width: 33%;
+			float: left;
+			background: #FFFFFF;
+		/*	  height: 339px;*/
+		}
+		.zexian{
+			box-sizing: border-box;
+		    padding-top: 30px;
+		    height: 339px;
+		    width: 100%;
+		    clear: both;
+		}
+		.zexian-chart-lineChart{
+			height: 280px;
+			margin-left: 10px;
+		}
+		.zexian-chart h2{
+			margin-left: 20px;
+		}
+		.jiankong-main .table{
+			max-height: 24.15rem;
+			overflow-y:auto;
+		}
+		.jiankong-main{
+			overflow: hidden;
+			position: relative;
+			height: 36.45rem;
+		}
+		.jiankong-main .video{
+			overflow: hidden;
+			position: relative;
+		}
+		.layui-layout-admin .layui-body{
+			bottom: 0;
+		}
+		/*.laytable-cell-2-one{
+			width: 60px;
+			text-align: center;
+		}*/
+		/*.shenchan .layui-table-cell{
+			width: 57px !important;
+		}*/
+		.jiankong-main{
+			bottom: 0 !important;
+			margin-bottom:0;
+		}
+		.jiankong-top-item img{
+			margin-top: 0;
+			margin-left: 0;
+		}
+		.jiankong-main .table h2{
+			height: 4.9rem;
+    		line-height: 4.9rem;
+    		font-size: 1.3rem;
+		}
+		.jiankong-main .section1 .ysb .head{
+			height: 4.9rem;
+    		line-height: 4.9rem;
+    		font-size: 1.3rem;
+		}
+		.jiankong-main .section1 .peibi .head{
+			font-size: 1.3rem;
+		}
+		.layui-table td, .layui-table th{
+			height: 38px;
+			line-height: 38px;
+		}
+		/* .jiankong-main .section1 .ysb{
+			width: 9.9rem;
+		} */
+		/*.peibi .laytable-cell-1-eight{
+			width:69px !important;
+		}*/
+		/*.jiankong-main .section{
+			width: 60.3rem;
+		}
+		.jiankong-main .section1{
+			width: 60.3rem;
+		}
+		.jiankong-main .section1 .peibi{
+			    width: 51.4rem;
+		}
+		.jiankong-main .table{
+			width: 60.3rem;
+		}*/
+	</style>
+	</head>
+
+	<body>
+	
+	
+		<div class="header clearfix">
+		<div class="container">
+			<div class="jiankong-top">
+				<div class="jiankong-top-item type">
+					<img src="../../assets/images/icon_type.png" />
+					<div class="type-inner">
+						<p>
+							<span id="produceType">--</span>
+							<em>生产类型</em>
+						</p>
+					</div>
+				</div>
+				<div class="jiankong-top-item temp">
+					<img src="../../assets/images/icon_temp.png" />
+					<div class="temp-inner">
+						<p>
+							<span id="guliaoTemp">0℃</span>
+							<em>骨料温度</em>
+						</p>
+						<p>
+							<span id="chuliaoTemp">0℃</span>
+							<em>出料温度</em>
+						</p>
+						<p>
+							<span id="zsTemp">0℃</span>
+							<em id="zstext">尾气温度</em>
+						</p>
+					</div>
+
+				</div>
+				<div class="jiankong-top-item num">
+					<img src="../../assets/images/icon_num.png" />
+					<div class="num-inner">
+						<p>
+							<span id="totalNum">0 吨</span>
+							<em>总产量</em>
+						</p>
+						<p>
+							<span id="curNum">0 吨</span>
+							<em>当前产量</em>
+						</p>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="jiankong-main">
+				<div class="section fl">
+
+					<div class="section1 fl">
+						<div class="fl ysb">
+							<p class="head">油石比</p>
+							<p class="ratiopb">--%</p>
+							<p class="ratio">--%</p>							
+						</div>
+						<div class="fr peibi">
+							<h2 class="head">设计配比</h2>
+							<table class="layui-hide" id="sheji"></table>
+						</div>
+						
+					</div>
+
+					<div class="fl table shenchan">
+						<h2>生产看板</h2>
+						<table class="layui-hide" id="produce" carousel-item></table>
+					</div>
+				</div>
+
+				<div class="fr video" id="monitorVideo" style="overflow: hidden;">
+					<h2>出料口视频</h2>
+					<div id="player">
+						
+					</div>
+					<!-- <iframe id="v1" src="http://183.230.164.56:10810/play.html?channel=3&device=6984714942377&iframe=yes&aspect=400x346" width="28.65rem" height="346px" allowfullscreen></iframe> -->
+					<div style="width: 100%;height: 7.5rem;background: #000000;position: absolute;bottom:0"></div>
+				</div>
+				
+			</div>
+			<audio id="myaudio1" src="1.mp3" controls="controls" autostart="false" hidden="true" ></audio>
+			<audio id="myaudio2" src="2.mp3" controls="controls" autostart="false" hidden="true" ></audio>
+			<audio id="myaudio3" src="3.mp3" controls="controls" autostart="false" hidden="true" ></audio>
+			
+			<div class="zexian">
+					<div class="section3-chart2 zexian-chart" >
+					<h2 style="color: #5BC450;">油石比（%）</h2>
+					<div id="lineChart1" class="zexian-chart-lineChart"></div>
+				</div>
+				<div class="section3-chart1 zexian-chart" style="margin-left:0.5% ;">
+					<h2 style="color: #5BC450;">温度（℃）</h2>
+					<div id="lineChart2" class="zexian-chart-lineChart" ></div>
+					
+				</div>
+
+			
+				<div class="section3-chart2 zexian-chart" style="margin-left:0.5% ;">
+					<h2 style="color: #5BC450;">仓1配比（%）</h2>
+					<div id="lineChart3" class="zexian-chart-lineChart"></div>
+				</div>
+				</div>
+		</div>
+
+		<script src="../../assets/js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../assets/js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../assets/layui/layui.all.js"></script>
+		<script src="../../assets/js/common.js"></script>
+		<script src="../../assets/js/common2.js"></script>
+		<script src="../../assets/js/server.js"></script>
+		<!-- <script src="../../assets/js/xgplayer.js" charset="utf-8"></script>
+		<script src="../../assets/js/xgplayer-flv.js" charset="utf-8"></script> -->
+		<script src="../../assets/js/hls.js" charset="utf-8"></script>
+		<!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script> -->
+		<script src="../../assets/js/comprehensiveapi.js" type="text/javascript" charset="utf-8"></script>
+	
+		<script type="text/javascript">
+			
+			 
+			
+		function ratioChart(name,obj,xData,yData){
+			// 折线图
+			var lineChart = echarts.init(document.getElementById(obj));
+			var option = {
+				grid: {
+					top: 30,
+					left: 40,
+					right:0,
+					bottom:'20%'
+				},
+				tooltip: {
+			        trigger: 'axis',  
+			    },
+				xAxis: {
+					type: 'category',
+					data:xData,
+					axisLine: {
+						show: true,
+						lineStyle: {
+							color: '#148976'
+						}
+					},
+					axisTick: {
+						lineStyle: {
+							color: '#fff'
+						}
+					},
+//					axisLabel: {
+//						show:false
+//					},   //隐藏x轴的刻度lable
+					tooltip: {
+				        trigger: 'axis',  
+				    },		
+					axisLabel:{
+						show:false
+					}
+				},
+				yAxis: {
+					name:name,
+					type: 'value',
+					splitLine: {
+						show: false
+					},
+					axisLine: {
+						show: true,
+						lineStyle: {
+							color: '#148976'
+						}
+					},
+					axisTick: {
+						lineStyle: {
+							color: '#fff'
+						}
+					},
+				},
+				series: [{
+					name:name,
+					type: 'line',
+					data: yData,
+					smooth: true,
+					itemStyle: {
+						color: '#00CAB0'
+					},
+					areaStyle: {
+						normal: {
+							color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+								offset: 0,
+								color: '#5BC450'
+							}, {
+								offset: 1,
+								color: '#ffe'
+							}])
+						}
+					}
+				}]
+			};
+		
+				lineChart.setOption(option);
+			}		
+			function gaugeOption(name,max,value,unit){
+				return {
+				    //backgroundColor: "#fff",
+				    color: ["#37A2DA", "#32C5E9", "#67E0E3"],
+				    
+				    series: [{
+				        name: name,
+				        type: 'gauge',
+			           	min:0,
+			           	max:max,
+			           	radius:'100%',
+				        detail: {
+				        	//show:false,
+				            formatter: '{value}'+unit,
+				            fontSize:20,
+				        },
+				        axisLine: {
+				            show: true,
+				            lineStyle: {
+				                width: 5,
+				                shadowBlur: 0,
+				                color: [
+				                    [0.3, '#67e0e3'],
+				                    [0.7, '#37a2da'],
+				                    [1, '#fd666d']
+				                ]
+				            }
+				        },
+				        splitLine:{
+				        	show:false,
+				        },
+				        axisLabel:{
+				        	show:false,
+				        	distance:0
+				        },
+				        title:{
+				        	color:'#00A7DC'
+				        },
+				        axisTick:{// 刻度样式
+				        	//show:false
+				        },
+				       // itemStyle
+				        pointer: {
+				        	//show:false
+				        	width:2
+				        },
+				        data: [{
+				            value: value,
+				            name: name,
+				        }]
+				
+				    }]
+				};
+			}
+
+			$(function(){
+				proMontitorvideo();
+	var deviceWidth = document.documentElement.clientWidth;
+	$("#monitorVideo #v1").css("width",deviceWidth*28.65 / 96+"px");
+	$("#monitorVideo #v1").css("height",deviceWidth*32.45 / 96+"px");
+				if(station=="两江站"){
+					if(deviceWidth<1200){
+						loadjscssfile("../../assets/css/cqlq.css");
+					}else{
+						loadjscssfile("../../assets/css/cqlq1.css");
+					}
+					
+				}else if(station=="璧山站"){
+					if(deviceWidth<1200){
+					loadjscssfile("../../assets/css/bisan.css");	
+					}else{
+						loadjscssfile("../../assets/css/bisan1.css");
+					}	
+				}else if(station=="双石站"){
+					if(deviceWidth<1200){
+						loadjscssfile("../../assets/css/shuangshi.css");
+					}else{
+						loadjscssfile("../../assets/css/shuangshi1.css");
+					}
+					
+				} else if(station=="广州站"){
+					if(deviceWidth<1200){
+					loadjscssfile("../../assets/css/cqlq.css");	
+					}else{
+						loadjscssfile("../../assets/css/cqlq1.css");
+					}
+				}else if(station=="丰都站"){
+					if(deviceWidth<1200){
+						loadjscssfile("../../assets/css/shuangshi.css");
+					}else{
+						loadjscssfile("../../assets/css/shuangshi1.css");
+					}
+				}else if(station=="鑫丰站" || station == "任丘站" || station == "新基地"){
+					$("#zstext").text("再生温度");
+					if(deviceWidth<1200){
+						loadjscssfile("../../assets/css/cangzhou.css");
+					}else{
+						loadjscssfile("../../assets/css/cangzhou1.css");
+					}
+				}else{
+					if(deviceWidth<1200){
+						loadjscssfile("../../assets/css/zhutuo.css");
+					}else{
+						loadjscssfile("../../assets/css/zhutuo1.css?1");
+					}
+				}
+				
+				//proMontitorvideo();
+			})
+			
+			var myAuto1 = document.getElementById('myaudio1');
+			var myAuto2 = document.getElementById('myaudio2');
+			var myAuto3 = document.getElementById('myaudio3');
+		    //myAuto2.play();
+	        var v1 = false; //配比异常
+			var v2 = false;	//油石比异常
+			var v3 = false;	//温度异常
+			var v4 = false;	//第一罐配比异常
+			var v5 = false;	//第一罐油石比异常
+				var v6 = false;	//温度异常
+			 
+			var xData1 = [];
+			var yData1 = [];
+			
+			var xData2 = [];
+			var yData2 = [];
+			
+			var xData3 = [];
+			var yData3 = [];
+			//油石比
+			var rate=[]
+			// 生产实时数据	
+			WebSocketFn(productUrl, function(data) {
+			var productList=[];
+				if(data == '{}' || data == '[]') {
+					return;
+				}
+				
+				var data = JSON.parse(data);
+				productList = data.productList;
+				
+				
+				// 生产类型
+				if(data.productName) {
+					$('#produceType').html(data.productName);
+				}
+
+				//骨料温度
+				if(data.guliaoTemp==undefined){
+					$('#guliaoTemp').html("--");
+				}else{
+					$('#guliaoTemp').html(data.guliaoTemp + '℃');
+				}
+				
+				// 出料温度
+				if(data.outTemp==undefined){
+					$('#chuliaoTemp').html("--");
+				}else{
+					$('#chuliaoTemp').html(data.outTemp + '℃');
+				}
+				
+				// 尾气温度
+				
+				if(data.weiqiTemp==undefined){
+					$('#zsTemp').html("--");
+				}else{
+					$('#zsTemp').html(data.weiqiTemp + '℃');
+				}
+				
+
+				// 总产量
+				if(data.productTotal) {
+					$('#totalNum').html(data.productTotal + '吨');
+				}
+				// 当前产量
+				if(data.curTotal) {
+					$('#curNum').html(data.curTotal + '吨');
+				}
+				// 油石比
+				if(station=="鑫丰站" || station=="任丘站" ||station=="新基地"){
+					if(data.lastItemPB!=null && data.lastItemPB.ysb!=null){
+						$('.ratio').html(data.lastItemPB.ysb.toFixed(2) + '%');
+						$('.ratiopb').html(data.lastItemPB.ysb.toFixed(2) + '%')
+					}
+				}else{
+					$(".ratiopb").hide();
+					if(data.rate) {
+						$('.ratio').html(data.lastItemPB.ysb + '%');
+					}
+				}
+				
+				
+				// 出料温度
+				if(station=="江津站"){
+					if(data.productList && data.productList.length>0){
+						var initXdata1 = data.productList.map(function(index,value){
+								return index.date+" "+index.dateTime;
+						})
+											
+						var initYdata1 = data.productList.map(function(index,value){
+							return index.cpwdx;
+						})
+						xData1 = xData1.concat(initXdata1);
+						yData1 = yData1.concat(initYdata1);
+						ratioChart('温度','lineChart2',xData1,yData1);
+					}
+				}else{
+					if(data.outTList && data.outTList.length>0){
+						var initXdata1 = data.outTList.map(function(index,value){
+								return index.outDate;
+						})
+					
+						var initYdata1 = data.outTList.map(function(index,value){
+							return index.out;
+						})
+						xData1 = xData1.concat(initXdata1);
+						yData1 = yData1.concat(initYdata1);
+						ratioChart('温度','lineChart2',xData1,yData1);
+						
+					}else if(data.outTemp){
+						// 温度曲线
+						
+						if(xData1.length>100){
+							xData1 = [];
+							yData1 = [];
+						}
+						
+						xData1.push(data.date);
+						yData1.push(data.outTemp)
+						
+						ratioChart('温度','lineChart2',xData1,yData1);
+					}
+				}
+					
+	
+	
+				// 油石比
+				if(data.rate){
+					if(data.change){
+						rate = data.productList;
+					}else{
+						rate = data.productList.concat(rate);
+					}
+					//油石比曲线
+			
+					xData2 = rate.map(function(index,value){
+						return index.date + '  '+ index.dateTime;
+					})
+					
+					yData2 = rate.map(function(index,value){
+						return index.ysb;
+					})
+			
+					xData2.sort();
+					yData2.sort();
+					
+					
+					ratioChart('油石比','lineChart1',xData2,yData2);
+				}
+				if(data.lastItemPB) {
+				
+					//判断第一个罐次是否异常
+					console.log(data.change);
+					console.log(data.lastItemPB);
+					if(data.change){
+					if(station!="鑫丰站"){
+					var fir = data.lastItemPB.one/data.change.one;	
+						//配比异常
+						if(fir>1.05||fir<0.95){
+							v4 = true;
+						}
+						//油石比异常
+						
+						fir = data.lastItemPB.ysb/data.change.ysb;	
+						if(fir>1.03||fir<0.97){
+							v5 = true;
+						}
+					}
+						
+					}
+				
+				
+					layui.use('table', function() {
+						var deviceWidth = document.documentElement.clientWidth;
+						if(station=="两江站"){
+							
+						
+							cqlqsheji(layui,data);	
+							
+						}else if(station=="璧山站"){
+							
+							
+							bishansheji(layui,data);	
+						}else if(station=="双石站"){
+							
+							shuangshishenji(layui,data);
+							
+						} else if(station=="广州站"){
+							
+							guangzhoushenji(layui,data);
+						}else if(station=="丰都站"){
+							
+							fengdushenji(layui,data);
+						}else if(station=="鑫丰站"){
+							
+							xinfengshenji(layui,data);
+						}else if(station == "任丘站"){
+							renqiushenji(layui,data);
+						}else if(station == "新基地"){
+							xjdshenji(layui,data);
+						}else{
+							
+							zhutuoshenji(layui,data);
+						}
+						
+					});
+				}
+				
+              
+				// 生产看板
+				if(data.productList&&data.lastItemPB){
+					console.log(data.productList);
+					xData3 = data.productList.map(function(index,value){
+						return index.date + '  '+ index.dateTime;
+					})
+					
+					yData3 = data.productList.map(function(index,value){
+					if(station=="鑫丰站"){
+					return index.one_S;
+					///if(data.lastItemPB.state==0){
+					//return index.one;
+					//}else{
+					//return index.one_S;
+					//}
+					
+					}else{
+					return data.lastItemPB.one/index.one;
+					}
+						
+					})
+			
+					//xData3.sort();
+					//yData3.sort();
+					ratioChart('仓1配比','lineChart3',xData3,yData3);
+					
+					layui.use('table', function() {
+						$.get(url + '/setting/getSettingDetailsList',{sb_id:localStorage.getItem("shebei_id"),zd_id:localStorage.getItem("station_id"),yccd:""},function(res){
+							localStorage.setItem("gz",JSON.stringify(res));
+							if(station=="两江站"){
+								cqlqshengchankanban(layui,data,productList);	
+							}else if(station=="璧山站"){
+								bishanchengchankanban(layui,data,productList);	
+							}else if(station=="双石站"){
+								shuangshichankanban(layui,data,productList);
+							}else if(station=="广州站"){
+								guangzhouchankanban(layui,data,productList);
+							}else if(station=="丰都站"){
+								fengduchankanban(layui,data,productList);
+							}else if(station=="鑫丰站"){
+								xinfengchankanban(layui,data,productList,data.lastItemPB);
+							}else if(station == "任丘站"){
+								renqiuchankanban(layui,data,productList,data.lastItemPB);
+							}else if(station == "新基地"){
+								xjdchankanban(layui,data,productList,data.lastItemPB);
+							}else{
+								shuangshichankanban(layui,data,productList);
+							}	
+							
+						});
+						
+					});
+				}
+
+			})
+			
+			
+			function loadjscssfile(path){
+//			      var fileref = document.createElement('link');
+//			      fileref.setAttribute("rel","stylesheet");
+//			      fileref.setAttribute("type","text/css");
+//			      fileref.setAttribute("href",filename);
+			 var head = document.getElementsByTagName('head')[0];
+			    var link = document.createElement('link');
+			    link.href = path;
+			    link.rel = 'stylesheet';
+			    link.type = 'text/css';
+			    head.appendChild(link);
+			}
+
+
+var carousel = layui.carousel;
+			carousel.render({
+			    elem: '#produce'//指向容器选择器
+			    ,width: '100%' //设置容器宽度
+			    ,full:false //开启全屏轮播
+			    //,arrow: 'always' //始终显示箭头
+			    ,anim: 'fade' //切换动画方式
+			    ,autoplay: false //是否自动切换false
+			    ,arrow: 'hover' //切换箭头默认显示状态||不显示：none||悬停显示：hover||始终显示：always
+			    ,indicator: 'none' //指示器位置||外部：outside||内部：inside||不显示：none
+			    ,interval: '5000' //自动切换时间:单位：ms（毫秒）
+			});
+
+			
+			
+			
+			
+		</script>
+	</body>
+
+</html>

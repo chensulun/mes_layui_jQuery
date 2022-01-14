@@ -1,0 +1,44 @@
+AK： A48s1fs2f6o6
+AS：c6da9c6ba7a2b61d
+
+
+            //定义一个套接字监听
+            //socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            ////将获取的IP地址和端口号绑定在网络节点上
+            //socket.Connect("rtk.ntrip.qxwz.com", 8002);
+            HttpWebResponse hwr = WebHelper.CreateGetHttpResponse("http://rtk.ntrip.qxwz.com:8002", "GET");
+            Stream responseStream = hwr.GetResponseStream();
+            // 对接响应流(以"GBK"字符集)
+            StreamReader sReader = new StreamReader(responseStream, Encoding.GetEncoding("utf-8"));
+            byte[] con = new byte[(int)hwr.ContentLength];
+            responseStream.Read(con, 0, (int)hwr.ContentLength);
+            string s = Encoding.ASCII.GetString(con);
+            HttpWebRequest request = null;
+            if (hwr.StatusCode.ToString() == "OK")
+            {
+                string up = "qxutbv001:6e47a8f";
+                string bup = "cXh1dGJ2MDAxOjZlNDdhOGY=";
+                request = WebRequest.Create("http://rtk.ntrip.qxwz.com:8002") as HttpWebRequest;
+                request.Method = "GET";
+                //WebHelper.SetHeaderValue(request.Headers, "Method", "GET /RTCM30_GG HTTP/1.0");
+                WebHelper.SetHeaderValue(request.Headers, "User-Agent", "NTRIP GNSSInternetRadio/1.4.10");
+                WebHelper.SetHeaderValue(request.Headers, "Accept", "*/*");
+                WebHelper.SetHeaderValue(request.Headers, "Connection", "close");
+                WebHelper.SetHeaderValue(request.Headers, "Authorization", "Basic " + bup);
+                request.Timeout = 1000;
+                //设置代理UserAgent和超时
+                HttpWebResponse HWebr = request.GetResponse() as HttpWebResponse;
+                con = new byte[(int)HWebr.ContentLength];
+                responseStream.Read(con, 0, (int)HWebr.ContentLength);
+                s = Encoding.ASCII.GetString(con);
+            }
+            request = null;
+            request = WebRequest.Create("http://rtk.ntrip.qxwz.com:8002") as HttpWebRequest;
+            WebHelper.SetHeaderValue(request.Headers, "Method", "GET /RTCM32_GGB HTTP/1.0");
+            WebHelper.SetHeaderValue(request.Headers, "User-Agent", "NTRIP GNSSInternetRadio/1.4.10");
+            WebHelper.SetHeaderValue(request.Headers, "Accept", "*/*");
+            WebHelper.SetHeaderValue(request.Headers, "Connection", "close");
+            WebHelper.SetHeaderValue(request.Headers, "Ntrip-GGA", "$GPGGA,052114.93,3115.2739300,N,12133.8922600,E,1,00,1.0,-10.643,M,11.353,M,0.0,*5D");
+            request.Timeout = 1000;
+            //设置代理UserAgent和超时
+            HttpWebResponse res = request.GetResponse() as HttpWebResponse;

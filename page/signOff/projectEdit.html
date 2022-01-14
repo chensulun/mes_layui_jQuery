@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>新增项目</title>
+		<link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+		<link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+		<link rel="stylesheet" href="../../assets/css/common_likui.css?v=314" />
+		<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style>
+			.project-setting .layui-tab-title {
+            border: none;
+        }
+        .project-setting.layui-tab-brief>.layui-tab-title li {
+            font-size: 13px;
+            background-color: #fff;
+            color: rgba(34, 34, 34, 1);
+            padding: 0px 28px;
+            line-height: 30px;
+            margin-right: 24px;
+        }
+        .project-setting.layui-tab-brief>.layui-tab-title .layui-this {
+            color: #fff;
+            background-color: rgba(25, 185, 155, 1);
+        }
+        .project-setting.layui-tab-brief>.layui-tab-title .layui-this:after {
+            content: none;
+        }
+        .contract-info-tip {
+            height: 30px;
+            line-height: 30px;
+            color: rgba(107, 107, 107, 1);
+            font-size: 12px;
+            margin-top: -20px;
+            text-align: right;
+        }
+        .contract-info-content {
+            height: 1105px;
+            padding-left: 355px;
+            position: relative;
+        }
+        .contract-info-content-left {
+            width: 335px;
+            height: 100%;
+            background-color: #fff;
+            box-shadow:0px 1px 11px 0px rgba(239,244,255,1);
+            border-radius:2px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 30px 15px;
+            box-sizing: border-box;
+        }
+        .contract-info-content-right {
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            box-shadow:0px 1px 11px 0px rgba(239,244,255,1);
+            border-radius:2px;
+            padding: 30px 30px;
+            box-sizing: border-box;
+        }
+        .content-title {
+            border-left: 4px solid rgba(26, 185, 155, 1);
+            padding-left: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgba(51, 51, 51, 1);
+            position: relative;
+            font-weight: bold;
+        }
+        .content-title:after {
+            content: '';
+            width: calc(100% - 70px);
+            border-top: 1px dashed rgba(208, 211, 221, 1);
+            position: absolute;
+            right: 0;
+            top: 9px;
+        }
+        .table-handle li {
+            float: left;
+            width: 105px;
+            height: 30px;
+            border-bottom: 1px solid rgb(230, 230, 230);
+            padding: 4px 8px;
+        }
+        .table-handle li:first-child {
+            border-left: 1px solid rgb(230, 230, 230);
+        }
+        .table-handle li:last-child {
+            border-right: 1px solid rgb(230, 230, 230);
+            border-left: none;
+            width: 45px;
+        }
+        .tableNum .layui-table, .layui-table-view {
+            margin-bottom: 0;
+        }
+        .map-container {
+            padding: 0 30px 10px 30px;
+            position: relative;
+        }
+        .map-header {
+            padding-right: calc(50% - 390px);
+            height: 40px;
+            line-height: 40px;
+        }
+        #map-container {
+            border: 1px solid #eee;
+            width: calc(50% + 390px);
+            height: 470px;
+        }
+        .search-container {
+            position: absolute;
+            top: 60px;
+            left: 60px;
+            z-index: 9;
+        }
+        #option-list {
+            width: 280px;
+            border: 1px solid #eee;
+            position: absolute;
+            left: 110px;
+            top: 40px;
+            background-color: #fff;
+        }
+        #option-list li {
+            height: 30px;
+            line-height: 30px;
+            padding: 0 8px;
+            cursor: pointer;
+        }
+        #option-list li:hover {
+            background-color: #eee;
+        }
+        .report-container-left, .report-container-right {
+            width: calc((100% - 20px) / 2);
+            float: left;
+        }
+        .report-header {
+            font-size:14px;
+            font-family:PingFangSC-Medium,PingFang SC;
+            font-weight:500;
+            color:rgba(51,51,51,1);
+            line-height:18px;
+            height: 18px;
+            padding-left: 8px;
+            border-left: 4px solid rgba(26, 185, 155, 1);
+        }
+        .report-content {
+            box-shadow:0px 1px 11px 0px rgba(239,244,255,1);
+            border-radius:2px;
+        }
+        /*.report-container .layui-table .layui-table-cell {
+            padding: 0px 2px;
+        }
+        .report-container .layui-table .layui-input {
+            height: 28px;
+            line-height: 28px;
+        }*/
+
+    </style>
+	</head>
+	<body>
+
+		<!-- 页面加载loading -->
+		<div class="page-loading">
+			<div class="ball-loader">
+				<span></span><span></span><span></span><span></span>
+			</div>
+		</div>
+
+		<!-- 正文开始-->
+		<div class="layui-fluid">
+			<div class="layui-tab layui-tab-brief project-setting" lay-filter="projectContract">
+				<ul class="layui-tab-title">
+					<li class="layui-this">正式合同信息</li>
+					<li>配合比报告</li>
+				</ul>
+				<div class="layui-tab-content clear">
+					<div class="layui-tab-item layui-show">
+						<div class="contract-info">
+							<div class="contract-info-tip"><span class="text-red">*</span>红色为必填项</div>
+							<div class="contract-info-content">
+								<form id="modelAddProjectForm" lay-filter="modelAddProjectForm" class="layui-form">
+									<input type="hidden" name="project_id" id="project_id" value="0" />
+									<div class="contract-info-content-left">
+										<div class="content-title">项目信息</div>
+										<div class="content-property layui-form">
+											<div class="layui-form-item">
+												<div>
+													<div class="text-normal pl-10" style="margin-top: 26px;">项目性质</div>
+													<div class="mt-10" style="padding-left: 8px;">
+														<input type="radio" name="project_type" value="zsht" title="正式合同" checked>
+														<input type="radio" name="project_type" value="xjht" title="临时合同">
+														<input type="radio" name="project_type" value="lssx" title="紧急任务">
+													</div>
+												</div>
+												<div class="mt-20">
+													<span class="text-normal pl-10" style="vertical-align: -2px;padding-right: 10px;">审核状态</span>
+													<input type="radio" name="project_state" value="0" title="未审核" checked>
+													<input type="radio" name="project_state" value="1" title="已审核">
+												</div>
+												<div class="mt-20 tableNum layui-form">
+													<table class="layui-table" id="tableNum" lay-filter="tableNum"></table>
+													<ul class="table-handle clear layui-form-item">
+														<li>
+															<input type="text" style="height: 30px;" id="qlx" name="qlx" placeholder="请输入硂类型" class="layui-input">
+														</li>
+														<li>
+															<input type="text" style="height: 30px;" id="qdl" name="qdl" placeholder="请输入签订量" class="layui-input">
+														</li>
+														<li class="center"><i class="layui-icon text-green" id="addItem" style="cursor: pointer;">&#xe654;</i></li>
+													</ul>
+													<div class="layui-form-item mt-20">
+														<label class="layui-form-label">追加量</label>
+														<div class="layui-input-block">
+															<input name="zjl" id="zjl" placeholder="请输入追加量" type="text" class="layui-input" value="0" lay-verType="tips"
+															 lay-verify="number" required />
+														</div>
+													</div>
+													<div class="layui-form-item mt-20">
+														<label class="layui-form-label">合同总量: </label>
+														<div class="layui-input-block">
+															<input name="htzl" id="htzl" placeholder="" readonly type="text" class="layui-input" lay-verType="tips"
+															 value="0" />
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="contract-info-content-right">
+										<div class="content-title">基本信息</div>
+										<div class="layui-form mt-20">
+											<div class="layui-form-item layui-row">
+												<div class="layui-col-xs6">
+													<label class="layui-form-label"><span class="text-red">*</span>客户名称: </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="custom_name" custom_id="" id="custom_name" placeholder="请选择客户名称" type="text" class="layui-input"
+														 lay-verType="tips" lay-verify="number" required />
+													</div>
+												</div>
+												<div class="layui-col-xs6">
+													<label class="layui-form-label"><span class="text-red">*</span>工作地址: </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="project_address" id="project_address" placeholder="请输入工作地址" type="text" class="layui-input"
+														 lay-verType="tips" lay-verify="number" required />
+													</div>
+												</div>
+											</div>
+											<div class="layui-form-item mt-20">
+												<div class="layui-col-xs6">
+													<label class="layui-form-label"><span class="text-red">*</span>工程名称: </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="project_name" id="project_name" placeholder="请输入工程名称" type="text" class="layui-input"
+														 lay-verType="tips" lay-verify="number" required />
+													</div>
+												</div>
+												<div class="layui-col-xs6">
+													<label class="layui-form-label">合同造价: </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="hz_amount" id="hz_amount" placeholder="请输入合同造价" type="text" class="layui-input" lay-verType="tips"
+														 lay-verify="number" required />
+													</div>
+												</div>
+											</div>
+											<div class="layui-form-item mt-20">
+												<div class="layui-col-xs6">
+													<label class="layui-form-label">施工单位: </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="sgdw" id="sgdw" placeholder="请输入施工单位" type="text" class="layui-input" lay-verType="tips"
+														 lay-verify="number" required />
+													</div>
+												</div>
+												<div class="layui-col-xs6">
+													<label class="layui-form-label">工地经度: </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="gdjd" id="gdjd" placeholder="请输入工地经度" type="text" class="layui-input" lay-verType="tips"
+														 lay-verify="number" required />
+													</div>
+												</div>
+											</div>
+											<div class="layui-form-item mt-20">
+												<div class="layui-col-xs6">
+													<label class="layui-form-label">工地纬度: </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="gdwd" id="gdwd" placeholder="请输入工地纬度" type="text" class="layui-input" lay-verType="tips"
+														 lay-verify="number" required />
+													</div>
+												</div>
+												<div class="layui-col-xs6">
+													<label class="layui-form-label"><span class="text-red">*</span>总签订量: </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="zqdl" id="zqdl" placeholder="请输入总签订量" type="text" class="layui-input" lay-verType="tips"
+														 lay-verify="number" required />
+													</div>
+												</div>
+											</div>
+											<div class="layui-form-item mt-20">
+												<div class="layui-col-xs6">
+													<label class="layui-form-label">工地联系人 </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="gzlxr" id="gzlxr" placeholder="请输入工作联系人" type="text" class="layui-input" lay-verType="tips"
+														 lay-verify="number" required />
+													</div>
+												</div>
+												<div class="layui-col-xs6">
+													<label class="layui-form-label">工地电话: </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="gdlxdh" id="gdlxdh" placeholder="请输入工地联系电话" type="text" class="layui-input" lay-verType="tips"
+														 lay-verify="number" required />
+													</div>
+												</div>
+											</div>
+											<div class="layui-form-item mt-20">
+												<div class="layui-col-xs6">
+													<label class="layui-form-label">总量控制: </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="zlkz" id="zlkz" placeholder="请输入总量控制" type="text" class="layui-input" lay-verType="tips"
+														 lay-verify="number" required />
+													</div>
+												</div>
+											</div>
+											<div class="layui-form-item mt-20">
+												<div class="layui-col-xs12">
+													<label class="layui-form-label">备注: </label>
+													<div class="layui-input-block" style="width: calc(50% + 280px);">
+														<textarea name="remark" id="remark" placeholder="请输入备注" class="layui-textarea" maxlength="200"></textarea>
+													</div>
+												</div>
+											</div>
+
+										</div>
+										<div class="map-container mt-30">
+											<div class="map-header text-gray">
+												*在地图上点击选点，然后点击<span class="text-red">读取经纬度</span>按钮，可将经纬信息填入输入框
+												<button type="button" class="layui-btn layui-btn-green pull-right" id="btn-refresh-map">刷新地图</button>
+												<button type="button" class="layui-btn layui-btn-green pull-right mr-20" id="btn-read-map">读取经纬度</button>
+											</div>
+											<div class="search-container">
+												<div class="layui-inline">
+													<label class="layui-form-label">关键字 </label>
+													<div class="layui-input-block" style="width: 280px;">
+														<input name="keywords" id="keywords" placeholder="请输入关键词" type="text" class="layui-input" />
+													</div>
+													<div id="option-list"></div>
+												</div>
+											</div>
+											<div class="mt-10" id="map-container"></div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="layui-tab-item">
+						<form id="modelAddProjectPbForm" lay-filter="modelAddProjectPbForm" class="layui-form">
+							<div class="report-container clear layui-form">
+								<div class="report-container-left mr-20">
+									<div class="report-item">
+										<div class="report-header">工程名称</div>
+										<div class="report-content layui-form-item bg-white mt-10" style="padding: 25px 55px;">
+											<div class="clear">
+												<label class="layui-form-label w-auto"><span class="text-red">*</span>工程名称</label>
+												<div class="layui-input-inline" style="width: calc(100% - 160px);">
+													<input type="text" name="project_name" class="layui-input" id="project_name" placeholder="请输入工程名">
+												</div>
+											</div>
+											<div class="clear" style="margin-top: 26px;">
+												<label class="layui-form-label w-auto"><span class="text-red">*</span>设计项目</label>
+												<div class="layui-input-inline" style="width: calc(100% - 160px);">
+													<input type="text" name="sjxm" class="layui-input" id="sjxm" placeholder="请输入设计项">
+												</div>
+											</div>
+											<div class="clear" style="margin-top: 26px;">
+												<label class="layui-form-label w-auto">设计依据</label>
+												<div class="layui-input-inline" style="width: calc(100% - 160px);">
+													<input type="text" name="sjyj" class="layui-input" id="sjyj" placeholder="请输入设计依据">
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="report-item">
+										<div class="report-header">高粘沥青检测指标</div>
+										<div class="report-content layui-form-item bg-white mt-10" style="padding: 15px 25px;">
+											<table class="layui-table" lay-skin="line">
+												<colgroup>
+													<col width="110">
+													<col width="100">
+													<col>
+													<col>
+												</colgroup>
+												<thead>
+													<tr>
+														<th colspan="2">试验项目</th>
+														<th>监测结果</th>
+														<th>技术要求</th>
+													</tr>
+												</thead>
+												<tbody id="GllqTable">
+													<tr syxm="0">
+														<td colspan="2" class="text-right">针入度（25°）0.1mm</td>
+														<td><input type="text" id="valjc0" name="result" class="layui-input" placeholder="请输入"></td>
+														<td><input type="text" id="valjs0" name="result" class="layui-input" placeholder="请输入"></td>
+													</tr>
+													<tr syxm="1">
+														<td colspan="2" class="text-right">度（5°）cm</td>
+														<td><input type="text" id="valjc1" name="result" class="layui-input" placeholder="请输入"></td>
+														<td><input type="text" id="valjs1" name="result" class="layui-input" placeholder="请输入"></td>
+													</tr>
+													<tr syxm="2">
+														<td colspan="2" class="text-right">软化点</td>
+														<td><input type="text" id="valjc2" name="result" class="layui-input" placeholder="请输入"></td>
+														<td><input type="text" id="valjs2" name="result" class="layui-input" placeholder="请输入"></td>
+													</tr>
+													<tr syxm="3">
+														<td colspan="2" class="text-right">弹性恢复率</td>
+														<td><input type="text" id="valjc3" name="result" class="layui-input" placeholder="请输入"></td>
+														<td><input type="text" id="valjs3" name="result" class="layui-input" placeholder="请输入"></td>
+													</tr>
+													<tr syxm="4">
+														<td colspan="2" class="text-right">脆点</td>
+														<td><input type="text" id="valjc4" name="result" class="layui-input" placeholder="请输入"></td>
+														<td><input type="text" id="valjs4" name="result" class="layui-input" placeholder="请输入"></td>
+													</tr>
+													<tr syxm="5">
+														<td colspan="2" class="text-right">伞点（克利夫兰开口杯）</td>
+														<td><input type="text" id="valjc5" name="result" class="layui-input" placeholder="请输入"></td>
+														<td><input type="text" id="valjs5" name="result" class="layui-input" placeholder="请输入"></td>
+													</tr>
+													<tr syxm="6">
+														<td rowspan="3" style="padding: 0;border-right: 1px solid #e6e6e6;" class="text-center">TFOT<br>（或RTFOT）/td>
+														<td class="text-center" style="padding: 0;">质量变化%</td>
+														<td><input type="text" id="valjc6" name="result" class="layui-input" placeholder="请输入"></td>
+														<td><input type="text" id="valjs6" name="result" class="layui-input" placeholder="请输入"></td>
+													</tr>
+													<tr syxm="7">
+														<td class="text-center" style="padding: 0;">针入度比%</td>
+														<td><input type="text" id="valjc7" name="result" class="layui-input" placeholder="请输入"></td>
+														<td><input type="text" id="valjs7" name="result" class="layui-input" placeholder="请输入"></td>
+													</tr>
+													<tr syxm="8">
+														<td class="text-center" style="padding: 0;">弹性恢复率%</td>
+														<td><input type="text" id="valjc8" name="result" class="layui-input" placeholder="请输入"></td>
+														<td><input type="text" id="valjs8" name="result" class="layui-input" placeholder="请输入"></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="report-item">
+										<div class="report-header">矿粉性能检测结果</div>
+										<div class="report-content layui-form-item bg-white mt-10" style="padding: 15px 25px;">
+											<table class="layui-table" lay-skin="line" id="table1" lay-filter="table1"></table>
+										</div>
+									</div>
+								</div>
+								<div class="report-container-right">
+									<div class="report-item">
+										<div class="report-header">集料及填料基本信息表</div>
+										<div class="report-content layui-form-item bg-white mt-10" style="padding: 15px 25px;">
+											<table class="layui-table" lay-skin="line" id="table2" lay-filter="table2"></table>
+										</div>
+									</div>
+									<div class="report-item">
+										<div class="report-header">细集料性能指标检测结果</div>
+										<div class="report-content layui-form-item bg-white mt-10" style="padding: 15px 25px;">
+											<table class="layui-table" lay-skin="line" id="table3" lay-filter="table3"></table>
+										</div>
+									</div>
+									<div class="report-item">
+										<div class="report-header">粗集料性能指标检测结果</div>
+										<div class="report-content layui-form-item bg-white mt-10" style="padding: 15px 25px;">
+											<table class="layui-table" lay-skin="line" id="table4" lay-filter="table4"></table>
+										</div>
+									</div>
+									<div class="report-item">
+										<div class="report-header">集料筛选结果</div>
+										<div class="report-content layui-form-item bg-white mt-10" style="padding: 15px 25px;">
+											<table class="layui-table" lay-skin="line" id="table5" lay-filter="table5"></table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="text-center pt-30">
+					<button class="layui-btn btn-yellow1" id="xmsh" >审核</button>
+					<button class="layui-btn layui-btn-green1" id="addBtn">保存</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- 表格操作��?-->
+		<script type="text/html" id="tableBarRole">
+			<a class="layui-btn layui-btn-xs table-btn" lay-event="edit">修改</a>
+			<a class="layui-btn layui-btn-xs table-btn" lay-event="del">删除</a>
+		</script>
+		<!-- 表单弹窗-客户列表 -->
+		<script type="text/html" id="modelCustomer">
+			<form id="modelCustomerForm" lay-filter="modelCustomerForm" class="layui-form model-form">
+			<div>
+            <div class="layui-inline mr-20">
+                <label class="layui-form-label w-auto" style="padding: 5px 15px;">级配编号</label>
+                <div class="layui-input-inline mr0">
+                    <input name="custom_cod" style="height: 30px;line-height: 30px;width: 208px;" class="layui-input" type="text" id="custom_cod" placeholder="请输入级配编号"/>
+                </div>
+            </div>
+            <div class="layui-inline mr-15">
+                <a href="javascript:;" id="searchCustomer" class="layui-btn layui-btn-green3">查询</a>
+            </div>
+            <div class="layui-inline mr-15">
+                <a href="javascript:;" id="addCustomer" class="layui-btn layui-btn-gray2">新增</a>
+            </div>
+            <div class="layui-inline">
+				<a href="javascript:;" id="uploadCustom" class="layui-btn layui-btn-gray2">导入</a>
+            </div>
+        </div>
+        <div style="padding-left: 30px;"><table class="layui-table" id="tableCustomer" lay-filter="tableCustomer"></table></div>
+        <div class="layui-form-item text-right mt-20 text-center" style="padding-left: 30px;">
+
+            <button class="layui-btn layui-btn-primary" lay-filter="modelSubmitRole" lay-submit>保存</button>
+            <button class="layui-btn" type="button" ew-event="closePageDialog">取消</button>
+        </div>
+    </form>
+</script>
+		<!-- 弹窗-新增客户 -->
+		<script type="text/html" id="modelAddCustomer">
+			<form id="modelAddCustomerForm" lay-filter="modelAddCustomerForm" class="layui-form model-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户名称</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入客户名称" type="text" class="layui-input"
+                       lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系人</label>
+            <div class="layui-input-block">
+                <input name="linkname" placeholder="请输入联系人" type="text" class="layui-input" maxlength="20"
+                       lay-verType="tips" lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系电话</label>
+            <div class="layui-input-block">
+                <input name="linkphone" placeholder="请输入联系电话" type="text" class="layui-input"
+                       lay-verType="tips" lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item text-center">
+
+            <button class="layui-btn layui-btn-primary" lay-filter="modelSubmitAddCustomer" name="modelSubmitAddCustomer" type="button">修改</button>
+            <button class="layui-btn" type="button" ew-event="closePageDialog">取消</button>
+        </div>
+    </form>
+</script>
+		<!-- js部分 -->
+		<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+		<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+		<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+		<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=PMNBZ-F2TCU-H3AVV-4NNS2-2NGHS-OWFOZ"></script>
+		<script>
+			layui.use(['layer', 'form', 'table', 'util', 'admin', 'element','upload'], function() {
+				var $ = layui.jquery;
+				var layer = layui.layer;
+				var form = layui.form;
+				var table = layui.table;
+				var util = layui.util;
+				var admin = layui.admin;
+				var element = layui.element;
+				var upload = layui.upload;
+				var list = [];
+				var id = getQueryString('id');
+				var shlx=getQueryString('shlx');
+				if (id === null)
+					id = 0;
+				var insTb;
+
+				$.get(url + '/sysProject/getProject', {
+					projectId: id
+				}, function(res) {
+					if (res.code === 0 || res.code === 500) {
+						var data = res.data;
+						//绑定基础数据
+						form.val('modelAddProjectForm', data);
+						$("#custom_name").attr("custom_id", data.custom_id)
+						list = data.projectFxDetails;
+						//绑定分项数据
+						insTb = table.render({
+							elem: '#tableNum',
+							cellMinWidth: 100,
+							skin: 'line',
+							data: list,
+							cols: [
+								[{
+										field: 'qlx',
+										align: 'center',
+										title: '硂类型'
+									},
+									{
+										field: 'qdl',
+										align: 'center',
+										title: '签订量'
+									},
+									{
+										align: 'center',
+										title: '',
+										width: 60,
+										templet: '<div><i class="layui-icon text-red" lay-event="del" style="cursor: pointer;">&#x1006;</i></div>'
+									}
+								]
+							]
+						});
+
+						//绑定配合比报告数��?
+						form.val('modelAddProjectPbForm', data.projectPbDetail);
+						var projectGllqDetails = data.projectPbDetail.projectGllqDetails;
+						for (var i = 0; i < projectGllqDetails.length; i++) {
+							var xm = projectGllqDetails[i].syxm;
+							$("#valjc" + xm).val(projectGllqDetails[i].jcjg);
+							$("#valjs" + xm).val(projectGllqDetails[i].jsyq);
+						}
+						var list1 = data.projectPbDetail.kfProjectJcDetails;
+						let addItem = {
+							id: -1,
+							pb_id: '',
+							jcxm: '',
+							dw: '',
+							jcjg: '',
+							jcjg2: '',
+							jsyq: '',
+							type: ''
+						}
+						list1.push(addItem);
+						var list2 = data.projectPbDetail.projectJltlDetails;
+						addItem = {
+							id: -1,
+							pb_id: '',
+							cl: '',
+							jlgg: '',
+							yx: '',
+							cd: ''
+						}
+						list2.push(addItem);
+						var list3 = data.projectPbDetail.xjlProjectJcDetails;
+						addItem = {
+							id: -1,
+							pb_id: '',
+							jcxm: '',
+							dw: '',
+							jcjg: '',
+							jcjg2: '',
+							jsyq: '',
+							type: ''
+						}
+						list3.push(addItem);
+						var list4 = data.projectPbDetail.cjlProjectJcDetails;
+						addItem = {
+							id: -1,
+							pb_id: '',
+							jcxm: '',
+							dw: '',
+							jcjg: '',
+							jcjg2: '',
+							jsyq: '',
+							type: ''
+						}
+						list4.push(addItem);
+						var list5 = data.projectPbDetail.jlsxProjectJcDetails;
+						addItem = {
+							id: -1,
+							pb_id: '',
+							jcxm: '',
+							dw: '',
+							jcjg: '',
+							jcjg2: '',
+							jsyq: '',
+							type: ''
+						}
+						list5.push(addItem);
+						//一些事件监��?
+						element.on('tab(projectContract)', function(data) {
+							if (data.index === 1) {
+								insReportTb('table1', list1);
+								insReportTbJLTL('table2', list2);
+								insReportTbXJL('table3', list3);
+								insReportTb('table4', list4);
+								insReportTb('table5', list5);
+							}
+						});
+					} else {
+						layer.msg(res.msg, {
+							icon: 2
+						});
+					}
+				});
+
+
+				var lng, lat;
+				var markersArray = [];
+				var map;
+				// 加载腾讯地图
+				function initMap() {
+					map = new qq.maps.Map(document.getElementById("map-container"), {
+						// 地图的中心地理坐标��?
+						center: new qq.maps.LatLng(23.117627611920557, 113.26904296875),
+						zoom: 10
+					});
+
+					qq.maps.event.addListener(map, 'click', function(event) {
+						//清空marker
+						if (markersArray) {
+							for (i in markersArray) {
+								markersArray[i].setMap(null);
+							}
+						}
+						lng = event.latLng.getLng();
+						lat = event.latLng.getLat();
+						$('#option-list').empty();
+						var marker = new qq.maps.Marker({
+							position: new qq.maps.LatLng(lat, lng),
+							map: map
+						});
+						markersArray.push(marker);
+					});
+					var latlngBounds = new qq.maps.LatLngBounds();
+					//调用Poi检索类
+					searchService = new qq.maps.SearchService({
+						complete: function(results) {
+							if (results.detail.pois) {
+								var pois = results.detail.pois;
+								var str = '';
+								pois.map(val => {
+									str += `<li data-id="${val.latLng}">${val.name}</li>`
+								})
+								$('#option-list').html(str);
+								$('#option-list li').on('click', (event) => {
+									map.panTo(new qq.maps.LatLng(Number(event.target.dataset.id.split(',')[0]), Number(event.target.dataset
+										.id.split(',')[1])));
+									map.zoomTo(16);
+									$('#option-list').empty();
+								});
+							}
+						}
+					});
+				}
+				initMap();
+				// 刷新地图
+				$('#btn-refresh-map').on('click', () => {
+					initMap();
+				});
+				// 读取经纬��?
+				$('#btn-read-map').on('click', () => {
+					$('#gdjd').val(lng);
+					$('#gdwd').val(lat);
+				});
+				$('#keywords').on('input', () => {
+					var keyword = document.getElementById("keywords").value;
+					searchService.search(keyword);
+				});
+				// $('#keywords').on('blur', () => {
+				//     $('#option-list').empty();
+				// });
+
+				// 左侧 添加 按钮
+				$('#addItem').on('click', (e) => {
+					if ($('#qlx').val() && $('#qdl').val()) {
+						let item = {
+							id: (new Date()).getTime(),
+							qlx: $('#qlx').val(),
+							qdl: $('#qdl').val()
+						};
+						list.push(item);
+						insTb.reload({
+							data: list
+						});
+						var allNum = 0;
+						list.map(val => {
+							allNum += (val.qdl * 1);
+						});
+						console.log(allNum);
+						allNum += ($('#zjl').val() * 1)
+						$('#htzl').val(allNum);
+						$('#qlx').val('');
+						$('#qdl').val('');
+					} else {
+						layer.msg('请输入硂类型或签订量', {
+							icon: 2
+						});
+					}
+				});
+				$('#addOther').on('blur', (e) => {
+					var allNum = 0;
+					list.map(val => {
+						allNum += (val.num * 1);
+					});
+					allNum += ($('#addOther').val() * 1)
+					$('#allNum').val(allNum);
+				});
+				// 工具条点击事��?
+				table.on('tool(tableNum)', function(obj, e) {
+					console.log(obj);
+					var layEvent = obj.event;
+					if (layEvent === 'del') { // 删除
+						var index = '';
+						list.map((val, i) => {
+							if (val.id === obj.data.id) {
+								index = i;
+							}
+						});
+						list.splice(index, 1);
+						insTb.reload({
+							data: list
+						});
+					}
+				});
+				var dialogIndex = '';
+				// 显示新增客户弹窗
+				function showCustomerModel() {
+					var customTb;
+					admin.open({
+						type: 1,
+						title: '选择客户',
+						area: '600px',
+						content: $('#modelCustomer').html(),
+						success: function(layero, dIndex) {
+							
+							//导入客户
+							var uploadInst = upload.render({
+								elem: '#uploadCustom' //绑定元素
+									,
+								url: url+'/sysProject/uploadCustom' //上传接口
+									,
+								accept:'file',
+								done: function(res) {
+									if(res.code===0)
+									{
+										$.get(url + '/sysProject/getCustoms', {
+											custom_cod: $("#custom_cod").val()
+										}, function(res) {
+											customTb = table.render({
+												elem: '#tableCustomer',
+												data: res.list,
+												cellMinWidth: 100,
+												cols: [
+													[{
+															field: 'custom_cod',
+															align: 'center',
+															title: '客户编号'
+														},
+														{
+															field: 'custom_name',
+															align: 'center',
+															title: '客户名称'
+														},
+														{
+															field: 'custom_id',
+															title: 'ID',
+															hide: true
+														}
+													]
+												]
+											});
+										})
+									}
+									else
+									{
+										layer.msg(res.msg, {
+											icon: 2
+										});
+									}
+								},
+								error: function() {
+									//请求异常回调
+								}
+							});
+							
+							dialogIndex = dIndex;
+
+							$.get(url + '/sysProject/getCustoms', {
+								custom_cod: $("#custom_cod").val()
+							}, function(res) {
+								customTb = table.render({
+									elem: '#tableCustomer',
+									data: res.list,
+									cellMinWidth: 100,
+									cols: [
+										[{
+												field: 'custom_cod',
+												align: 'center',
+												title: '客户编号'
+											},
+											{
+												field: 'custom_name',
+												align: 'center',
+												title: '客户名称'
+											},
+											{
+												field: 'custom_id',
+												title: 'ID',
+												hide: true
+											}
+										]
+									]
+								});
+							})
+
+							// 查询客户
+							$('#searchCustomer').on('click', (e) => {
+								$.get(url + '/sysProject/getCustoms', {
+									custom_cod: $("#custom_cod").val()
+								}, function(res) {
+									var insTb = table.render({
+										elem: '#tableCustomer',
+										data: res.list,
+										cellMinWidth: 100,
+										cols: [
+											[{
+													field: 'custom_cod',
+													align: 'center',
+													title: '客户编号'
+												},
+												{
+													field: 'custom_name',
+													align: 'center',
+													title: '客户名称'
+												},
+												{
+													field: 'custom_id',
+													title: 'ID',
+													hide: true
+												}
+											]
+										]
+									});
+								})
+							});
+
+							// 新增客户
+							$('#addCustomer').on('click', (e) => {
+								admin.open({
+									type: 1,
+									title: '新增客户',
+									area: '400px',
+									content: $('#modelAddCustomer').html(),
+									success: function(layero, dIndex) {
+										//form.val('modelAddCustomerForm', mCustome);
+										// 表单提交事件
+										$("[name='modelSubmitAddCustomer']").on("click", function() {
+											layer.load(2);
+											$.post(url + '/sysProject/addCustom', {
+												contact_person: $("[name='linkname']").val(),
+												contact_phone: $("[name='linkphone']").val(),
+												custom_id: 0,
+												custom_name: $("[name='name']").val()
+											}, function(res) {
+												layer.closeAll('loading');
+												if (res.code == 0) {
+													layer.close(dIndex);
+													layer.msg(res.msg, {
+														icon: 1
+													});
+													$.get(url + '/sysProject/getCustoms', {
+														custom_cod: $("#custom_cod").val()
+													}, function(res) {
+														customTb.reload({
+															data: res.list
+														});
+													})
+												} else {
+													layer.msg(res.msg, {
+														icon: 2
+													});
+												}
+											}, 'json');
+										});
+									}
+								});
+							});
+						}
+					});
+				}
+				$('#custom_name').on('click', (e) => {
+					showCustomerModel();
+				});
+				table.on('row(tableCustomer)', function(obj) {
+					console.log(obj.data);
+					$('#custom_name').val(obj.data.custom_name);
+					$('#custom_name').attr('custom_id', obj.data.custom_id);
+					layer.close(dialogIndex);
+				});
+
+				// 配合比报告表��?
+				function insReportTb(ele, lists) {
+
+					table.render({
+						elem: `#${ele}`,
+						data: lists,
+						height: 210,
+						cols: [
+							[{
+									field: 'jcxm',
+									align: 'center',
+									edit: 'text',
+									title: '检测项目',
+									rowspan: 2
+								},
+								{
+									field: 'dw',
+									align: 'center',
+									edit: 'text',
+									title: '单位',
+									rowspan: 2
+								},
+								{
+									align: 'center',
+									title: '检测结果',
+									colspan: 2
+								},
+								{
+									field: 'jsyq',
+									align: 'center',
+									edit: 'text',
+									title: '技术要求',
+									rowspan: 2
+								},
+								{
+									align: 'center',
+									title: '操作',
+									rowspan: 2,
+									width: 60,
+									templet: function(d) {
+										if (d.id === -1) {
+											return '<div><i class="layui-icon text-green" id="addlist1" lay-event="add" style="cursor: pointer;">&#xe654;</i></div>'
+										} else {
+											return '<div><i class="layui-icon text-red" lay-event="del" style="cursor: pointer;">&#x1006;</i></div>'
+										}
+									}
+								}
+							],
+							[{
+									field: 'jcjg',
+									align: 'center',
+									edit: 'text',
+									title: '检测结果'
+								},
+								{
+									field: 'jcjg2',
+									align: 'center',
+									edit: 'text',
+									title: '检测结果'
+								},
+							]
+						]
+					});
+					table.on(`tool(${ele})`, function(obj) {
+						var layEvent = obj.event;
+						console.log(obj.data);
+						if (layEvent === 'add') {
+							lists.push({
+								...obj.data,
+								id: (new Date()).getTime()
+							});
+							let addItem = {
+								id: -1,
+								pb_id: '',
+								jcxm: '',
+								dw: '',
+								jcjg: '',
+								jcjg2: '',
+								jsyq: '',
+								type: ''
+							}
+							lists.splice(-2, 1);
+							lists.push(addItem);
+							if (ele === 'table1') {
+								list1 = { ...lists
+								}
+							} else if (ele === 'table4') {
+								list4 = { ...lists
+								}
+							} else if (ele === 'table5') {
+								list5 = { ...lists
+								}
+							}
+							table.reload(ele, {
+								data: lists
+							})
+						} else if (layEvent === 'del') {
+							lists.map((val, index) => {
+								if (val.id === obj.data.id) {
+									lists.splice(index, 1);
+									if (ele === 'table1') {
+										list1 = { ...lists
+										}
+									} else if (ele === 'table4') {
+										list4 = { ...lists
+										}
+									} else if (ele === 'table5') {
+										list5 = { ...lists
+										}
+									}
+									table.reload(ele, {
+										data: lists
+									});
+								}
+							})
+						}
+					});
+					table.on(`edit(${ele})`, function(obj) {
+						lists.map((val, index) => {
+							if (val.id === obj.data.id) {
+								lists.splice(index, 1, obj.data);
+								if (ele === 'table1') {
+									list1 = { ...lists
+									}
+								} else if (ele === 'table4') {
+									list4 = { ...lists
+									}
+								} else if (ele === 'table5') {
+									list5 = { ...lists
+									}
+								}
+							}
+						});
+					});
+				}
+
+				// 集料及填料基本信息表
+				function insReportTbJLTL(ele, lists) {
+
+					table.render({
+						elem: `#${ele}`,
+						data: lists,
+						height: 210,
+						cols: [
+							[{
+									field: 'cl',
+									align: 'center',
+									edit: 'text',
+									title: '材料'
+								},
+								{
+									field: 'jlgg',
+									align: 'center',
+									edit: 'text',
+									title: '集料规格'
+								},
+								{
+									field: 'yx',
+									align: 'center',
+									edit: 'text',
+									title: '岩性'
+								},
+								{
+									field: 'cd',
+									align: 'center',
+									edit: 'text',
+									title: '产地'
+								},
+								{
+									align: 'center',
+									title: '操作',
+									rowspan: 2,
+									width: 60,
+									templet: function(d) {
+										if (d.id === -1) {
+											return '<div><i class="layui-icon text-green" id="addlist1" lay-event="add" style="cursor: pointer;">&#xe654;</i></div>'
+										} else {
+											return '<div><i class="layui-icon text-red" lay-event="del" style="cursor: pointer;">&#x1006;</i></div>'
+										}
+									}
+								}
+							]
+						]
+					});
+					table.on(`tool(${ele})`, function(obj) {
+						var layEvent = obj.event;
+						console.log(obj.data);
+						if (layEvent === 'add') {
+							lists.push({
+								...obj.data,
+								id: (new Date()).getTime()
+							});
+							let addItem = {
+								id: -1,
+								pb_id: '',
+								cl: '',
+								jlgg: '',
+								yx: '',
+								cd: ''
+							}
+							lists.splice(-2, 1);
+							lists.push(addItem);
+							list2 = { ...lists
+							}
+							table.reload(ele, {
+								data: lists
+							})
+						} else if (layEvent === 'del') {
+							lists.map((val, index) => {
+								if (val.id === obj.data.id) {
+									lists.splice(index, 1);
+									list2 = { ...lists
+									}
+									table.reload(ele, {
+										data: lists
+									});
+								}
+							})
+						}
+					});
+					table.on(`edit(${ele})`, function(obj) {
+						lists.map((val, index) => {
+							if (val.id === obj.data.id) {
+								lists.splice(index, 1, obj.data);
+								list2 = { ...lists
+								}
+							}
+						});
+					});
+				}
+
+				// 细集料性能指标检测结��?
+				function insReportTbXJL(ele, lists) {
+					table.render({
+						elem: `#${ele}`,
+						data: lists,
+						height: 210,
+						cols: [
+							[{
+									field: 'jcxm',
+									align: 'center',
+									edit: 'text',
+									title: '检测项目'
+								},
+								{
+									field: 'dw',
+									align: 'center',
+									edit: 'text',
+									title: '单位'
+								},
+								{
+									field: 'jcjg',
+									align: 'center',
+									edit: 'text',
+									title: '检测结果'
+								},
+								{
+									field: 'jsyq',
+									align: 'center',
+									edit: 'text',
+									title: '技术要求'
+								},
+								{
+									field: 'type',
+									align: 'center',
+									edit: 'text',
+									title: '检测类型'
+								},
+								{
+									align: 'center',
+									title: '操作',
+									rowspan: 2,
+									width: 60,
+									templet: function(d) {
+										if (d.id === -1) {
+											return '<div><i class="layui-icon text-green" id="addlist1" lay-event="add" style="cursor: pointer;">&#xe654;</i></div>'
+										} else {
+											return '<div><i class="layui-icon text-red" lay-event="del" style="cursor: pointer;">&#x1006;</i></div>'
+										}
+									}
+								}
+							]
+						]
+					});
+					table.on(`tool(${ele})`, function(obj) {
+						var layEvent = obj.event;
+						console.log(obj.data);
+						if (layEvent === 'add') {
+							lists.push({
+								...obj.data,
+								id: (new Date()).getTime()
+							});
+							let addItem = {
+								id: -1,
+								pb_id: '',
+								jcxm: '',
+								dw: '',
+								jcjg: '',
+								jcjg2: '',
+								jsyq: '',
+								type: ''
+							}
+							lists.splice(-2, 1);
+							lists.push(addItem);
+							list3 = { ...lists
+							}
+							table.reload(ele, {
+								data: lists
+							})
+						} else if (layEvent === 'del') {
+							lists.map((val, index) => {
+								if (val.id === obj.data.id) {
+									lists.splice(index, 1);
+									list3 = { ...lists
+									}
+									table.reload(ele, {
+										data: lists
+									});
+								}
+							})
+						}
+					});
+					table.on(`edit(${ele})`, function(obj) {
+						lists.map((val, index) => {
+							if (val.id === obj.data.id) {
+								lists.splice(index, 1, obj.data);
+								list3 = { ...lists
+								}
+							}
+						});
+					});
+				}
+
+				$('#addBtn').on('click', () => {
+					layer.load(2);
+					//获取签订��?
+					var projectFxParams = [];
+					var fxTable = $("[lay-id='tableNum']").find(".layui-table-body").find("tr");
+					for (var i = 0; i < fxTable.length; i++) {
+						projectFxParams[i] = {
+							qlx: $(fxTable[i]).find("[data-field='qlx']").find("div").html(),
+							qdl: $(fxTable[i]).find("[data-field='qdl']").find("div").html()
+						}
+					}
+
+					//获取高粘沥青检测指��?
+					var projectGllqParams = [];
+					$.each($("#GllqTable").find("tr"), function(i, item) {
+						projectGllqParams[i] = {
+							syxm: $(item).attr("syxm"),
+							jcjg: $(item).find("#valjc" + i).val(),
+							jsyq: $(item).find("#valjs" + i).val()
+						}
+					})
+
+					//获取集料及填料基本信息表
+					var projectJltlParams = [];
+					var JltlTable = $("[lay-id='table2']").find(".layui-table-body").find("tr");
+					for (var i = 0; i < JltlTable.length - 1; i++) {
+						projectJltlParams[i] = {
+							cl: $(JltlTable[i]).find("[data-field='cl']").find("div").html(),
+							jlgg: $(JltlTable[i]).find("[data-field='jlgg']").find("div").html(),
+							yx: $(JltlTable[i]).find("[data-field='yx']").find("div").html(),
+							cd: $(JltlTable[i]).find("[data-field='cd']").find("div").html()
+						}
+					}
+
+					//获取细集料性能指标检测结��?
+					var xjlProjectJcParams = [];
+					var XjlTable = $("[lay-id='table3']").find(".layui-table-body").find("tr");
+					for (var i = 0; i < XjlTable.length - 1; i++) {
+						xjlProjectJcParams[i] = {
+							jcxm: $(XjlTable[i]).find("[data-field='jcxm']").find("div").html(),
+							dw: $(XjlTable[i]).find("[data-field='dw']").find("div").html(),
+							jcjg: $(XjlTable[i]).find("[data-field='jcjg']").find("div").html(),
+							jsyq: $(XjlTable[i]).find("[data-field='jsyq']").find("div").html(),
+							type: $(XjlTable[i]).find("[data-field='type']").find("div").html()
+						}
+					}
+					//获取粗集料性能指标检测结��?
+					var cjlProjectJcParams = [];
+					var CljTable = $("[lay-id='table4']").find(".layui-table-body").find("tr");
+					for (var i = 0; i < XjlTable.length - 1; i++) {
+						cjlProjectJcParams[i] = {
+							jcxm: $(CljTable[i]).find("[data-field='jcxm']").find("div").html(),
+							dw: $(CljTable[i]).find("[data-field='dw']").find("div").html(),
+							jcjg: $(CljTable[i]).find("[data-field='jcjg']").find("div").html(),
+							jcjg2: $(CljTable[i]).find("[data-field='jcjg2']").find("div").html(),
+							jsyq: $(CljTable[i]).find("[data-field='jsyq']").find("div").html()
+						}
+					}
+
+					//获取矿粉性能检测结��?
+					var kfProjectJcParams = [];
+					var KfTable = $("[lay-id='table1']").find(".layui-table-body").find("tr");
+					for (var i = 0; i < XjlTable.length - 1; i++) {
+						kfProjectJcParams[i] = {
+							jcxm: $(KfTable[i]).find("[data-field='jcxm']").find("div").html(),
+							dw: $(KfTable[i]).find("[data-field='dw']").find("div").html(),
+							jcjg: $(KfTable[i]).find("[data-field='jcjg']").find("div").html(),
+							jcjg2: $(KfTable[i]).find("[data-field='jcjg2']").find("div").html(),
+							jsyq: $(KfTable[i]).find("[data-field='jsyq']").find("div").html()
+						}
+					}
+					//获取集料筛选结��?
+					var jlsxProjectJcParams = [];
+					var JlsxTable = $("[lay-id='table5']").find(".layui-table-body").find("tr");
+					for (var i = 0; i < XjlTable.length - 1; i++) {
+						jlsxProjectJcParams[i] = {
+							jcxm: $(JlsxTable[i]).find("[data-field='jcxm']").find("div").html(),
+							dw: $(JlsxTable[i]).find("[data-field='dw']").find("div").html(),
+							jcjg: $(JlsxTable[i]).find("[data-field='jcjg']").find("div").html(),
+							jcjg2: $(JlsxTable[i]).find("[data-field='jcjg2']").find("div").html(),
+							jsyq: $(JlsxTable[i]).find("[data-field='jsyq']").find("div").html()
+						}
+					}
+
+					var projectPbParam = {
+						pb_id: 0,
+						project_id: 0,
+						project_name: $("#project_name").val(),
+						sjxm: $("#sjxm").val(),
+						sjyj: $("#sjyj").val(),
+						projectGllqParams: projectGllqParams,
+						projectJltlParams: projectJltlParams,
+						xjlProjectJcParams: xjlProjectJcParams,
+						cjlProjectJcParams: cjlProjectJcParams,
+						kfProjectJcParams: kfProjectJcParams,
+						jlsxProjectJcParams: jlsxProjectJcParams
+					};
+					var data = {
+						project_id: $("#project_id").val(),
+						project_type: $("[name='project_type']:checked").val(),
+						project_state: $("[name='project_state']:checked").val(),
+						zjl: $("#zjl").val(),
+						htzl: $("#htzl").val(),
+						custom_id: $("#custom_name").attr("custom_id"),
+						project_address: $("#project_address").val(),
+						project_name: $("#project_name").val(),
+						hz_amount: $("#hz_amount").val(),
+						sgdw: $("#sgdw").val(),
+						gdjd: $("#gdjd").val(),
+						gdwd: $("#gdwd").val(),
+						zqdl: $("#zqdl").val(),
+						gzlxr: $("#gzlxr").val(),
+						gdlxdh: $("#gdlxdh").val(),
+						zlkz: $("#zlkz").val(),
+						remark: $("#remark").val(),
+						addUser: localStorage.getItem("userid"),
+						projectFxParams: projectFxParams,
+						projectPbParam: projectPbParam
+					}
+					$.ajax({
+						type: "post",
+						url: url + '/sysProject/addProject',
+						data: JSON.stringify(data),
+						contentType: 'application/json;utf-8',
+						dataType: "json",
+						success: function(res) {
+							layer.closeAll('loading');
+							if (res.code == 0) {
+								layer.msg(res.msg, {
+									icon: 1
+								});
+							} else {
+								layer.msg(res.msg, {
+									icon: 2
+								});
+							}
+						}
+					})
+				});
+                $('#xmsh').on('click', () => {
+                    layer.confirm('确定要审核通过吗？', {
+                        skin: 'layui-layer-admin',
+                        shade: .1
+                    }, function() {
+                        xmsy();
+                    });
+                })
+                function xmsy(){
+                    $.post(url + '/qianhe/addShRecord', {
+                        shlx: shlx,
+                        shr:localStorage.getItem("userid"),
+                        shzt:1,
+                        shId:id
+                    }, function(res) {
+                        layer.closeAll('loading');
+                        if (res.code == 0) {
+                            layer.msg(res.msg, {
+                                icon: 1
+                            });
+                            parent.location.reload();
+                            parent.layui.admin.events.closeThisTabs()
+                        } else {
+                            layer.msg(res.msg, {
+                                icon: 2
+                            });
+                        }
+                    }, 'json');
+                }
+			});
+		</script>
+
+	</body>
+</html>

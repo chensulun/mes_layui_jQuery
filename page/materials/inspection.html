@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>原材报检</title>
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=314"/>
+    <link rel="stylesheet" href="../../assets/css/common_likui.css?v=314"/>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .search-container {
+            height: 144px;
+            padding: 57px 0 57px 100px;
+            box-sizing: border-box;
+        }
+        .search-container .layui-form-radio {
+            margin: 0 30px 0 0 ;
+        }
+        .project-audit-table {
+            padding: 30px 20px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0;
+        }
+        .project-audit-table .layui-tab-title {
+            border: none;
+        }
+        .project-audit-table .layui-tab-title li {
+            border-radius: 2px;
+            background-color: rgba(236, 236, 236, 1);
+            color: rgba(56, 56, 56, 1);
+            margin-right: 26px;
+        }
+        .project-audit-table .layui-tab-title .layui-this {
+            background-color: rgba(26, 185, 155, 1);
+            color: #fff;
+        }
+        #modelInspectionForm .layui-form-label {
+            width: 100px;
+            padding-right: 0;
+            box-sizing: border-box;
+        }
+        #modelInspectionForm .layui-input-block {
+            margin-left: 110px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 页面加载loading -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card" style="background-color: initial;">
+        <div class="layui-card-body">
+            <div class="project-audit-table bg-white mt-20">
+                <div class="layui-tab layui-tab-brief" lay-filter="projectSetting">
+                    <ul class="layui-tab-title" id="menu-tab">
+                        <li class="layui-this">待检材料</li>
+                        <li>检毕材料</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <table class="layui-table" id="tableInspection" lay-filter="tableInspection"></table>
+                        </div>
+                        <div class="layui-tab-item">
+                            <div class="p-20" style="padding-left: 0;">
+                                <div class="layui-inline">
+                                    <!-- <label class="layui-form-label w-auto">日&emsp;期：</label> -->
+                                    <div class="layui-input-inline" style="width: 200px;">
+                                        <input type="text" name="start_time" class="layui-input" id="test-laydate-start" placeholder="开始日期" lay-key="1">
+                                    </div>
+                                    <div class="layui-input-inline"> - </div>
+                                    <div class="layui-input-inline" style="width: 200px;">
+                                        <input type="text" name="end_time" class="layui-input" id="test-laydate-end" placeholder="结束日期" lay-key="2">
+                                    </div>
+                                </div>
+                                <div class="layui-inline" style="margin-left: 50px;">
+                                    <button id="btnSearch" lay-filter="formSubSearchtableInspection1" lay-submit class="layui-btn layui-btn-green3">搜索</button>
+                                </div>
+                            </div>
+                            <table class="layui-table" id="tableInspection1" lay-filter="tableInspection1"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white mt-20 layui-form" style="padding: 35px;">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-md3">
+                        <div class="mb-20">
+                            <label class="layui-form-label">车牌号</label>
+                            <div class="layui-input-block">
+								<input  id="inspectionId"  type="hidden" class="layui-input"/>
+                                <input  id="bus_number"  placeholder="请输入" type="text" class="layui-input"/>
+                            </div>
+                        </div>
+                        <div class="">
+                            <label class="layui-form-label">明扣(吨)</label>
+                            <div class="layui-input-block">
+                                <input id="ming_buckle" placeholder="请输入" type="number" class="layui-input"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <div class="mb-20">
+                            <label class="layui-form-label">仓位</label>
+                            <div class="layui-input-block">
+								<input type="text" id="position_name"   class="layui-input"/>
+                              <!--  <select name="pid" lay-filter="roleList" id="menuList" lay-verType="tips" lay-verify="required" required>
+                                </select> -->
+                            </div>
+                        </div>
+                        <div class="">
+                            <label class="layui-form-label">明扣比例(%)</label>
+                            <div class="layui-input-block">
+                                <input id="ming_buckle_scale"   placeholder="请输入" type="number" class="layui-input"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            <textarea id="remark" placeholder="请输入备注" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-col-md2" id="caozuo">
+                        <div class="text-center mb-20"><button class="layui-btn layui-btn-green1" style="width: 90px;text-align: center;" type="button"  lay-filter="modelSubmitHg" lay-submit>合格</button></div>
+                        <div class="text-center"><button class="layui-btn layui-btn-red1" style="width: 90px;text-align: center;" type="button"  lay-filter="modelSubmitBhg" lay-submit>不合格</button></div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarTask">
+	<a class="layui-btn layui-btn-xs table-btn" lay-event="edit">报告</a>
+</script>
+
+<script type="text/html" id="tableBarReport">
+	
+	
+	{{# if(d.file==null || d.file=='null'){ }}
+	<a class="layui-btn layui-btn-xs table-btn"  href="javascript:return false;" style="opacity: 0.2" >查看</a>
+
+	{{#  } else { }}
+		<a class="layui-btn layui-btn-xs table-btn"  lay-event="see">查看</a>
+	{{#  } }}
+	
+</script>
+<!-- 弹窗 -->
+<script type="text/html" id="inspectionModal">
+    <form id="modelInspectionForm" lay-filter="modelMenuForm" class="layui-form model-form adjust-container">
+	<input type="hidden" id="inspection_id" name="inspection_id" />
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">编号</label>
+                    <div class="layui-input-block">
+                        <input name="no" id="no" placeholder="请输入" type="text" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">检验结果</label>
+                    <div class="layui-input-block">
+                        <select name="inspector_type" id="inspector_type" lay-filter="inspectorTypeList" lay-verType="tips" lay-verify="required" required>
+							<option value="">请选择</option>
+							<option value="1">合格</option>
+							<option value="2">不合格</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">来样日期</label>
+                    <div class="layui-input-block">
+						 <input name="sample_date" id="sample_date_time" placeholder="请输入" type="text" class="layui-input" lay-key="1"/>
+                    </div>
+                </div>
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">取样日期</label>
+                    <div class="layui-input-block">
+                       <input name="sampling_date" id="sampling_date_time" placeholder="请输入" type="text" class="layui-input" lay-key="2"/>
+                    </div>
+                </div>
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">样品规格</label>
+                    <div class="layui-input-block">
+                        <input name="sample_specification" placeholder="请输入" type="text" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">样品数量</label>
+                    <div class="layui-input-block">
+                        <input name="sample_num" placeholder="请输入" type="text" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">筛分</label>
+                    <div class="layui-input-block"></div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">其余检测参数</label>
+                    <div class="layui-input-block"></div>
+                </div>
+                <div class="layui-col-md6 mb-20" style="padding: 0 0 0 40px;">
+					<table class="layui-table" lay-skin="line" id="tableScreen" lay-filter="tableScreen"></table>
+                </div>
+                <div class="layui-col-md6 mb-20" style="padding: 0 10px 0 10px;">
+                    <table class="layui-table" id="tableParameter" lay-filter="tableParameter"></table>
+                </div>
+                <div class="layui-col-md12 mb-20">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <textarea name="remark" placeholder="请输入备注" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">批准人员</label>
+                    <div class="layui-input-block">
+                        <input name="approval_name" placeholder="请输入" type="text" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">审核人员</label>
+                    <div class="layui-input-block">
+                        <input name="examine_name" placeholder="请输入" type="text" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">试验人员</label>
+                    <div class="layui-input-block">
+                        <input name="trial_name" placeholder="请输入" type="text" class="layui-input"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="layui-form-item text-center p-20">
+            <button class="layui-btn layui-btn-primary" type="button"  lay-filter="modelSubmitInspection" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-green2" type="button" lay-filter="modelCancalInspection" lay-submit>取消</button>
+        </div>
+    </form>
+</script>
+
+
+
+
+
+
+<script type="text/html" id="inspectionDetailModal">
+    <form id="modelInspectionDetailForm" lay-filter="modelInspectionDetailForm" class="layui-form model-form adjust-container">
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">编号</label>
+                    <div class="layui-input-block">
+                        <input name="no" id="no" placeholder="请输入" type="text" class="layui-input" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">检验结果</label>
+                    <div class="layui-input-block">
+						  <input name="inspector_result" id="inspector_result" placeholder="请输入" type="text" class="layui-input"  readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">来样日期</label>
+                    <div class="layui-input-block">
+						<input name="sample_date" id="sample_date" placeholder="请输入" type="text" class="layui-input" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">取样日期</label>
+                    <div class="layui-input-block">
+                        <input name="sampling_date" id="sampling_date" placeholder="请输入" type="text" class="layui-input" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">样品规格</label>
+                    <div class="layui-input-block">
+                        <input name="sample_specification" id="sample_specification" placeholder="请输入" type="text" class="layui-input" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="layui-col-md6 mb-20">
+                    <label class="layui-form-label">样品数量</label>
+                    <div class="layui-input-block">
+                        <input name="sample_num" id="sample_num" placeholder="请输入" type="text" class="layui-input" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">筛分</label>
+                    <div class="layui-input-block"></div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label">其余检测参数</label>
+                    <div class="layui-input-block"></div>
+                </div>
+                <div class="layui-col-md6 mb-20" style="padding: 0 20px 0 40px;">
+                    <table class="layui-table" id="tableSfdetail" lay-filter="tableSfdetail"></table>
+                </div>
+                <div class="layui-col-md6 mb-20" style="padding: 0 10px 0 10px;">
+                    <table class="layui-table" id="tableOtherdetail" lay-filter="tableOtherdetail"></table>
+                </div>
+                <div class="layui-col-md12 mb-20">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <textarea name="remark" id="remark" placeholder="请输入备注" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">批准人员</label>
+                    <div class="layui-input-block">
+                       <input name="approval_name" id="approval_name" placeholder="请输入" type="text" class="layui-input" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">审核人员</label>
+                    <div class="layui-input-block">
+                       <input name="examine_name" id="examine_name" placeholder="请输入" type="text" class="layui-input" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">试验人员</label>
+                    <div class="layui-input-block">
+                        <input name="trial_name" id="trial_name" placeholder="请输入" type="text" class="layui-input" readonly="readonly"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+<!-- js部分 -->
+<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../assets/js/server.js"></script>
+<script>
+	//url="http://localhost:8080/";
+	$(function(){
+		$("#menu-tab li").click(function(){
+			index=$(this).index();
+			if(index==0){
+				$("#caozuo").show();
+				$("#bus_number").val("");
+				$("#position_name").val("");
+				$("#ming_buckle").val("");
+				$("#ming_buckle_scale").val("");
+				$("#remark").val("");
+				// $('#test-laydate-end').val("");
+				// $('#test-laydate-start').val("");
+				
+			}else{
+				$("#caozuo").hide();
+			}
+		})
+	})
+    layui.use(['layer', 'form', 'table', 'util', 'laydate', 'admin', 'element'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var laydate = layui.laydate;
+        var admin = layui.admin;
+        var element = layui.element;
+		
+		
+		//日期
+        laydate.render({
+            elem: '#test-laydate-start',
+            trigger: 'click',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var startDate = new Date(value).getTime();
+                var endTime = new Date($('#test-laydate-end').val()).getTime();
+                if (endTime < startDate) {
+                    layer.msg('开始时间不能大于结束时间');
+                    $('#test-laydate-start').val($('#test-laydate-end').val());
+                }
+            }
+
+        });
+        laydate.render({
+            elem: '#test-laydate-end',
+            trigger: 'click',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var startDate = new Date($('#test-laydate-start').val()).getTime();
+                var endTime = new Date(value).getTime();
+                if (endTime < startDate) {
+                    layer.msg('结束时间不能小于开始时间');
+                    $('#test-laydate-end').val($('#test-laydate-start').val());
+                }
+            }
+        });
+		//待检材料
+        var insTb = table.render({
+            elem: '#tableInspection',
+            url: url + '/materialInspection/getInspectionSiteList',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+				 {field: 'id', align: 'center', title: '主键',hide:true},
+                     {field: 'row', align: 'center', title: '序号', width: 60},
+                {field: 'bus_number', align: 'center', title: '车牌号'},
+                {field: 'name_norms', align: 'center', title: '名称规格'},
+                {field: 'supplier_name', align: 'center', title: '供应商'},
+                {field: 'position_name', align: 'center', title: '仓位名'},
+                {field: 'gross_weight', align: 'center', title: '毛重',
+					templet: function(d) {
+						if(d.gross_weight==0){
+							return "";
+						}else{
+							return (d.gross_weight/1000).toFixed(3);
+						}
+					}
+				},
+                {field: 'tare', align: 'center', title: '皮重',
+					templet: function(d) {
+						if(d.tare==0){
+							return "";
+						}else{
+							return (d.tare/1000).toFixed(3);
+						}
+					}
+				},
+                {field: 'initial_date_str', align: 'center', title: '进厂时间'},
+                {field: 'inspector_result', align: 'center', title: '检测结果'},
+                {field: 'inspector_name', align: 'center', title: '检测人'},
+                {field: 'inspector_date_str', align: 'center', title: '检测时间'},
+				 {align: 'center', toolbar: '#tableBarTask', title: '操作', minWidth: 100}
+            ]],
+            request: {
+                pageName: 'currentIndex', //页码的参数名称，默认：page
+                limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            },
+            where: {
+               type: 0,
+			   idzhandian:localStorage.getItem("station_id")
+            },
+            response: {
+                countName: 'totalCount', //数据总数的字段名称，默认：count
+                dataName: 'list' //数据列表的字段名称，默认：data
+            }
+        });
+		table.on('tool(tableInspection)', function (obj) {
+			var data = obj.data;
+		    var layEvent = obj.event;
+		    if(layEvent === 'edit'){
+		         showEditModel(data.id);
+				 insReportTbScreen('tableScreen', listScreen);
+				 insReportTbParameter('tableParameter', listParameter);
+				 
+				 
+				 form.on('submit(modelSubmitInspection)', function(data) {
+					 var json={...data.field,inspector_id:localStorage.getItem("userid"),inspector_name:localStorage.getItem("username"),
+					 reportScreenModels:listScreen, reportParameterModels:listParameter};
+					 var chanshuj= JSON.stringify(json);
+					 $.ajax({
+					 	type: "post",
+					 	url: url + '/materialInspection/editTwo',
+					 // 	data: {
+						//  ...data.field,
+						//  inspector_id:localStorage.getItem("userid"),
+						//  inspector_name:localStorage.getItem("username"),
+						//  reportScreenModels:listScreen,
+						//  reportParameterModels:listParameter
+					 // },
+					 data:chanshuj,
+					 	async: false,
+					 	contentType: 'application/json;utf-8',
+					 	success: function(re) {
+					 		console.log(re);
+					 		if (re.code == 0) {
+					 
+					 		}
+					 	}
+					 })
+					 // $.post(url+"/materialInspection/editTwo",{
+						//  ...data.field,
+						//  inspector_id:localStorage.getItem("userid"),
+						//  inspector_name:localStorage.getItem("username"),
+						//  reportScreenModels:listScreen,
+						//  reportParameterModels:listParameter
+					 // },function(res){
+						//  if(res.code==0){
+							 
+						//  }else{
+							 
+						//  }
+					 // })
+				 })
+		    }
+		})
+		function showEditModel(id) {
+			
+		    admin.open({
+		        type: 1,
+		        area: '1060px',
+		        title: '粗集料检验报告',
+		        content: $('#inspectionModal').html(),
+		        success: function (layero, dIndex) {
+					//日期
+					laydate.render({
+					    elem: '#sample_date_time',
+					    trigger: 'click',
+					    format: 'yyyy-MM-dd',
+					    done: function (value, date, endDate) {
+					       
+					    }
+					
+					});
+					laydate.render({
+					    elem: '#sampling_date_time',
+					    trigger: 'click',
+					    format: 'yyyy-MM-dd',
+					    done: function (value, date, endDate) {
+					       
+					    }
+					});
+					$("#inspection_id").val(id);
+		            layui.form.render("select");
+		            // initTbSf();
+		            // initTbOther();
+		        }
+		    });
+		}
+		//单击
+		table.on('row(tableInspection)',function(obj){
+		    var data=obj.data;
+			$("#bus_number").val(data.bus_number);
+			$("#position_name").val(data.position_name);
+			$("#inspectionId").val(data.id);
+		})
+		
+		form.on('submit(modelSubmitHg)', function(data) {
+			var bus_number=$("#bus_number").val();
+			var position_name=$("#position_name").val();
+			var ming_buckle=$("#ming_buckle").val();
+			var ming_buckle_scale=$("#ming_buckle_scale").val();
+			var remark=$("#remark").val();
+			var id=$("#inspectionId").val();
+			if(id==""){
+				layer.msg("至少选中一条数据", {icon: 1});
+				return;
+			}
+			$.post(url+"/materialInspection/editOne",{
+				bus_number:bus_number,
+				position_name:position_name,
+				ming_buckle:ming_buckle,
+				ming_buckle_scale:ming_buckle_scale,
+				remark:remark,
+				inspector_type:1,
+				inspector_id:localStorage.getItem("userid"),
+				inspector_name:localStorage.getItem("username"),
+				id:id
+			},function(res){
+				if(res.code==0){
+					insTb.reload();
+					insTb1.reload();
+				}else{
+					layer.msg(res.msg, {icon: 2});
+				}
+			})
+		});
+		form.on('submit(modelSubmitBhg)', function(data) {
+			var bus_number=$("#bus_number").val();
+			var position_name=$("#position_name").val();
+			var ming_buckle=$("#ming_buckle").val();
+			var ming_buckle_scale=$("#ming_buckle_scale").val();
+			var remark=$("#remark").val();
+			var id=$("#inspectionId").val();
+			if(id==""){
+				layer.msg("至少选中一条数据", {icon: 1});
+				return;
+			}
+			$.post(url+"/materialInspection/editOne",{
+				bus_number:bus_number,
+				position_name:position_name,
+				ming_buckle:ming_buckle,
+				ming_buckle_scale:ming_buckle_scale,
+				remark:remark,
+				inspector_type:2,
+				inspector_id:localStorage.getItem("userid"),
+				inspector_name:localStorage.getItem("username"),
+				id:id
+			},function(res){
+				if(res.code==0){
+					insTb.reload();
+					insTb1.reload();
+				}else{
+					layer.msg(res.msg, {icon: 2});
+				}
+			})
+		});
+		
+		// 筛分
+		var listScreen = [];
+		addItem = {
+			id: -1,
+			sieve_size: '',
+			percentage: '',
+			skills_requirement: '',
+			result_judgment: ''
+		}
+		listScreen.push(addItem);
+		
+		
+		function insReportTbScreen(ele, lists) {
+		
+			table.render({
+				elem: `#${ele}`,
+				data: lists,
+				height: 210,
+				cols: [
+					[{
+							field: 'sieve_size',
+							align: 'center',
+							edit: 'text',
+							title: '筛孔尺寸(mm)'
+						},
+						{
+							field: 'percentage',
+							align: 'center',
+							edit: 'text',
+							title: '累计筛余百分率(%)检测结果'
+						},
+						{
+							field: 'skills_requirement',
+							align: 'center',
+							edit: 'text',
+							title: '技术要求'
+						},
+						{
+							field: 'result_judgment',
+							align: 'center',
+							edit: 'text',
+							title: '结果判定'
+						},
+						{
+							align: 'center',
+							title: '操作',
+							rowspan: 2,
+							width: 60,
+							templet: function(d) {
+								if (d.id === -1) {
+									return '<div><i class="layui-icon text-green" id="addlist1" lay-event="add" style="cursor: pointer;">&#xe654;</i></div>'
+								} else {
+									return '<div><i class="layui-icon text-red" lay-event="del" style="cursor: pointer;">&#x1006;</i></div>'
+								}
+							}
+						}
+					]
+				]
+			});
+			table.on(`tool(${ele})`, function(obj) {
+				var layEvent = obj.event;
+				console.log(obj.data);
+				if (layEvent === 'add') {
+					lists.push({
+						...obj.data,
+						id: (new Date()).getTime()
+					});
+					let addItem = {
+						id: -1,
+						pb_id: '',
+						cl: '',
+						jlgg: '',
+						yx: '',
+						cd: ''
+					}
+					lists.splice(-2, 1);
+					lists.push(addItem);
+					list2 = { ...lists
+					}
+					table.reload(ele, {
+						data: lists
+					})
+				} else if (layEvent === 'del') {
+					lists.map((val, index) => {
+						if (val.id === obj.data.id) {
+							lists.splice(index, 1);
+							list2 = { ...lists
+							}
+							table.reload(ele, {
+								data: lists
+							});
+						}
+					})
+				}
+			});
+		}
+		
+	   // 其余检测参数
+		var listParameter = [];
+		addItem = {
+			id: -1,
+			parameter_name: '',
+			jianche_result: '',
+			skills_requirement: '',
+			result_judgment: ''
+		}
+		listParameter.push(addItem);
+		
+	
+		function insReportTbParameter(ele, lists) {
+		
+			table.render({
+				elem: `#${ele}`,
+				data: lists,
+				height: 210,
+				cols: [
+					[{
+							field: 'parameter_name',
+							align: 'center',
+							edit: 'text',
+							title: '参数'
+						},
+						{
+							field: 'jianche_result',
+							align: 'center',
+							edit: 'text',
+							title: '检测结果'
+						},
+						{
+							field: 'skills_requirement',
+							align: 'center',
+							edit: 'text',
+							title: '技术要求'
+						},
+						{
+							field: 'result_judgment',
+							align: 'center',
+							edit: 'text',
+							title: '结果判定'
+						},
+						{
+							align: 'center',
+							title: '操作',
+							rowspan: 2,
+							width: 60,
+							templet: function(d) {
+								if (d.id === -1) {
+									return '<div><i class="layui-icon text-green" id="addlist1" lay-event="add" style="cursor: pointer;">&#xe654;</i></div>'
+								} else {
+									return '<div><i class="layui-icon text-red" lay-event="del" style="cursor: pointer;">&#x1006;</i></div>'
+								}
+							}
+						}
+					]
+				]
+			});
+			table.on(`tool(${ele})`, function(obj) {
+				var layEvent = obj.event;
+				console.log(obj.data);
+				if (layEvent === 'add') {
+					lists.push({
+						...obj.data,
+						id: (new Date()).getTime()
+					});
+					let addItem = {
+						id: -1,
+						pb_id: '',
+						cl: '',
+						jlgg: '',
+						yx: '',
+						cd: ''
+					}
+					lists.splice(-2, 1);
+					lists.push(addItem);
+					list2 = { ...lists
+					}
+					table.reload(ele, {
+						data: lists
+					})
+				} else if (layEvent === 'del') {
+					lists.map((val, index) => {
+						if (val.id === obj.data.id) {
+							lists.splice(index, 1);
+							list2 = { ...lists
+							}
+							table.reload(ele, {
+								data: lists
+							});
+						}
+					})
+				}
+			});
+		}
+		
+		//检毕材料
+        var insTb1 = table.render({
+            elem: '#tableInspection1',
+            url: url + '/materialInspection/getInspectionSiteList',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+            	 {field: 'id', align: 'center', title: '主键',hide:true},
+				  {field: 'file',hide:true},
+                {field: 'row', align: 'center', title: '序号', width: 60},
+                {field: 'bus_number', align: 'center', title: '车牌号'},
+                {field: 'name_norms', align: 'center', title: '名称规格'},
+                {field: 'supplier_name', align: 'center', title: '供应商'},
+                {field: 'position_name', align: 'center', title: '仓位名'},
+              {field: 'gross_weight', align: 'center', title: '毛重',
+              	templet: function(d) {
+              		if(d.gross_weight==0){
+              			return "";
+              		}else{
+              			return (d.gross_weight/1000).toFixed(3);
+              		}
+              	}
+              },
+              {field: 'tare', align: 'center', title: '皮重',
+              	templet: function(d) {
+              		if(d.tare==0){
+              			return "";
+              		}else{
+              			return (d.tare/1000).toFixed(3);
+              		}
+              	}
+              },
+                {field: 'initial_date_str', align: 'center', title: '进厂时间'},
+                {field: 'inspector_result', align: 'center', title: '检测结果'},
+                {field: 'inspector_name', align: 'center', title: '检测人'},
+                {field: 'inspector_date_str', align: 'center', title: '检测时间'},
+				 {align: 'center', toolbar: '#tableBarReport', title: '操作', minWidth: 80}
+            ]],    
+            request: {
+                pageName: 'currentIndex', //页码的参数名称，默认：page
+                limitName: 'pageSize', //每页数据量的参数名，默认：limit
+				
+            },
+            where: {
+               type:1,
+			   start_time:$('#test-laydate-start').val(),
+			   end_time:$('#test-laydate-end').val(),
+			   idzhandian:localStorage.getItem("station_id")
+            },
+            response: {
+                countName: 'totalCount', //数据总数的字段名称，默认：count
+                dataName: 'list' //数据列表的字段名称，默认：data
+            }
+        });
+		
+		//查询
+		form.on('submit(formSubSearchtableInspection1)', function (data) {
+			var currentPage=1;
+			var datafield= data.field;
+			
+			datafield.currentPage= currentPage;
+			insTb1.reload({
+				where: {
+					type:1,
+					start_time:$('#test-laydate-start').val(),
+					end_time:$('#test-laydate-end').val()
+				},
+				page: {
+					curr: 1
+				}
+			
+			},'data');
+		});
+		
+		//单击
+		table.on('row(tableInspection1)',function(obj){
+		    var data=obj.data;
+			$("#bus_number").val(data.bus_number);
+			$("#position_name").val(data.position_name);
+			$("#ming_buckle").val(data.ming_buckle);
+			$("#ming_buckle_scale").val(data.ming_buckle_scale);
+			$("#remark").val(data.remark);
+		})
+		table.on('tool(tableInspection1)', function (obj) {
+			var data = obj.data;
+		    var layEvent = obj.event;
+		    if(layEvent === 'see'){
+				var zdname = localStorage.getItem("station");
+				var api_url = getServerUrl(zdname);
+				window.location.href = `${api_url}/api/data/downloadBgFile/${data.file}`;
+		         // showEditDetailModel(data.id);
+		    }
+		})
+		
+        function showEditDetailModel(id) {
+            admin.open({
+                type: 1,
+                area: '1060px',
+                title: '粗集料检验报告',
+                content: $('#inspectionDetailModal').html(),
+                success: function (layero, dIndex) {
+					$.post(url+"/materialInspection/getcjljcReportModel",{id:id},function(res){
+						   
+							form.val('modelInspectionDetailForm', res);
+							var reportScreenListss=res==""?[]:res.reportScreenModels;
+							var reportParameterListss=res==""?[]:res.reportParameterModels;
+							initTbSfDetail(reportScreenListss);
+							initTbOtherDetail(reportParameterListss);
+					})
+					// form.val('modelAddProjectForm', data);
+     //                layui.form.render("select");
+                  
+                }
+            });
+        }
+        function initTbSfDetail(list) {
+            var yclList = [{yclgg: '原材料规格', zl: '重量', bz: '备注'}]
+            var insYclTb = table.render({
+                elem: '#tableSfdetail',
+                data: list,
+                cellMinWidth: 40,
+                height: 320,
+                cols: [[
+                    {field: 'sieve_size', align: 'center', title: '筛孔尺寸(mm)'},
+                    {field: 'percentage', align: 'center', title: '累计筛余百分率(%)检测结果'},
+                    {field: 'skills_requirement', align: 'center', title: '技术要求'},
+                    {field: 'result_judgment', align: 'center', title: '结果判定'},
+                ]]
+            });
+        }
+        function initTbOtherDetail(list) {
+            var insYclTb = table.render({
+                elem: '#tableOtherdetail',
+                data: list,
+                cellMinWidth: 40,
+                height: 320,
+                cols: [[
+                    {field: 'parameter_name', align: 'center', title: '参数'},
+                    {field: 'jianche_result', align: 'center', title: '检测结果'},
+                    {field: 'skills_requirement', align: 'center', title: '技术要求'},
+                    {field: 'result_judgment', align: 'center', title: '结果判定'},
+                ]]
+            });
+        }
+        //一些事件监听
+        element.on('tab(projectSetting)', function(data){
+			
+			
+            console.log(data);
+        });
+	});
+</script>
+
+</body>
+</html>

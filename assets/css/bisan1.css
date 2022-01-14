@@ -1,0 +1,46 @@
+.jiankong-main .section1 .ysb{
+	    height: 10.46rem !important;
+}
+.jiankong-main .section1 .peibi .head{
+	    height: 5.0rem !important;
+    line-height: 5.0rem !important;
+}
+
+.jiankong-main .video{
+	height: 36.45rem;
+	overflow: hidden;		
+}
+.layui-table-cell{
+			    height: 50px;
+    line-height: 50px;
+		}
+		
+.peibi .layui-table-cell{
+			width: 105px;
+		}
+
+.shenchan .layui-table-cell{
+			width: 91px !important;
+		}
+		
+		.jiankong-main .section{
+			width:60.1rem;
+		}
+		.jiankong-main .section1 .peibi{
+			width:51.3rem;
+		}
+		.jiankong-main .section1{
+			width:60.1rem;
+		}
+		.jiankong-main .table{
+			width:60rem;
+		}
+			.peibi .laytable-cell-1-tjjsl{
+			width:72.0px !important;
+		}
+.shenchan .laytable-cell-2-ysb{
+			width: 65px !important;
+		}
+		
+
+

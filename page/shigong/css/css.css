@@ -1,0 +1,227 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.main{
+    width: 1200px;
+    margin: 10px auto;
+}
+select {
+    /*Chrome和Firefox里面的边框是不一样的，所以复写了一下*/
+    border: solid 1px #000;
+    /*很关键：将默认的select选择框样式清除*/
+    appearance:none;
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    /*将背景改为红色*/
+    background:red;
+    /*加padding防止文字覆盖*/
+    padding-right: 14px;
+}
+/*清除ie的默认选择框样式清除，隐藏下拉箭头*/
+select::-ms-expand { display: none; }
+body{
+    background:white;
+}
+.select{
+
+    background: white ;
+
+    width: 99%;
+    border: 2px solid lightgray;
+
+    margin: 12px auto;
+
+    overflow: hidden;
+}
+.selectitem{
+
+    width: 30%;
+
+    float: left;
+
+    margin: 1%;
+
+    display: flex;
+
+    line-height: 34px;
+}
+.selecttime{
+
+    width: 62%;
+
+    text-align: left;
+}
+.selecttime input{
+    width: 22%;
+    background: white;
+    border: 1px solid #999;
+}
+.selelabel{
+
+    width: 135px;
+}
+.selecon{
+
+    width: 63%;
+}
+.selecon select{
+
+    background: white url("../images/down.png") no-repeat right ;
+
+    border: 1px solid #9999;
+
+    height: 34px;
+
+    width: 100%;
+    margin: 2px;
+}
+.selebottom{
+
+    width: 98%;
+
+    margin: 1% auto;
+
+    background: #DCEBFE;
+}
+.left{
+
+    float: left;
+
+    width: 70%;
+}
+.left1{
+
+    overflow: hidden;
+}
+.left1L{
+
+    float: left;
+
+    color: #13B3A4;
+
+    font-weight: 700;
+
+    margin: 27px;
+}
+.left1R{
+
+    float: right;
+
+    margin: 20px;
+}
+.left1R img{
+
+}
+.left1R input{
+
+}
+.right{
+
+    float: right;
+
+    width: 30%;
+    border: 1px solid #ddd;
+}
+.rightbox{
+
+    background:white;
+
+    margin: 10px;
+}
+.righttit{
+
+    font-size: 20px;
+
+    color: #000;
+
+    border-bottom: 1px solid #ddd;
+
+    padding: 10px;
+
+    margin-bottom: 10px;
+    border: 1px solid lightgray;
+    background: darkgray;
+}
+.qixiang{
+
+    background: white;
+
+    overflow: hidden;
+
+    padding: 10px 0;
+    border: 1px solid #ddd;
+}
+.qixiangitem {
+
+    float: left;
+
+    width: 50%;
+
+    text-align: center;
+    /* border: 1px solid #ddd; */
+}
+.qixiangitem img{
+
+    height: 73px;
+
+    vertical-align: middle;
+    border-bottom: 1px solid #ddd;
+}
+.sbcon{
+
+    padding-bottom: 20px;
+    border: 1px solid #ddd;
+}
+.sbimg{
+
+}
+.sbimg img{
+    vertical-align: middle;
+    width: 100%;
+}
+.sblsit{
+
+    margin: 10px auto;
+
+    width: 90%;
+
+    color: #999;
+}
+.sblsit img{
+    vertical-align: middle;
+}
+.status{
+    background: #13B3A4;
+    color: #fff;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 10px;
+
+}
+.leftbott{
+    position: relative;
+    /* text-align: center; */
+    /* background: lightgray; */
+}
+.bts{
+text-align: center;
+}
+.bts input{
+    background: #13B3A4;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+}
+
+.bts1{
+    text-align: right;
+    }
+    .bts1 input{
+        background: #13B3A4;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        margin: 10px;
+    }

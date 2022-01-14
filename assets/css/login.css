@@ -1,0 +1,320 @@
+/** 登录页面样式 */
+
+body {
+    background-image: url("../images/cjbeijign.png");
+    background-position: center center ;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-color: #f0f2f5;
+}
+
+.login-wrapper, body, html {
+    width: 100%;
+    height: 100%;
+
+}
+
+.login-wrapper {
+    /*width: 794px;*/
+    width:28.125vw;
+    height:23.020vw;
+    background:rgba(255,255,255,1);
+    box-shadow:4px 8px 30px 0px rgba(0,0,0,0.2);
+    border-radius:16px;
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    background: white;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+}
+.login-img{
+    background: url("../images/cjicon_beijin.png") no-repeat center 100% ;
+    float: left;
+    width: 422px;
+    height:385px;
+    position: relative;
+    left: 0;
+    top: 0;
+    color: white;
+    overflow: hidden;
+}
+.line {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    top: 200px;
+    width:85%;
+    height: 0;
+    border-top: 1px solid white;
+    opacity: 0.6;
+}
+.layui-card{
+    padding: 20px 0;
+}
+.login-captcha{
+    font-size: 26px;
+    color: #bbbbbb;
+    background-color: #e7f4ff;
+    padding: 0;
+}
+.lg_pading{
+    padding: 150px  46px 0 26px;
+}
+.login-img .lg_title{
+    font-size: 28px;
+    padding-bottom: 20px;
+}
+.login-img .lg_title img{
+    padding-left: 15px;
+}
+.login-body > .layui-card {
+    padding: 2.35vw 3.697vw;
+   /*padding: 3.697vw;*/
+    position: relative;
+}
+.layui-form-pane .layui-input {
+
+    padding-right: 43px;
+    border-radius: 0 5px 5px 0 ;
+}
+.log-input{
+    border-radius:10px!important;
+}
+.layui-card{
+    box-shadow:none
+}
+.login-body .layui-card-header {
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.login-body .layui-form-pane .layui-form-label {
+    width: 48px;
+    overflow: visible;
+}
+
+.login-body .layui-form-pane .layui-input-block {
+    margin-left: 48px;
+}
+.layui-form-label{
+    background-color: #fff!important;
+}
+
+.login-body .login-captcha {
+    width: 100%;
+    cursor: pointer;
+    height: 2.5vw;
+    line-height:2.5vw;
+    border: 1px solid #e6e6e6;
+    border-radius: 2px;
+    box-sizing: border-box;
+    display: block;
+    text-align: center;
+}
+.login-body .login-other > * {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.login-body .login-other .layui-icon {
+    position: relative;
+    top: 2px;
+    font-size: 26px;
+}
+
+.login-body .login-other a:hover {
+    opacity: .8;
+}
+h4 {
+    display: block;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
+.layui-icon-login-qq {
+    color: #3492ED
+}
+
+.layui-icon-login-wechat {
+    color: #4DAF29
+}
+
+.layui-icon-login-weibo {
+    color: #CF1900
+}
+
+/** 底部样式 */
+.login-footer {
+    text-align: center;
+    line-height: 30px;
+    color: rgba(255, 255, 255, 0.7) !important;
+    padding-bottom: 20px;
+}
+
+.login-footer span {
+    padding: 0 5px
+}
+
+.login-footer a {
+    padding: 0 5px;
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.login-footer a:hover {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/** 头部样式 */
+.login-header {
+    font-family: Myriad Pro, Helvetica Neue, Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85) !important;
+    padding: 10px;
+}
+
+.login-header img {
+    height: 40px;
+}
+
+/** 移动设备样式 */
+@media screen and (min-height: 590px) {
+}
+
+@media screen and (min-height: 670px) {
+    /*.login-body {*/
+    /*    padding: 110px 10px 40px 10px;*/
+    /*}*/
+}
+
+/** 辅助样式 */
+.layui-link {
+    color: #029789 !important;
+}
+
+.layui-link:hover {
+    opacity: .8;
+}
+
+.pull-right {
+    float: right;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.login-header {
+    color: rgba(0, 0, 0, .85) !important;
+}
+
+.login-footer {
+    color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.login-footer a {
+    color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.login-footer a:hover {
+    color: rgba(0, 0, 0, 0.4) !important;
+}
+.login{
+    width: 100%;
+    display: inline-block;
+    height: 53px;
+    line-height: 53px;
+    padding: 0 18px;
+    background-color: #008de7;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    border-radius:10px;
+}
+.lg_jzhu{
+    margin-bottom: 20px;
+}
+/*.layui-form input[type=checkbox], .layui-form input[type=radio], .layui-form select {
+  display: block;
+}*/
+.layui-input{
+    height: 2.6041vw;
+}
+.layui-form-pane .layui-form-label{
+    height:  2.6041vw;
+    line-height: 1.5625vw;
+}
+.login-body .layui-form-pane .layui-form-label{
+    border-radius:5px 0 0 5px;
+}
+.layui-icon {
+    font-size: 1.302vw;
+    color: #c6c6c6;
+}
+.layui-icon .iphoto{
+   width:0.7291vw;
+    height: 1.25vw;
+ }
+.layui-icon .suo{
+    width:1.145vw;
+    height: 1.25vw;
+}
+.layui-form-pane .layui-form-label{
+    padding: 7px 10px;
+}
+.itempading{
+    padding-bottom: 0.416vw;
+}
+.title{
+    font-size: 1.458vw !important;
+}
+.login-i{
+    width: 13.75vw;
+    height: 1.770vw;
+    overflow: hidden;
+    position: absolute;
+    left: 32%;
+    top: 14%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+}
+.login-i img{
+    width: 100%;
+    height: 100%;
+}
+.clear-btn{
+    position: absolute;
+    z-index: 20;
+    right:0.57vw;
+    /*top: 0.625vw;*/
+    top:0;
+    width: 1.25vw;
+    height: 2.6041vw;
+    line-height: 2.6041vw;
+    cursor: pointer;
+    /*display: none;*/
+}
+.layui-form-item{
+    margin-bottom: 0.781vw;
+}
+.clear-btn img{
+    width: 1.14583vw;
+    height: 0.833vw;
+    margin-top: 0.3125vw;
+
+}
+#look2{
+    display: none;
+}
+/*.login-body .layui-form-pane .layui-input-block{*/
+/*    margin-left: 61px;*/
+/*}*/
+

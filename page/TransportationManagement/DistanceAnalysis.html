@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>运距分析</title>
+		<link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+		<link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+		<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style>
+			.layui-form-item .layui-input-inline{
+				width: 140px;
+			}
+			.table-tool-mini .layui-table-view{
+				margin-top: 50px !important;
+			}
+			.layui-table-tool-self{
+			display: none !important;
+		}
+		.layui-form-label{
+			padding-left: 0;
+		}
+			/*.layui-layer-setwin {*/
+        /*    position: absolute;*/
+        /*    right: 15px;*/
+        /*    *right: 0;*/
+        /*    top: 15px;*/
+        /*    font-size: 0;*/
+        /*    line-height: initial;*/
+        /*}*/
+    </style>
+	</head>
+	<body>
+
+		<!-- 页面加载loading -->
+		<div class="page-loading">
+			<div class="ball-loader">
+				<span></span><span></span><span></span><span></span>
+			</div>
+		</div>
+
+		<!-- 正文开始 -->
+		<div class="layui-fluid">
+			<div class="layui-card">
+				<div class="layui-card-body table-tool-mini">
+					<div class="layui-form toolbar">
+						<div class="layui-form-item" style="margin-top: 20px;">
+							<div class="layui-inline">
+								<label class="layui-form-label w-auto">&emsp;日&emsp;期：</label>
+								<div class="layui-input-inline" style="width: 200px;">
+									<input type="text" name="dateArea"  lay-verify="required" class="layui-input" id="dateArea" placeholder=" - " >
+									
+									<!-- <input type="text" name="startTime" lay-verify="required" class="layui-input" id="startTime" placeholder="开始日期" lay-key="1"> -->
+								</div>
+								<!-- <div class="layui-form-mid">
+									-
+								</div>
+								<div class="layui-input-inline">
+									<input type="text" name="endTime" lay-verify="required" class="layui-input" id="endTime" placeholder="结束日期" lay-key="2">
+								</div> -->
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label w-auto">项目名称：</label>
+								<div class="layui-input-inline mr0" style="width: 200px;">
+									<select lay-filter="project" class="select"  lay-verify="required" name="project" id="project">
+										
+									</select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label w-auto">&emsp;车牌号：</label>
+								<div class="layui-input-inline mr0">
+									<select lay-filter="carno" class="select" lay-verify="type" name="carno" id="carno">
+									</select>
+								</div>
+							</div>
+							
+							<div class="layui-inline">
+								<!--                        <div class="layui-input-inline mr0">-->
+								<!--                            <input name="username" class="layui-input" type="text" placeholder="请输入关键字"/>-->
+								<!--                        </div>-->
+								<button class="layui-btn icon-btn layui-btn-green" lay-filter="formSubSearchUser" lay-submit>
+									<i class="layui-icon">&#xe615;</i>查询
+								</button>
+
+							</div>
+							
+							
+						</div>
+					</div>
+
+					<table class="layui-table" id="tableUser" lay-filter="tableUser2">
+						<script type="text/html" id="toolbarDemo">
+							<div class="layui-col-md12 layui-col-sm9 layui-col-xs6" style="text-align: left;">
+								<div class="layui-input-inline yutons-btn-margin-right" style="margin-right: 0px;">
+									<span style="background-color: #26C44F;color: white;" class="layui-inline yutons-header-tool" title="筛选列" lay-event="LAYTABLE_COLS">
+										<i class="layui-icon layui-icon-cols"></i></span>
+								</div>
+							</div>
+						</script>
+					
+
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- 表格操作列 -->
+
+		<!-- js部分 -->
+		<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+		<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+		<script type="text/javascript" src="../../assets/js/dtzh.js?v=314"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=d8bcTvcwp83GYnUhdMPiOIkxzRSelYhz"></script>
+		<script type="text/javascript" src="../../assets/js/server.js"></script>
+		<script type="text/html" id="ckgj">
+			<a class="layui-btn layui-btn-xs table-btn btn-uncheck" lay-event="ckgj" ><span class="btn-icon"></span>查看轨迹</a>
+		</script>
+		<script>
+            layui.use(['layer', 'form', 'table', 'util', 'admin', 'laydate'], function() {
+				var $ = layui.jquery;
+				var layer = layui.layer;
+				var laydate = layui.laydate;
+				var form = layui.form;
+				var table = layui.table;
+				var util = layui.util;
+				var admin = layui.admin;
+				var zd = localStorage.getItem("station");
+				//查询搜索
+				//var  serverUrl='http://192.168.0.15:8080';
+				// var serverUrl='http://113.204.72.94:8080/CjManager';
+				var userid = localStorage.getItem("userid");
+				var token = localStorage.getItem("token");
+				var obj = {};
+				obj.userid = userid;
+				obj.token = token;
+				obj.currentPage = 1;
+				var insTb;
+
+				function tableRender(){
+					// 表格初始化
+					insTb = table.render({
+						elem: '#tableUser',
+						url: getServerUrl(zd) + '/api/data/ajaxGetAllDistance',
+						page: true,
+						toolbar: '#toolbarDemo',
+						where: obj,
+						cellMinWidth: 100,
+						limit: 4,
+						totalRow: true,
+						request:{
+							beginDate: '9999-99-99',
+							endDate: '9999-99-99'
+						},
+						cols: [
+							[
+								{
+									field: 'carNo',
+									sort: true,
+									title: '车牌',
+									totalRowText: '合计'
+								},								
+								{
+									field: 'projectName',
+										sort: true,
+									title: '项目名称'
+								},	
+								{
+									field: 'CompressiveStrength',
+									sort: true,
+									title: '运输类型'
+								},							
+								{
+									field: 'total',
+										sort: true,
+									title: ' 运距（米）',
+									totalRow: true
+								},
+								{ align: 'center', toolbar: '#ckgj', title: '操作', minWidth: 100}
+								
+							]
+						],
+						done: function(res) {
+							console.log(res);
+							var data = null;
+						},
+						response: {
+							"code": 0,
+							"msg": "",
+							"count": 1000,
+							"data": []
+						},
+						parseData: function(res) { //res 即为原始返回的数据
+							console.log(res);
+							return {
+								"code": res.errno, //解析接口状态
+								"msg": res.error, //解析提示文本
+								"count": res.num, //解析数据长度
+								"data": res.list //解析数据列表
+							};
+						}
+					});		
+				}
+
+				tableRender()
+				
+				//bindProject();
+				//bindCar();
+				//绑定项目列表
+				 function  bindProject() {
+					$.ajax({
+						type: "post",
+						url: getServerUrl(zd) + '/api/data/ajaxGetProject',
+						async:false,
+						success: function(res) {
+							if (res.errno == 0) {
+								var str1 = '<option value="0">项目名称</option>';
+								for (var i = 0; i < res.list.length; i++) {
+									str1 += '<option value=' + res.list[i].projectId + '>' + res.list[i].projectName + '</option>'
+								}
+								//str1 = '<option value="0">项目名称</option>' + str1;
+								$('#project').html(str1);	
+								obj.project = res.list[0].projectId;
+								tableRender();
+													
+								layui.form.render("select");
+							}							
+						}
+					})
+				};
+				
+				form.on('select(project)', function(data){
+					var project = data.value === '0' ? '' : data.value;
+					if(!project){
+						$('#carno').html('');	
+						return
+					}
+					
+					var dateArea = $("#dateArea")[0];
+					var data = {};
+					if(dateArea.value) {
+						area = dateArea.value.split(' - ');
+						data.beginDate = area[0]
+						data.endDate = area[1]
+					}
+					data.project = project
+					
+					$.ajax({
+						type: "post",
+						url: getServerUrl(zd) + '/api/location/ajaxGet',
+						async:false,
+						data: data,
+						success: function(res) {
+							if(res.errno==0){
+								var str1 = '';
+								for(var i=0;i<res.list.length;i++){
+									if(res.list[i].projectName){
+										str1 += '<option data-id='+i+'>'+res.list[i].carNo+'</option>'
+									}									
+								}
+								str1 = '<option>车牌号</option>'+str1;
+								$('#carno').html(str1);
+								layui.form.render("select");
+							}
+							
+						}
+					})
+				});
+				
+				function  bindCar() {
+					var project = $('#project').find('option:selected')[0].value;
+					if(project === '0') project = ''
+					$.ajax({
+						type: "post",
+						url: getServerUrl(zd) + '/api/location/ajaxGet?project=' + project + '&last48h=0',
+						async:false,
+						success: function(res) {
+							if(res.errno==0){
+								var str1 = '';
+								for(var i=0;i<res.list.length;i++){
+									str1 += '<option data-id='+i+'>'+res.list[i].carNo+'</option>'
+								}
+								str1 = '<option>车牌号</option>'+str1;
+								$('#carno').html(str1);
+								layui.form.render("select");
+							}
+							
+						}
+					})
+				};
+				//查询
+				// 搜索
+				form.on('submit(formSubSearchUser)', function(data) {
+					var currentPage = 1;
+					var datafield = data.field;
+					datafield.userid = userid;
+					datafield.token = token;
+					datafield.currentPage = currentPage;
+					if(datafield.carno === '车牌号'){
+						datafield.carno = '';
+					}
+					if(datafield.project === '0'){
+						datafield.project = ''
+					}
+										
+					var dateArea = datafield.dateArea.split(" - ");
+					datafield.startTime =  dateArea[0] 
+					datafield.endTime =  dateArea[1] 
+					
+					console.log(datafield);
+					insTb.reload({
+						where: datafield
+					}, 'data');
+				});
+
+				//日期
+			  laydate.render({
+				elem: '#dateArea'
+				,range: true,
+				done : function(value, date, dateEnd){
+					if(!value || value===' - ') {
+						$('#project').html('');	
+						$('#carno').html('');	
+						layui.form.render("select");
+						return;
+					} 
+					var data = {};
+					if(value){
+						 var dateArea = value.split(" - ");
+						data.beginDate =  dateArea[0] 
+						data.endDate =  dateArea[1] 
+					}
+					$.ajax({
+						type: "post",
+						url: getServerUrl(zd) + '/api/data/ajaxGetProject',
+						async:false,
+						data: data,
+						success: function(res) {
+							if (res.errno == 0) {
+								var str1 = '<option value="0">项目名称</option>';
+								for (var i = 0; i < res.list.length; i++) {
+									str1 += '<option value=' + res.list[i].projectId + '>' + res.list[i].projectName + '</option>'
+								}
+								//str1 = '<option value="0">项目名称</option>' + str1;
+								$('#project').html(str1);	
+								//tableRender();
+													
+								layui.form.render("select");
+							
+							}							
+						}
+					})
+				}
+			  });
+
+			   $("#dateArea").change(function(e){
+				   console.log(e)
+				  var value = this.value;
+				  if(!value || value===' - ') {
+				  	$('#project').html('');	
+				  	$('#carno').html('');	
+					layui.form.render("select");
+					return;
+				  }
+				  
+				  var data = {};
+				  if(value){
+					 var dateArea = value.split(" - ");
+					data.beginDate =  dateArea[0] 
+					data.endDate =  dateArea[1] 
+				  }
+				  
+				  $.ajax({
+				  	type: "post",
+				  	url: getServerUrl(zd) + '/api/data/ajaxGetProject',
+				  	async:false,
+				  	data: data,
+				  	success: function(res) {
+				  		if (res.errno == 0) {
+				  			var str1 = '<option value="0">项目名称</option>';
+				  			for (var i = 0; i < res.list.length; i++) {
+				  				str1 += '<option value=' + res.list[i].projectId + '>' + res.list[i].projectName + '</option>'
+				  			}
+				  			//str1 = '<option value="0">项目名称</option>' + str1;
+				  			$('#project').html(str1);	
+				  			//tableRender();
+				  								
+				  			layui.form.render("select");
+				  		
+				  		}							
+				  	}
+				  })
+			  }); 
+			  
+					
+				
+				/* laydate.render({
+					elem: '#startTime',
+					trigger: 'click',
+					format: 'yyyy-MM-dd',
+					done: function(value, date, endDate) {
+						var startDate = new Date(value).getTime();
+						var endTime = new Date($('#endTime').val()).getTime();
+						if (endTime < startDate) {
+							layer.msg('开始时间不能大于结束时间');
+							$('#startTime').val($('#endTime').val());
+						}
+					}
+
+				});
+				laydate.render({
+					elem: '#endTime',
+					trigger: 'click',
+					format: 'yyyy-MM-dd',
+					done: function(value, date, endDate) {
+						var startDate = new Date($('#startTime').val()).getTime();
+						var endTime = new Date(value).getTime();
+						if (endTime < startDate) {
+							layer.msg('结束时间不能小于开始时间');
+							$('#endTime').val($('#startTime').val());
+						}
+					}
+				}); */
+				// 轨迹弹窗
+				//$('#btnLocus').on('click', () => {
+                var convertor = new BMap.Convertor();
+                function doTranslateGps(points, callback) {
+                    var N = Math.ceil(points.length / 10);
+                    var result = []
+                    var idx = 0;
+
+                    var loop = function(i) {
+                        var pts = points.slice(i++*10, i*10);
+
+                        convertor.translate(pts, 1, 5, function(d){
+                            if(d.status === 0) {
+                                result = result.concat(d.points);
+                                if(++idx >= N){
+                                    callback(result)
+                                }else{
+                                    loop(idx);
+                                }
+                            }
+                        })
+                    }
+
+                    loop(idx)
+                }
+                function bd_encrypt  (gcjLat, gcjLon) {
+                    var x_pi= 3.14159265358979324 * 3000.0 / 180.0;
+                    var x = gcjLon, y = gcjLat;
+                    var z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * x_pi);
+                    var theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * x_pi);
+                    var bdLon = z * Math.cos(theta) + 0.0065;
+                    var bdLat = z * Math.sin(theta) + 0.006;
+                    return { 'lat': bdLat, 'lon': bdLon };
+                };
+                table.on('tool(tableUser2)', function (obj) {
+                    var pois=[]
+					for(var i=0;i<obj.data.locations.length;i++){
+					    var point=obj.data.locations[i];
+						var item=wgs2bd(point.lng,point.lat);
+						//console.info(item);
+                        pois.push(new BMap.Point(item[0],item[1]));
+					}
+                    if(pois.length==0){return;}
+                    // doTranslateGps(pois, function(pts){
+                    //     ///console.info( obj.data.locations);
+                    //     for(var i=0; i<pts.length; i++){
+                    //         console.info(pois[i]);
+                    //         console.info(pts[i]);
+                    //         console.info(11);
+                    //         obj.data.locations[i].lng= pts[i].lng;
+                    //         obj.data.locations[i].lat= pts[i].lat;
+                    //     }
+                    //     //console.info( obj.data.locations);
+                    //     translateCallBack()
+                    // });
+                        admin.open({
+                            type: 1,
+                            title: '轨迹回放',
+                            area: '785px',
+                            closeBtn: 1,
+                            content: '<div class="map-container" style="height:485px;padding: 10px 20px 20px 20px;"><div id="map-container" style="height: 100%;"></div></div>',
+                            success: function(layero, dIndex) {
+                                var map = new BMap.Map("map-container");
+                                map.centerAndZoom(pois[0], 13);
+                                map.enableScrollWheelZoom(true);
+                                map.setMapStyle({
+                                    styleJson:[
+                                        {
+                                            "featureType": "all",
+                                            "elementType": "all",
+                                            "stylers": {
+                                                "lightness": 10,
+                                                "saturation": -100
+                                            }
+                                        }
+                                    ]
+                                });
+                                var myIcon = new BMap.Icon("../../assets/images/icon_car1.png", new BMap.Size(24, 24), {    //小车图片
+                                    //offset: new BMap.Size(0, -5),    //相当于CSS精灵
+                                    imageOffset: new BMap.Size(0, 0)    //图片的偏移量。为了是图片底部中心对准坐标点。
+                                });
+                                var sy = new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+                                    scale: 0.6,//图标缩放大小
+                                    strokeColor:'#fff',//设置矢量图标的线填充颜色
+                                    strokeWeight: '2',//设置线宽
+                                });
+                                var icons = new BMap.IconSequence(sy, '10', '30');
+                                // 创建polyline对象
+                                /*var pois = [
+                                    new BMap.Point(116.350658,39.938285),
+                                    new BMap.Point(116.355658,39.938285),
+                                    new BMap.Point(116.360658,39.938285),
+                                    new BMap.Point(116.365658,39.938285),
+                                    new BMap.Point(116.370658,39.938285),
+                                    new BMap.Point(116.375658,39.938285),
+                                    new BMap.Point(116.380446,39.939285),
+                                    new BMap.Point(116.385446,39.939285),
+                                    new BMap.Point(116.390446,39.939285),
+                                    new BMap.Point(116.395446,39.939285),
+                                    new BMap.Point(116.400446,39.939285),
+                                    new BMap.Point(116.405446,39.939285),
+                                    new BMap.Point(116.410446,39.939285),
+                                    new BMap.Point(116.415446,39.939285),
+                                    new BMap.Point(116.420446,39.939285),
+                                    new BMap.Point(116.425446,39.939285),
+                                    new BMap.Point(116.430446,39.939285),
+                                    new BMap.Point(116.435446,39.939285),
+                                    new BMap.Point(116.440446,39.939285),
+                                    new BMap.Point(116.445446,39.939285),
+                                    new BMap.Point(116.450446,39.939285),
+                                    new BMap.Point(116.455446,39.939285)
+                                ];*/
+                                console.info(pois);
+                                var polyline =new BMap.Polyline(pois, {
+                                    enableEditing: false,//是否启用线编辑，默认为false
+                                    enableClicking: true,//是否响应点击事件，默认为true
+                                    // icons:[icons],
+                                    strokeWeight:'4',//折线的宽度，以像素为单位
+                                    strokeOpacity: 0.8,//折线的透明度，取值范围0 - 1
+                                    strokeColor:"#FF0000" //折线颜色
+                                });
+                                var marker = new BMap.Marker(pois[0], {icon: myIcon});
+                                map.addOverlay(marker);
+                                map.addOverlay(polyline);          //增加折线
+                                var i = 0;
+                                function resetMkPoint(i){
+                                    marker.setPosition(pois[i]);
+                                    if(i < pois.length){
+                                        setTimeout(function(){
+                                            i++
+                                            resetMkPoint(i);
+                                        },100);
+                                    }
+                                }
+                                setTimeout(function(){
+                                    resetMkPoint(0);
+                                },1000)
+                            }
+                        })
+
+				});
+				// 显示表单弹窗
+				function showEditModel(mUser) {
+					admin.open({
+						type: 1,
+						title: '新增设备维修',
+						area: '670px',
+						closeBtn: 1,
+						content: $('#modelUser').html(),
+						success: function(layero, dIndex) {
+							$(layero).children('.layui-layer-content').css('overflow', 'visible');
+							// 回显数据
+							form.val('modelUserForm', mUser);
+							// 表单提交事件
+							form.on('submit(modelSubmitUser)', function(data) {
+								var datajson = {};
+								datajson.userid = userid;
+								datajson.token = token;
+								var datafield = data.field;
+								datajson.informationRepairJson = JSON.stringify(datafield);
+								console.log(datajson);
+								// layer.load(2);
+								$.ajax({
+									url: serverUrl + '/repair/addTaskOfRepair',
+									type: "get",
+									dataType: "json",
+									data: datajson,
+									success: function(res) {
+										layer.msg(res.msg);
+										layer.close(dIndex);
+										table.reload('tableUser', {});
+									},
+									error: function(res) {
+										layer.msg(res.msg);
+									}
+
+								});
+								return false;
+							});
+
+
+						}
+
+					});
+					laydate.render({
+						elem: '#test1',
+						trigger: 'click'
+					});
+				}
+				//修改用户传id
+				table.on('tool(tableUser)', function(obj) {
+					var data = obj.data.equipmentId;
+					// sessionStorage.setItem("datas",data);
+				});
+				// 修改审核
+				// 工具条点击事件
+				table.on('tool(tableUser)', function(obj) {
+					var data = obj.data;
+					var layEvent = obj.event;
+					if (layEvent === 'check') { // 审批
+						if (data.stateRepair == '待审核') {
+							console.log(33);
+							approval(data);
+							table.reload('tableUser', {});
+						} else if (data.stateRepair == '已审核') {
+							layer.msg("你已审核过");
+						} else if (data.stateRepair == '进行中') {
+							layer.msg("你暂时是没有权限的");
+						} else {
+							layer.msg("你不能进行审批");
+						}
+					} else if (layEvent === 'view') {
+						sessionStorage.setItem("datas", data.equipmentId);
+						console.log(data.equipmentId);
+					} else if (layEvent === 'edit') {
+						sessionStorage.setItem("datas", data.equipmentId);
+					}
+
+
+
+				});
+
+				function approval(data) {
+					var stateRepair = data.stateRepair;
+					var equipmentId = data.equipmentId;
+					if (stateRepair == '待审核') {
+						// console.log(equipmentId);
+						var datajson = {};
+						var datafield = {};
+						datajson.userid = userid;
+						datajson.token = token;
+						datafield.stateRepair = "已审核";
+						datafield.equipmentId = equipmentId;
+						console.log(datafield);
+						datajson.informationRepairJson = JSON.stringify(datafield);
+						console.log(datajson);
+						$.ajax({
+							url: serverUrl + '/repair/updateRecordOfRepair',
+							type: "post",
+							dataType: "json",
+							async: false,
+							data: datajson,
+							success: function(res) {
+								console.log(res);
+
+
+							},
+							error: function(res) {
+								layer.msg(res.msg);
+							}
+
+						});
+					}
+				}
+
+
+			});
+
+		</script>
+
+	</body>
+</html>

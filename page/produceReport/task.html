@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>任务管理</title>
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=314"/>
+    <link rel="stylesheet" href="../../assets/css/common_likui.css?v=314"/>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>  
+        .search-container {
+            height: 144px;
+            padding: 57px 0 57px 30px;
+            box-sizing: border-box;
+        }
+        .search-container .layui-form-radio {
+            margin: 0 30px 0 0 ;
+        }
+        .project-setting-table {
+            padding: 30px 20px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0;
+        }
+		.layui-btn+.layui-btn{
+					margin-left: 0;
+				}
+    </style>
+</head>
+<body>
+
+<!-- 页面加载loading -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card" style="background-color: initial;">
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="search-container bg-white">
+                        <div class="layui-inline">
+                            <label class="layui-form-label w-auto">日&emsp;期：</label>
+                            <div class="layui-input-inline" style="width: 120px;">
+                                <input type="text" name="start_time" class="layui-input" id="test-laydate-start" placeholder="开始日期" lay-key="1">
+                            </div>
+                            <div class="layui-form-mid"> - </div>
+                            <div class="layui-input-inline" style="width: 120px;">
+                                <input type="text" name="end_time" class="layui-input" id="test-laydate-end" placeholder="结束日期" lay-key="2">
+                            </div>
+
+                        </div>
+						 <div class="layui-inline">
+							 <label class="layui-form-label w-auto">审核状态：</label>
+							 <div class="layui-input-inline mr0" style="width: 140px;">
+							 	<select name="allauditstate"  lay-verType="tips">
+							 	    <option value="">请选择</option>
+									<option value="1">未审核</option>
+							 	    <option value="2">审核中</option>
+							 	    <option value="3">已审核</option>
+							 	    <option value="4">退回</option>
+							 	</select>
+							    <!-- <input name="zhandian" id="zhandian" class="layui-input" type="text" placeholder="请输入站点名称"/> -->
+							 </div>
+					     </div>
+                        <div class="layui-inline" style="margin-right: 20px;width: 220px;">
+                            <input name="key" class="layui-input" type="text" id="keywords" placeholder="请输入关键字"/>
+                        </div>
+                        <div class="layui-inline" style="margin-right: 15px;">
+                            <button id="btnSearch"  lay-filter="formTaskSearch" lay-submit  class="layui-btn layui-btn-green3">查询</button>
+                        </div>
+                        <div class="layui-inline" style="margin-right: 15px;">
+                            <a id="btnAddTask" ew-href="page/produceReport/addTask.html" class="layui-btn layui-btn-yellow">新增</a>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+            
+            <div class="project-setting-table bg-white mt-20">
+                <table class="layui-table" id="tableTask" lay-filter="tableTask" style="margin: 0;"></table>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarTask">
+    {{# if (d.audit_status ==1){}}
+        <a class="layui-btn layui-btn-xs table-btn btn-edit" href="javascript:return false;" style="opacity: 0.2"><span class="btn-icon"></span>修改</a>
+        <a class="layui-btn layui-btn-xs table-btn btn-look" ew-href="page/produceReport/addTask.html?taskId={{d.task_id}}&type=1"><span class="btn-icon"></span>查看</a>
+    	<a class="layui-btn layui-btn-xs table-btn btn-del" href="javascript:return false;" style="opacity: 0.2"><span class="btn-icon"></span>删除</a>
+    	{{# } }}
+    	{{# if (d.audit_status !=1){}}
+    	<a class="layui-btn layui-btn-xs table-btn btn-edit" ew-href="page/produceReport/addTask.html?taskId={{d.task_id}}"><span class="btn-icon"></span>修改</a>
+    	<a class="layui-btn layui-btn-xs table-btn btn-look" ew-href="page/produceReport/addTask.html?taskId={{d.task_id}}&type=1"><span class="btn-icon"></span>查看</a>
+    	<a class="layui-btn layui-btn-xs table-btn btn-del" lay-event="del"><span class="btn-icon"></span>删除</a>
+    	{{#  } }}
+</script>
+<script type="text/html" id="tbsh">
+    {{#  if(d.audit_status == 0){ }}
+    未审核
+    {{#  } }}
+    {{#  if(d.audit_status == -1||d.scshzt==-1||d.zzsjzt==-1){ }}
+    退回<a onclick="showMsg('{{d.htyy}}')">(查看原因)</a>
+    {{#  } }}
+    {{#  if(d.zzshzt== 1){ }}
+    已审核
+    {{#  } }}
+    {{#  if(d.zzshzt== 0&&d.audit_status== 1&&d.scshzt!=-1){ }}
+    审核中
+    {{#  } }}
+</script>
+<!-- js部分 -->
+<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+<script type="text/javascript" src="../../assets/js/tongyong.js?v=314"></script>
+<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+<script>
+   // url="http://localhost:8081/";
+    layui.use(['layer', 'form', 'table', 'util', 'laydate', 'admin', 'element'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var laydate = layui.laydate;
+        var admin = layui.admin;
+        var element = layui.element;
+        var insTb = table.render({
+            elem: '#tableTask',
+            url: url + '/production/getTaskList',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+				{field: 'task_id', title: 'task_id',hide:true},
+                {field: 'row', align: 'center', title: '序号',width:50},
+                {field: 'task_no', align: 'center', title: '任务单编号'},
+                {field: 'engineer_name', align: 'center', title: '工程名称'},
+                {field: 'sgdw', align: 'center', title: '施工单位'},
+                {field: 'site_name', align: 'center', title: '施工部位'},
+                {field: 'concrete_name', align: 'center', title: '硂类型'},
+                {field: 'plan_amount', align: 'center', title: '计划量'},
+                {field: 'transport_way', align: 'center', title: '运输方式'},
+                {field: 'site_supply_date', align: 'center', title: '工地需求供应时间'},
+				{field: 'next_audit_name', align: 'center', title: '下一级审核人'},
+				{align: 'center', title: '审核状态',toolbar: '#tbsh'},
+				{align: 'center', toolbar: '#tableBarTask', title: '操作', minWidth: 200, fixed: 'right'}
+            ]],
+            request: {
+                pageName: 'currentIndex', //页码的参数名称，默认：page
+                limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            },
+            where: {
+				idzhandian:localStorage.getItem("station_id")
+               // keywords:$('keywords').val(),
+      //          start_time:$('#test-laydate-start').val(),
+			   // end_time:$('#test-laydate-end').val()
+            },
+            response: {
+                countName: 'totalCount', //数据总数的字段名称，默认：count
+                dataName: 'list' //数据列表的字段名称，默认：data
+            }
+        });
+		//日期
+		laydate.render({
+		    elem: '#test-laydate-start',
+		    trigger: 'click',
+		    format: 'yyyy-MM-dd',
+		    done: function (value, date, endDate) {
+		        var startDate = new Date(value).getTime();
+		        var endTime = new Date($('#test-laydate-end').val()).getTime();
+		        if (endTime < startDate) {
+		            layer.msg('开始时间不能大于结束时间');
+		            $('#test-laydate-start').val($('#test-laydate-end').val());
+		        }
+		    }
+		
+		});
+		laydate.render({
+		    elem: '#test-laydate-end',
+		    trigger: 'click',
+		    format: 'yyyy-MM-dd',
+		    done: function (value, date, endDate) {
+		        var startDate = new Date($('#test-laydate-start').val()).getTime();
+		        var endTime = new Date(value).getTime();
+		        if (endTime < startDate) {
+		            layer.msg('结束时间不能小于开始时间');
+		            $('#test-laydate-end').val($('#test-laydate-start').val());
+		        }
+		    }
+		});
+		//查询
+		form.on('submit(formTaskSearch)', function (data) {
+		    var currentPage=1;
+		    var datafield= data.field;
+		    datafield.idzhandian=localStorage.getItem("station_id");
+		    datafield.currentPage= currentPage;
+		    insTb.reload({where: datafield},'data');
+		});
+        
+        // 新增项目
+        $('#btnAddProject').on('click', (e) => {
+
+        });
+
+        //一些事件监听
+        element.on('tab(projectSetting)', function(data){
+            console.log(data);
+        });
+		
+		
+		
+		table.on('tool(tableTask)', function (obj) {
+			var data = obj.data;
+			console.log(data);
+		    var layEvent = obj.event;
+		    if(layEvent === 'del'){
+		        layer.confirm('确定要删除任务单“' + data.task_no + '”吗？', {
+		            skin: 'layui-layer-admin',
+		            shade: .1
+		        }, function (i) {
+		            layer.close(i);
+		            layer.load(2);
+		            $.post(url + '/production/delTask', {
+		                taskId: data.task_id,
+						idzhandian:localStorage.getItem("station_id")
+		            }, function (res) {
+		                layer.closeAll('loading');
+		                if (res.code == 0) {
+		                    layer.msg(res.msg, {icon: 1});
+		                    insTb.reload();
+		                } else {
+		                    layer.msg(res.msg, {icon: 2});
+		                }
+		            }, 'json');
+		        });
+		    }else if(layEvent === 'edit'){
+		         var index = layui.layer.open({
+		                    title: "6s考核系统编辑",
+		                    type: 2,
+		                    content: "page/produceReport/addTask.html?taskId=" + data.task_id,
+		                    success: function (layero, index) {
+		                        setTimeout(function () {
+		                            layui.layer.tips('点击此处返回', '.layui-layer-setwin .layui-layer-close', {
+		                                tips: 3
+		                            });
+		                        }, 500);
+		                    }
+		                });
+		                layui.layer.full(index);
+		    }
+		});
+	});
+</script>
+
+</body>
+</html>

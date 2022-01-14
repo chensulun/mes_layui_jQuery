@@ -1,0 +1,31 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 3,
+  "data": [
+    {
+      "siteId": "ZONGJO-QX-001",
+      "siteName": "两江站",
+      "latlng": "北纬36度",
+      "createTime": "2019/03/29 16:38:03",
+      "address": "重庆市渝北区",
+      "editName": "张三"
+    },
+    {
+      "siteId": "ZONGJO-QX-002",
+      "siteName": "九龙站",
+      "latlng": "北纬36度",
+      "createTime": "2019/03/29 16:38:03",
+      "address": "重庆市渝北区",
+      "editName": "张三"
+    },
+    {
+      "siteId": "ZONGJO-QX-003",
+      "siteName": "沙坪坝站",
+      "latlng": "北纬36度",
+      "createTime": "2019/03/29 16:38:03",
+      "address": "重庆市渝北区",
+      "editName": "张三"
+    }
+  ]
+}

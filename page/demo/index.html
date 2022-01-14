@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100vh;
+        position: relative;
+      }
+
+      * {
+        margin: 0;
+        border: 0;
+        padding: 0;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .option {
+        position: absolute;
+        width: 140px;
+        height: 40px;
+        right: 30px;
+        top: 75px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <img src="./bg.jpg" />
+    <a
+      href="http://test.zgdrkj.cn:8888/page/ComprehensiveDisplay/videoMonitor.html"
+      class="option"
+    ></a>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script>
+      $(function () {
+        $("body").on("dblclick", function () {
+          if (!document.fullscreen) {
+            fullScreen();
+          } else {
+            exitFullScreen();
+          }
+        });
+      });
+      function fullScreen() {
+        const element = document.querySelector("body");
+        if (element.requestFullScreen) {
+          element.requestFullScreen();
+        } else if (element.webkitRequestFullScreen) {
+          element.webkitRequestFullScreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        }
+      }
+      function exitFullScreen() {
+        if (!document.fullscreen) return;
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    </script>
+  </body>
+</html>

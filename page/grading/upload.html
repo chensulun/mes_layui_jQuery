@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>级配上传</title>
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=314"/>
+    <link rel="stylesheet" href="../../assets/css/common_likui.css?v=314"/>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .contract-info-tip {
+            height: 30px;
+            line-height: 30px;
+            color: rgba(107, 107, 107, 1);
+            font-size: 12px;
+        }
+        .contract-info-content-right .layui-table-grid-down{ display: none; }
+        .contract-info-content-right .layui-layer-tips{display:none !important; }
+        /*表格按钮样式*/
+        .layui-table-cell {
+            padding: 0 15px !important;
+        }
+        .contract-info-content {
+            padding-left: 355px;
+            position: relative;
+        }
+        .contract-info-content-left {
+            width: 335px;
+            background-color: #fff;
+            box-shadow:0px 1px 11px 0px rgba(239,244,255,1);
+            border-radius:2px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 30px 15px;
+            box-sizing: border-box;
+        }
+        .contract-info-content-right {
+            width: 100%;
+            box-shadow:0px 1px 11px 0px rgba(239,244,255,1);
+            border-radius:2px;
+            box-sizing: border-box;
+        }
+        .content-title {
+            border-left: 4px solid rgba(26, 185, 155, 1);
+            padding-left: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgba(51, 51, 51, 1);
+            position: relative;
+            font-weight: bold;
+        }
+        .content-title:after {
+            content: '';
+            width: calc(100% - 70px);
+            border-top: 1px dashed rgba(208, 211, 221, 1);
+            position: absolute;
+            right: 0;
+            top: 9px;
+        }
+        .audio-status {
+            color: rgba(30, 189, 160, 1);
+            background-color: rgba(231, 249, 244, 1);
+            padding: 4px 15px;
+            font-size: 12px;
+        }
+        .grading-upload-form .layui-form-label {
+            width: 140px;
+        }
+        .grading-upload-form .layui-input-block {
+            margin-left: 170px;
+        }
+        td .layui-form-select{
+            margin-top: -10px;
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 页面加载loading -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid layui-form" id="form1">
+    <div class="layui-tab layui-tab-brief project-setting" lay-filter="projectContract">
+        <div class="contract-info-content">
+            <div class="contract-info-content-left" >
+                <div class="layui-form-item">
+                    <div class="layui-input-inline" style="width: 80px;">
+                        <select id="selectType" name="selectType" lay-verType="tips" lay-verify="required" lay-search lay-filter="selectType">
+                            <option value="0">未审核</option>
+                            <option value="1">已审核</option>
+                            <option value="-1">退回</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width: 130px;">
+                        <input name="key" id="key"  placeholder="请输入查询条件" style="width: 140px;display: inline-block;" type="text" class="layui-input"/>
+                    </div>
+                    <div class="layui-input-inline" style="width: 60px;margin-top: 5px;">
+                         <button id="btnSearch" class="layui-btn layui-btn-green3" >查询</button>
+                    </div>
+                </div>
+                <table class="layui-table" id="tableMatching" lay-filter="tableMatching"></table>
+            </div>
+            <div class="  contract-info-content-right">
+                <div class="contract-info-tip"><span class="text-red">*</span>红色为必填项</div>
+                <div class="bg-white p-30" style="height: calc(100% - 30px);box-sizing: border-box;">
+                    <div class="content-title">基本信息</div>
+                    <div class="layui-form mt-20 grading-upload-form">
+                        <div class="layui-form-item mt-20" style="color: rgba(102, 102, 102, 1);">
+                            <div class="layui-row mb-20">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">级配编号: </label>
+                                    <div class="layui-input-block">
+                                        <input name="jpbh" placeholder="提交后自动生成" readonly="readonly"  type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label"><span class="text-red">*</span>任务名称: </label>
+                                    <div class="layui-input-block" style="max-width: 240px;">
+                                        <input name="jpId" type="hidden"/>
+                                        <input name="task_id" type="hidden"/>
+                                        <input name="rwbh" type="hidden"/>
+                                        <input id="gcmc"class="layui-input" name="gcmc" style="display: none"/>
+                                        <select id="selectGcmc" name="selectGcmc" lay-verType="tips" lay-verify="required" lay-search lay-filter="selectGcmc">
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row mb-20">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">级配模板: </label>
+                                    <div class="layui-input-block" style="max-width: 240px;">
+                                        <select id="mbSelect"  lay-verType="tips" lay-verify="required" lay-search lay-filter="mbSelect">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label"><span class="text-red">*</span>混合科类型: </label>
+                                    <div class="layui-input-block" style="max-width: 240px;">
+                                        <input name="hhklx" placeholder="请输入" type="text" class="layui-input" lay-verType="tips" lay-verify="required"  readonly="readonly"  style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row mb-20">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">沥青标号: </label>
+                                    <div class="layui-input-block" style="max-width: 240px;">
+                                        <input name="lqbh" placeholder="请输入" type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">区间温度: </label>
+                                    <div class="layui-input-block">
+                                        <input name="qjwd" placeholder="请输入" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row mb-20">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">班次: </label>
+                                    <div class="layui-input-block">
+                                        <input name="bc" placeholder="请输入"  type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">天气: </label>
+                                    <div class="layui-input-block" style="max-width: 240px;">
+                                        <input name="tq" placeholder="请输入" type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row mb-20">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">石料加热温度(C°): </label>
+                                    <div class="layui-input-block">
+                                        <input name="sljrwd" placeholder="请输入" type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label"><span class="text-red">*</span>产品出厂温度（C°）: </label>
+                                    <div class="layui-input-block">
+                                        <input name="cpccwd" placeholder="请输入" lay-verify="required" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row mb-20">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">机号: </label>
+                                    <div class="layui-input-block">
+                                        <input name="jh" placeholder="请输入" type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">沥青加热温度(C°): </label>
+                                    <div class="layui-input-block">
+                                        <input name="lqjrwd" placeholder="请输入"  type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row mb-20">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">日期: </label>
+                                    <div class="layui-input-block">
+                                        <input name="rq" id="rq"  placeholder="请输入" readonly="readonly" type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">干拌时间(s) </label>
+                                    <div class="layui-input-block">
+                                        <input name="gbsj" placeholder="请输入" lay-verify="number"  type="number" type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row mb-20">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">湿拌时间(s): </label>
+                                    <div class="layui-input-block">
+                                        <input name="sbsj" placeholder="请输入" lay-verify="number"  type="number" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">审核状态: </label>
+                                    <div class="layui-input-block">
+                                        <input type="radio" name="zt" value="0" title="未审批"checked>
+                                        <input type="radio" name="zt" value="1" title="已审批" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row mb-20">
+                                <div class="layui-col-xs12">
+                                    <label class="layui-form-label">备注: </label>
+                                    <div class="layui-input-block">
+                                        <textarea name="bz" placeholder="请输入备注" class="layui-textarea" maxlength="200"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-title">冷料仓配比</div>
+                    <div class="text-right">
+                        <a href="javascript:;" id="addItem1"><i class="layui-icon" style="font-size: 22px;font-weight: bolder;color: #FD0000;">&#xe608;</i></a>
+                    </div>
+                    <table class="layui-table" id="tableCold" lay-filter="tableCold" style="margin: 0;"></table>
+                   <!-- <p style="color: #999">双击删除当前行</p>-->
+                    <div class="content-title mt-30">热料仓配比</div>
+                    <div class="text-right">
+                        <a href="javascript:;" id="addItem2"><i class="layui-icon" style="font-size: 22px;font-weight: bolder;color: #FD0000;">&#xe608;</i></a>
+                    </div>
+                    <table class="layui-table" id="tableHot" lay-filter="tableHot" style="margin: 0;"></table>
+                    <div class="layui-row mt-20">
+                        <div class="layui-col-xs4">
+                            <label class="layui-form-label">操作人员: </label>
+                            <div class="layui-input-block">
+                                <input name="addUser" placeholder="请输入" type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;"  readonly="readonly"  />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs4">
+                            <label class="layui-form-label">填表人员: </label>
+                            <div class="layui-input-block">
+                                <input name="tbr" placeholder="请输入" type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs4">
+                            <label class="layui-form-label">复合人员: </label>
+                            <div class="layui-input-block">
+                                <input name="fhr" placeholder="请输入" type="text" class="layui-input" lay-verType="tips" style="max-width: 240px;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="btns" class="text-center pt-30">
+            <button id="save" class="layui-btn layui-btn-blue1" lay-filter="formAdd" lay-submit>保存</button>
+           <!-- <button class="layui-btn layui-btn-yellow1" lay-filter="formEdit" lay-submit>修改</button>-->
+            <button id="del" class="layui-btn layui-btn-green1" >删除</button>
+            <button id="reset" class="layui-btn layui-btn-red1o" >新增</button>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="bar1">
+    <a href="javascript:;" lay-event="del"><i class="layui-icon" style="font-size: 22px;font-weight: bolder;color: #FD0000;">&#x1006;</i></a>
+</script>
+<script type="text/html" id="tbsh">
+    {{#  if(d.zt == -1){ }}
+    {{d.ztStr}}<a onclick="showMsg('{{d.htyy}}')">(查看原因)</a>
+    {{#  } }}
+    {{#  if(d.zt != -1){ }}
+    {{d.ztStr}}
+    {{#  } }}
+</script>
+<!-- js部分 -->
+<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+<script type="text/javascript" src="../../assets/js/tongyong.js?v=314"></script>
+<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=PMNBZ-F2TCU-H3AVV-4NNS2-2NGHS-OWFOZ"></script>
+<script>
+    var zdId=localStorage.getItem("station_id");
+    layui.use(['layer', 'form', 'table', 'util', 'admin', 'element', 'laydate'], function () {
+        var list1 = [{id:0,llcgg:"0-5"},{id:1,llcgg:"5-10"},{id:2,llcgg:"10-15"},{id:3,llcgg:"15-20"}];
+        var list2 = [{id:0,rlc:"1#",id:1,rlc:"2#",id:2,rlc:"3#",id:3,rlc:"4#",id:4,rlc:"5#"}];
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var admin = layui.admin;
+        var element = layui.element;
+        var gxmc="";
+        var yclggT='原材料规格';
+        var zlT='重量';
+        var tb1data=[
+            {field: 'id', align: 'center', title: 'ID',hide:true},
+            {field: 'llcgg', align: 'center', title: '冷料仓各规格', edit: 'text'},
+            {field: 'yclcs', align: 'center', title: '原材料厂商', templet:selectGxmc},
+            {field: 'yclgg', align: 'center', title: yclggT, templet:selectYccgg},
+            {field: 'zl', align: 'center', title: zlT, edit: 'text'},
+            {field: 'bz', align: 'center', title: '备注', edit: 'text'},
+            {fixed: 'right', width: 80, align:'center', toolbar: '#bar1'}
+        ];
+        if("cangzhou"==projectName){
+            yclggT='原材料材质';
+            zlT='重量/比例';
+            $("input[name='zt'][value='0']").prop("checked","false");
+            $("input[name='zt'][value='0']").prop("disabled","true");
+            $("input[name='zt'][value='1']").prop("checked","true");
+            tb1data=[
+                {field: 'id', align: 'center', title: 'ID',hide:true},
+                {field: 'llcgg', align: 'center', title: '冷料仓各规格', edit: 'text'},
+                {field: 'zl', align: 'center', title: zlT, edit: 'text'},
+                {field: 'yclcs', align: 'center', title: '原材料厂商', templet:selectGxmc},
+                {field: 'yclgg', align: 'center', title: yclggT, templet:selectYccgg},
+                {field: 'bz', align: 'center', title: '备注', edit: 'text'},
+                {fixed: 'right', width: 80, align:'center', toolbar: '#bar1'}
+            ];
+        }
+        function selectGxmc(a){
+            var reg = new RegExp('#id', "g");
+            return gxmc.replace(reg,a.id);
+        }
+        var yylgcMap={};
+        function selectYccgg(a){
+            //console.info(a.yclId)
+            var html="<select  name='yclgg'  lay-filter='f2' id='yclgg"+a.id+"'  lay-search=''><option value=''></option>";
+            if("cangzhou"==projectName){
+                if(!yylgcMap[-1]){
+                    $.ajax({
+                        url: url+"/jipei/getYccgg",
+                        type: 'POST',
+                        dataType: 'json',
+                        async: false,
+                        data:{zdId:zdId},
+                        success:function (res) {
+                            yylgcMap[-1]=res.list;
+
+                        }
+                    })
+                }
+
+                $.each(yylgcMap[-1],function (i,v){
+                    html+="<option value=\""+v.u_Name+"\">"+v.u_Name+"</option>";
+                })
+                html+="</select>";
+                return html;
+            }
+            if(!a.yclId){
+                html+="</select>";
+                return html;
+            }else if(!yylgcMap[a.yclId]){
+                $.ajax(
+                {
+                    url: url+"/jipei/getYccgg",
+                    type: 'POST',
+                    dataType: 'json',
+                    async: false,
+                    data:{id:a.yclId,zdId:zdId},
+                    success:function (res) {
+                        yylgcMap[a.yclId]=res.list;
+
+                    }
+                })
+            }
+            $.each(yylgcMap[a.yclId],function (i,v){
+                html+="<option value=\""+v.u_Name+"\">"+v.u_Name+"</option>";
+            })
+            html+="</select>";
+            return html;
+        }
+        $.ajax(
+            {
+                url: url+"/gongyingshang/getSupplierList?pageIndex=1&pageSize=99999&bg_time=&ed_time=&zdId="+zdId,
+                type: 'GET',
+                dataType: 'json',
+                async: false,
+                data:{},
+                success:function (res) {
+                    var html="<select name='jtcyGxmc' id='yclcs#id' lay-filter='f1' lay-search=''> <option value=''></option>";
+                    if (res.code == 0) {
+                        $.each(res.list,function (i,v){
+                            html+="<option value=\""+v.id+"|;"+v.u_Name+"\">"+v.u_Name+"</option>";
+                        })
+                    }
+                    html+="</select>";
+                    gxmc= html;
+                }
+            })
+
+        var id = getQueryString('id');
+        if(id){
+            getModel({jpId:id});
+            $('#btns').hide();
+        }
+        form.on('select(f1)', function(data){
+            var dv=data.value.split('|;');
+            $.each(list1,function (i,v){
+               if("yclcs"+v.id==data.elem.id){
+                   v.yclcs=dv[1];
+                   v.yclId=dv[0];
+               }
+            })
+            reTb1();
+
+        });
+        form.on('select(f2)', function(data){
+            console.info(data);
+            console.info(list1);
+            $.each(list1,function (i,v){
+                if("yclgg"+v.id==data.elem.id){
+                    v.yclgg=data.value;
+                }
+            })
+            reTb1();
+        });
+        /*laydate.render({
+            elem: '#rq',
+            trigger: 'click',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+
+            }
+        });*/
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            return currentdate;
+        }
+
+        var insTb = table.render({
+            elem: '#tableMatching',
+            url: url + '/jipei/getList',
+            page: false,
+            cellMinWidth: 100,
+            method:'POST',
+            skin: 'line',
+            cols: [[
+                {field: 'jpbh', align: 'center', title: '配比编号',width:120},
+                {field: 'hhklx', align: 'center', title: '混合科类型',width:70},
+                {field: 'ztStr', align: 'center', templet:'#tbsh',title: '审核状态',width:100},
+            ]],
+            where: {
+                zdId:zdId,
+                key: $('#key').val(),
+                zt:$('#selectType').val()
+            },
+            response: {
+                countName: 'totalCount', //数据总数的字段名称，默认：count
+                dataName: 'list' //数据列表的字段名称，默认：data
+            }
+        });
+
+        $('#btnSearch').click(function () {
+            var data={};
+            data.key= $('#key').val();
+            data.zt=$('#selectType').val();
+            console.info(data);
+            insTb.reload({where:data}, 'data');
+            //reload()
+        })
+        $('#del').click(function(){
+            var data={};
+            data.jpbh=$("[name='jpbh']").val();
+            data.jpId=$("[name='jpId']").val();
+            if(!data.jpId||data.jpId.length==0){
+               layer.msg('请先选中级配再删除', {icon: 2});
+               return;
+            }
+            layer.confirm('确认删除“' + data.jpbh + '”吗？', {
+                skin: 'layui-layer-admin',
+                shade: .1
+            }, function() {
+                $.post(url+'/jipei/delJipei', data, function (res) {
+                    if (res.code ==0) {
+                        layer.msg(res.msg, {
+                            icon: 1
+                        });
+                        reload();
+                    } else {
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }, 'json');
+            });
+
+        })
+        $('#reset').click(function(){
+            reload();
+        });
+        var rwlist;
+        function reload(){
+            var data={};
+            data.key= $('#key').val();
+            insTb.reload({where:data}, 'data');
+            $("[type='text'],[type='hidden'],[type='select']").val('');
+            list1 = [{id:0,llcgg:"0-5"},{id:1,llcgg:"5-10"},{id:2,llcgg:"10-15"},{id:3,llcgg:"15-20"}];
+            list2 = [{id:0,rlc:"1#"},{id:1,rlc:"2#"},{id:2,rlc:"3#"},{id:3,rlc:"4#"},{id:4,rlc:"5#"}];
+            reTb1();
+            reTb2();
+            $('#save').html('保存');
+            changeGcmc();
+
+            $.post(url+'/jipei/getList',{ zdId:zdId,zt:1},function (res) {
+                console.info(res);
+                var html="<option value='0'>请选择</option>";
+
+                res.list.forEach(item=>{
+                    html+="<option value='"+item.jpId+"'>"+item.jpbh+"("+item.gcmc+")</option>"
+                })
+                $('#mbSelect').html(html);
+                layui.use('form', function(){
+                    var form = layui.form;
+                    form.render();
+                });
+                form.on('select(mbSelect)', function(data){
+                    console.log(data);
+                    var d={}
+                    d.jpId=data.value;
+                    d.mbSelect=true;
+                    d.state=1;
+                    if(data.value!=0){
+                        getModel(d)
+                    }
+                });
+            })
+
+            $.post(url+'/jipei/getSclist', {zdId:zdId}, function (res) {
+                if (res.code ==0) {
+                    var html="";
+                    var list=res.list;
+                    rwlist=res.list;
+                    for(var i=0;i<list.length;i++){
+                        var value=list[i].task_id+";"+list[i].task_no+";"+list[i].engineer_name+";"+list[i].concrete_name;
+                        html+="<option value='"+value+"'>"+list[i].task_no+"("+list[i].engineer_name+")</option>";
+                    }
+                    if(list.length>0){
+                        $("[name='selectGcmc']").html(html);
+                        $("[name='task_id']").val(list[0].task_id);
+                        $("[name='rwbh']").val(list[0].task_no);
+                        $("[name='gcmc']").val(list[0].engineer_name);
+                        $("[name='hhklx']").val(list[0].concrete_name);
+                    }
+                    layui.use('form', function(){
+                        var form = layui.form;
+                        form.render();
+                    });
+                    form.on('select(selectGcmc)', function(data){
+                        console.log(data);
+                        var c=data.value.split(';');
+                        $("[name='task_id']").val(c[0]);
+                        $("[name='rwbh']").val(c[1]);
+                        $("[name='gcmc']").val(c[2]);
+                        $("[name='hhklx']").val(c[3]);
+                    });
+
+                } else {
+                    layer.msg(res.msg, {icon: 2});
+                }
+            }, 'json');
+            $("[name='addUser']").val(localStorage.getItem("username"))
+            $('#rq').val(getNowFormatDate())
+        }
+
+        form.on('submit(formAdd)', function (data) {
+            var datas=data.field;
+            var jpId=data.field.jpId;
+            if(list1.length==0){
+                layer.msg('冷料仓配比不能为空', {icon: 2});
+                return
+            }
+            if(list2.length==0){
+                layer.msg('热料仓配比不能为空', {icon: 2});
+                return
+            }
+            for(var i=0;i<list1.length;i++){
+                if(!isNumber(list1[i].zl)){
+                    layer.msg('冷料仓重量只能是数字', {icon: 2});
+                    return
+                }
+            }
+            for(var i=0;i<list2.length;i++){
+                if(!isNumber(list2[i].zl)){
+                    layer.msg('热料仓重量只能是数字', {icon: 2});
+                    return
+                }
+            }
+            if("cangzhou"==projectName){
+                datas.zt=1;
+            }
+            datas.llcjson=JSON.stringify(list1);
+            datas.rlcjson=JSON.stringify(list2);
+            layer.load(2);
+            var action =url+"/jipei/addJipei";
+            if(jpId&&jpId.length>=0){
+                action =url+"/jipei/updateJipei";
+            }
+            //console.info(localStorage.getItem("userid"));
+            $.post(action,datas, function (res) {
+                layer.closeAll('loading');
+                if (res.code == 0) {
+                    layer.msg(res.msg, {icon: 1});
+                    if(!jpId||jpId.length==0){
+                        reload();
+                    }
+                } else {
+                    layer.msg(res.msg, {icon: 2});
+                }
+            }, 'json');
+
+            return false;
+        });
+        var insTb1 = table.render({
+            elem: '#tableCold',
+            data: list1,
+            // skin: 'line',
+            cols: [tb1data],done: function(res, curr, count){
+                //数据渲染完的回调。
+                //由于layui 设置了超出隐藏，所以这里改变下，以兼容操作按钮的下拉菜单
+                $(".layui-table-body, .layui-table-box, .layui-table-cell").css('overflow', 'visible');
+            }
+        });
+
+        var insTb2 = table.render({
+            elem: '#tableHot',
+            data: list2,
+            // skin: 'line',
+            cols: [[
+                {field: 'id', align: 'center', title: 'ID',hide:true},
+                {field: 'rlc', align: 'center', title: '热料仓', edit: 'text'},
+                {field: 'zl', align: 'center', title: zlT, edit: 'text'},
+                {field: 'bz', align: 'center', title: '备注', edit: 'text'},
+                {fixed: 'right', width: 80, align:'center', toolbar: '#bar1'}
+            ]]
+        });
+
+        table.on('tool(tableCold)', function(obj){
+            //console.info(obj);
+            switch(obj.event){
+                case 'del':
+                    list1.splice(obj.data.id,1);
+                    reTb1();
+                    break;
+
+            };
+        });
+        table.on('tool(tableHot)', function(obj){
+            console.info(obj);
+            switch(obj.event){
+                case 'del':
+                    list2.splice(obj.data.id,1);
+                    reTb2();
+                    break;
+
+            };
+        });
+        $('#addItem1').on('click', () => {
+            list1.push({});
+            reTb1();
+        });
+        $('#addItem2').on('click', () => {
+            list2.push({});
+            reTb2();
+        });
+        table.on('row(tableMatching)', (obj) => {
+            //console.info(obj);
+            getModel(obj.data)
+
+        });
+        function getModel(data){
+            if(!data.mbSelect){
+                $('#save').html('保存');
+            }
+            $.post(url+'/jipei/getModel', data, function (res) {
+                if (res.code ==0) {
+                    if(res.data.zt==-1){
+                        res.data.zt=0
+                    }
+                    if(data.mbSelect){
+                       res.data.jpId='';
+                        res.data.zt=0;
+                        res.data.hhklx= $("[name='hhklx']").val();
+                        res.data.gcmc=$("[name='gcmc']").val();
+                        res.data.rwbh=$("[name='rwbh']").val();
+                        res.data.task_id=$("[name='task_id']").val();
+                        changeGcmc(false);
+                    }else{
+                        res.data.selectGcmc=res.data.task_id+';'+res.data.rwbh+';'+res.data.gcmc+';'+res.data.hhklx;
+                        changeGcmc(true);
+                    }
+                    formSet('form1',res.data);
+                    list1= res.data.llcpb;
+                    list2= res.data.rlcpb;
+                    reTb1();
+                    reTb2();
+                    layui.form.render('select')
+
+                    if(res.data.zt==1){
+                        $('#del').hide();
+                        $('#save').hide();
+                    }else{
+                        $('#del').show();
+                        $('#save').show();
+                    }
+
+                } else {
+                    layer.msg(res.msg, {icon: 2});
+                }
+            }, 'json');
+        }
+        function reTb1(){
+            for(var i=0;i<list1.length;i++){
+                list1[i].id=i;
+            }
+            insTb1.reload({
+                data: list1
+            })
+            //console.info(list1);
+            $.each(list1,function (i,v){
+                $("#yclcs"+v.id).val(v.yclId+"|;"+v.yclcs);
+                $("#yclgg"+v.id).val(v.yclgg);
+            })
+            form.render();
+
+        }
+        function reTb2(){
+            for(var i=0;i<list2.length;i++){
+                list2[i].id=i;
+            }
+            insTb2.reload({
+                data: list2
+            })
+        }
+        table.on('edit(tableCold)', function(obj){
+            //console.info(obj);
+            list1[obj.tr[0].rowIndex] = obj.data;
+            reTb1();
+        });
+        table.on('edit(tableHot)', function(obj){
+            list2[obj.tr[0].rowIndex] = obj.data;
+            insTb2.reload({
+                data: list2
+            })
+        });
+        reload();
+        function changeGcmc(show) {
+            if(show){
+                $('#gcmc').show();
+                $('#selectGcmc').next().hide();
+            }else {
+                $('#gcmc').hide();
+                $('#selectGcmc').next().show();
+            }
+        }
+	});
+
+    function formSet(formId,data) {
+        for(var key in data){
+            $("#"+formId+" [name='"+key+"']").val(data[key]);
+        }
+    }
+
+</script>
+
+
+</body>
+</html>

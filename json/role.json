@@ -1,0 +1,28 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 3,
+  "data": [
+    {
+      "roleId": "ZONGJO-QX-001",
+      "roleName": "管理员",
+      "roleType": "系统管理员",
+      "createTime": "2019/03/29 16:38:03",
+      "roleRights": "综合展示、生产管理、成本管理、实验管理、系统设置、环保管理"
+    },
+    {
+      "roleId": "ZONGJO-QX-002",
+      "roleName": "普通用户",
+      "roleType": "系统普通用户",
+      "createTime": "2019/03/29 16:38:03",
+      "roleRights": "综合展示、生产管理、成本管理、实验管理"
+    },
+    {
+      "roleId": "ZONGJO-QX-003",
+      "roleName": "游客",
+      "roleType": "系统游客",
+      "createTime": "2019/03/29 16:38:03",
+      "roleRights": "综合展示、生产管理、成本管理、实验管理"
+    }
+  ]
+}

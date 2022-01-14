@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>供应商编辑</title>
+		<link rel="stylesheet" href="../../assets/libs/layui/css/layui.css" />
+		<link rel="stylesheet" href="../../assets/module/admin.css?v=314" />
+		<link rel="stylesheet" href="../../assets/css/common_likui.css?v=314" />
+		<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style>
+			.layui-form-label {
+            min-width: 130px;
+            box-sizing: border-box;
+            padding-left: 0;
+        }
+        .layui-form-item .layui-input-inline { 
+            width: calc(100% - 140px);
+            margin-right: 0;
+        }
+        .task-container {
+            padding: 30px 30px 0;
+            box-shadow:0px 1px 11px 0px rgba(239,244,255,1);
+            border-radius:2px;
+        }
+        .task-tip {
+            color: rgba(107, 107, 107, 1);
+            line-height: 30px;
+            font-size: 12px;
+        }
+        .task-title {
+            border-left: 4px solid rgba(26, 185, 155, 1);
+            padding-left: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgba(51, 51, 51, 1);
+            position: relative;
+            font-weight: bold;
+        }
+        .task-title:after {
+            content: '';
+            width: calc(100% - 70px);
+            border-top: 1px dashed rgba(208, 211, 221, 1);
+            position: absolute;
+            right: 0;
+            top: 9px;
+        }
+        .task-content {
+            padding: 20px 10px;
+        }
+        .contract-upload {
+            width: 96px;
+            height: 96px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 24px 0;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(153, 153, 153, 1);
+            cursor: pointer;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: top;
+            box-sizing: border-box;
+        }
+        .contract-upload img {width: 100%;}
+        .apply-btn-del {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+        .supply-img-container {
+
+        }
+        .supply-img-item {
+            width: 96px;
+            height: 96px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            margin-right: 20px;
+            position: relative;
+        }
+        .supply-img-item .supply-img-close {
+            width: 13px;
+            height: 13px;
+            cursor: pointer;
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 0, 0, 1);
+            font-size: 10px;
+            text-align: center;
+            color: rgba(255, 0, 0, 1);
+        }
+        .supply-img-item img {width: 100%;}
+    </style>
+	</head>
+	<body>
+
+		<!-- 页面加载loading -->
+		<div class="page-loading">
+			<div class="ball-loader">
+				<span></span><span></span><span></span><span></span>
+			</div>
+		</div>
+
+		<!-- 正文开始 -->
+		<div class="layui-fluid">
+			<div class="task-tip mt-10"><span class="text-red">*</span>红色为必填项</div>
+			<div class="task-container bg-white layui-form">
+				<div class="task-item">
+					<div class="task-title">基本信息</div>
+					<form id="form_data" lay-filter="form_data">
+						<div class="task-content layui-form-item">
+							<div class="layui-row">
+								<div class="layui-col-md3 p-10">
+									<input type="hidden" name="id" id="id" />
+									<label class="layui-form-label w-auto">供应商编号</label>
+									<div class="layui-input-inline" style="margin-bottom: 0px;">
+										<input name="u_Code" readonly="readonly" class="layui-input" type="text" id="u_Code" placeholder="" />
+									</div>
+								</div>
+								<div class="layui-col-md3 p-10">
+									<label class="layui-form-label w-auto"><span class="text-red">*</span>供应商名称</label>
+									<div class="layui-input-inline" style="margin-bottom: 0px;">
+										<input name="u_Name" class="layui-input" type="text" id="u_Name" placeholder="请输入供应商名称" lay-verType="tips"
+										 lay-verify="required" required />
+									</div>
+								</div>
+								<div class="layui-col-md3 p-10">
+									<label class="layui-form-label w-auto"><span class="text-red">*</span>供应商简称</label>
+									<div class="layui-input-inline" style="margin-bottom: 0px;">
+										<input name="abbreviation" class="layui-input" id="abbreviation" lay-verify="required" lay-verType="tips"
+										 required type="text" placeholder="请输入供应商简称" />
+									</div>
+								</div>
+								<div class="layui-col-md3 p-10">
+									<label class="layui-form-label w-auto"><span class="text-red">*</span>承运单位</label>
+									<div class="layui-input-inline" style="margin-bottom: 0px;">
+										<input name="carrier" class="layui-input" id="carrier" lay-verify="required" lay-verType="tips" required type="text"
+										 placeholder="请输入承运单位" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="task-item">
+					<div class="task-title">供应商信息</div>
+					<div class="task-content layui-form-item" id="task-content">
+						<div>
+							<a id="addItem" href="javascript:;"><i class="layui-icon" style="color: rgba(25, 185, 155, 1);">&#xe654;</i> 新增</a>
+						</div>
+						<form id="form_ycl">
+							<div id="div_ycl">
+								<!-- <div class="mb-20">
+									<div class="layui-row">
+										<div class="layui-col-md4">
+											<label class="layui-form-label w-auto">原材料名称</label>
+											<div class="layui-input-inline">
+												<select id="a_status" name="status" lay-verType="tips" lay-verify="required">
+													<option value="使用中">使用中</option>
+													<option value="报废">报废</option>
+													<option value="封存">封存</option>
+												</select>
+											</div>
+										</div>
+										<div class="layui-col-md4">
+											<label class="layui-form-label w-auto">原材料名称</label>
+											<div class="layui-input-inline">
+												<input name="orderAmount"  class="layui-input" type="text" placeholder="请输入签订量"/>
+											</div>
+										</div>
+										<div class="layui-col-md4">
+											<label class="layui-form-label w-auto">原材料名称</label>
+											<div class="layui-input-inline">
+												<input name="orderAmount"  class="layui-input" type="text" placeholder="请输入签订量"/>
+											</div>
+										</div>
+										<div class="layui-col-md4">
+											<label class="layui-form-label w-auto">原材料名称</label>
+											<div class="layui-input-inline">
+												<input name="orderAmount"  class="layui-input" type="text" placeholder="请输入签订量"/>
+											</div>
+										</div>
+										<div class="layui-col-md4">
+											<label class="layui-form-label w-auto">原材料名称</label>
+											<div class="layui-input-inline">
+												<input name="orderAmount"  class="layui-input" type="text" placeholder="请输入签订量"/>
+											</div>
+										</div>
+										<div class="layui-col-md4">
+											<label class="layui-form-label w-auto">原材料名称</label>
+											<div class="layui-input-inline">
+												<input name="orderAmount"  class="layui-input" type="text" placeholder="请输入签订量"/>
+											</div>
+										</div>
+									</div>
+								</div> -->
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="text-center p-30">
+					<!-- 	<button class="layui-btn layui-btn-gray1">修改</button> -->
+					<button class="layui-btn layui-btn-green1" lay-submit lay-filter="*" id="save">保存</button>
+					<button class="layui-btn layui-btn-green2">返回</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- js部分 -->
+		<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
+		<script type="text/javascript" src="../../assets/js/common.js?v=314"></script>
+		<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+		<script>
+			var upload;
+			layui.use(['layer', 'form', 'table', 'util', 'admin', 'element', 'upload'], function() {
+				var $ = layui.jquery;
+				var layer = layui.layer;
+				var form = layui.form;
+				var table = layui.table;
+				var util = layui.util;
+				var admin = layui.admin;
+				var element = layui.element;
+				upload = layui.upload;
+
+				var yclList = [];
+				var options = '';
+				bind_yuancailiao();
+
+
+				function getupload(id) {
+					// 上传头像
+					var insUpload = upload.render({
+						elem: '#contract-upload' + id, //绑定元素
+						url: url + '/upload/file', //上传接口
+						done: function(res) {
+							console.log(res)
+							//上传完毕回调
+							headFile = res.data.filePath;
+							//alert("图片上传成功，路劲为：" + headFile);
+							var append = '<li img_url="' + headFile +
+								'" class="pull-left supply-img-item"><input type="hidden" name="img_url" value="' + headFile +
+								'"/><img src="' + imgUrl + headFile +
+								'"><i   class="supply-img-close  layui-icon" onclick="getdeleteImg(this)">&#x1006;</i></li>';
+							$("#ul_" + id).append(append);
+
+						},
+						error: function() {
+							//请求异常回调
+						}
+					});
+				}
+
+				//绑定数据
+				function bindData() {
+					$.ajax({
+						type: "get",
+						url: url + '/gongyingshang/getSupplier',
+						data: {
+							id: getQueryString('id'),
+							zdId: localStorage.getItem("station_id")
+						},
+						async: false,
+						success: function(res) {
+							console.log(res.data);
+							var data = res.data;
+							$("#u_Code").val(data.u_Code);
+							$("#u_Name").val(data.u_Name);
+							$("#abbreviation").val(data.abbreviation);
+							$("#id").val(data.id);
+							$("#carrier").val(data.carrier);
+							var details = data.details;
+							var html = '';
+							var Arra = new Array();
+							var sys_Material_ID = [];
+							$.each(details, function(index, item) {
+								Arra[index] = index;
+								sys_Material_ID[index] = item.sys_Material_ID;
+								html += '<div class="mb-20 rg">';
+								html += '<div class="layui-row">';
+								html +=
+									`<div class="layui-col-md4">
+											<label class="layui-form-label w-auto">原材料名称</label>
+											<div class="layui-input-inline" style="margin-bottom: 0px;">
+												<input type="hidden" name="ycl_id" value="${item.id}" />
+												<select value="${item.sys_Material_ID}" id="sys_Material_ID${index}" name="sys_Material_ID" lay-verType="tips" lay-verify="required">
+													${options}
+												</select>
+											</div>
+										</div>`;
+								html += '<div class="layui-col-md4">';
+								html += '<label class="layui-form-label w-auto">签订量(吨)</label>';
+								html += '<div class="layui-input-inline" style="margin-bottom: 0px;">';
+								html += '<input name="orderAmount" value="' + item.orderAmount +
+									'" class="layui-input" type="text" placeholder="请输入签订量"/>';
+								html += '</div>';
+								html += '</div>';
+								html += '<div class="layui-col-md4">';
+								html += '<label class="layui-form-label w-auto">签订价格(元/吨)</label>';
+								html += '<div class="layui-input-inline" style="margin-bottom: 0px;">';
+								html += '<input name="price" value="' + item.price +
+									'" class="layui-input" type="text" placeholder="请输入签订价格"/>';
+								html += '</div>';
+								html += '</div>';
+								html += '</div>';
+								html += '<div class="mt-20 clear relative" style="padding-right: 100px;">';
+								html += '<label class="layui-form-label w-auto">上传合同</label>';
+								html += '<div class="layui-input-inline" style="margin-bottom: 0px;">';
+								html += '<ul id="ul_' + Arra[index] + '" class="layui-inline clear supply-img-container">';
+								var img_list = item.img_list;
+								for (var i = 0; i < img_list.length; i++) {
+									html += '<li img_url="' + img_list[i].img_Url +
+										'" class="pull-left supply-img-item"><input type="hidden" name="img_url" value="' + img_list[i].img_Url +
+										'"/><img src="' + imgUrl + img_list[i].img_Url +
+										'"><i   class="supply-img-close  layui-icon" onclick="getdeleteImg(this)">&#x1006;</i></li>'
+								}
+								html += '</ul>';
+								html += '<div class="contract-upload" id="contract-upload' + Arra[index] + '">';
+								html += '<div><i class="layui-icon" style="font-size: 30px;">&#xe654;</i></div>';
+								html += '<div>上传照片</div>';
+								html += '</div>';
+								html += '</div>';
+								html +=
+									'<a onclick="getdelete(this,' + item.id +
+									')" href="javascript:;" class="apply-btn-del"><i class="layui-icon" style="color: rgba(255, 29, 0, 1);">&#xe640;</i>删除</a>';
+								html += '</div>';
+								html += '</div>';
+							});
+							$("#div_ycl").html(html);
+
+							for (var i = 0; i < Arra.length; i++) {
+								getupload(Arra[i]);
+								$(`#sys_Material_ID${i}`).val(sys_Material_ID[i]);
+
+							}
+							layui.form.render('select');
+						}
+					})
+				}
+
+				function bind_yuancailiao() {
+					var html = '';
+					$.ajax({
+						type: "get",
+						url: url + '/yuancailiao/getyuancailiaoList',
+						data: {
+							zdId: localStorage.getItem("station_id")
+						},
+						async: false,
+						success: function(res) {
+							//这里循环绑定原材料,下拉列表,但是要区分层级
+							formateData(res.list);
+							console.log(res.list);
+							yclList.map(val => {
+								options += `<option value="${val.id}">${val.u_Name}</option>`
+							});
+							if (getQueryString('id') !== null) {
+								bindData();
+							}
+						}
+					})
+					$("#sys_Material_ID").html(html);
+				}
+
+				function formateData(arr, index = 0) {
+					let index1 = index;
+					index++;
+					return arr.map(val => {
+						yclList.push({
+							...val,
+							u_Name: formateName(index1) + val.u_Name
+						})
+						if (val.children.length > 0) formateData(val.children, index);
+					})
+				}
+				// 加空格
+				function formateName(index) {
+					let str = '';
+					for (let i = 0; i < index; i++) {
+						str += '&nbsp;&nbsp;&nbsp;&nbsp;';
+					}
+					return str
+				}
+
+				$('#addItem').on('click', () => {
+					var sjs = sj();
+					var html = '';
+					html += '<div class="mb-20 rg">';
+					html += '<div class="layui-row">';
+					html +=
+						`<div class="layui-col-md4">
+								<label class="layui-form-label w-auto">原材料名称</label>
+								<div class="layui-input-inline" style="margin-bottom: 0px;">
+									<input type="hidden" name="ycl_id" />
+									<select name="sys_Material_ID" lay-verType="tips" lay-verify="required">
+										${options}
+									</select>
+								</div>
+							</div>`;
+					html += '<div class="layui-col-md4">';
+					html += '<label class="layui-form-label w-auto">签订量(吨)</label>';
+					html += '<div class="layui-input-inline" style="margin-bottom: 0px;">';
+					html += '<input name="orderAmount"  class="layui-input" type="text" placeholder="请输入签订量"/>';
+					html += '</div>';
+					html += '</div>';
+					html += '<div class="layui-col-md4">';
+					html += '<label class="layui-form-label w-auto">签订价格(元/吨)</label>';
+					html += '<div class="layui-input-inline" style="margin-bottom: 0px;">';
+					html += '<input name="price" class="layui-input" type="text" placeholder="请输入签订价格"/>';
+					html += '</div>';
+					html += '</div>';
+					html += '</div>';
+					html += '<div class="mt-20 clear relative" style="padding-right: 100px;">';
+					html += '<label class="layui-form-label w-auto">上传合同</label>';
+					html += '<div class="layui-input-inline" style="margin-bottom: 0px;">';
+					html += '<ul id="ul_' + sjs + '" class="layui-inline clear supply-img-container">';
+					html += '</ul>';
+					html += '<div class="contract-upload" id="contract-upload' + sjs + '">';
+					html += '<div><i class="layui-icon" style="font-size: 30px;">&#xe654;</i></div>';
+					html += '<div>上传照片</div>';
+					html += '</div>';
+					html += '</div>';
+					html +=
+						'<a onclick="getdelete(this,-1)" href="javascript:;" class="apply-btn-del"><i class="layui-icon" style="color: rgba(255, 29, 0, 1);">&#xe640;</i>删除</a>';
+					html += '</div>';
+					html += '</div>';
+					$('#div_ycl').append(html);
+					layui.form.render("select");
+					getupload(sjs)
+				});
+				// $('#save').on('click', () => {getOk();})
+				form.on('submit(*)', function(data) {
+					getOk();
+				});
+				// 保存
+				function getOk() {
+					// top.layui.index.openTab({
+					// 	url:'page/materials/supplier.html',
+					// 	title: '供应商管理'
+					// });
+					// admin.events.closeThisTabs()
+
+					$.ajax({
+						type: "post",
+						url: url + '/gongyingshang/addgongyingshang',
+						data: {
+							id: getQueryString('id'),
+							status: 2,
+							IsValid: 1,
+							u_Name: $("#u_Name").val(),
+							abbreviation: $("#abbreviation").val(),
+							Carrier: $("#carrier").val(),
+							zdId: localStorage.getItem("station_id")
+						},
+						async: false,
+						success: function(res) {
+							if (res.code == 0) {
+								var id = res.data;
+								//新增原材料合同
+								var data_json = JSON.stringify(getAddyuancailia(id));
+								$.ajax({
+									type: "post",
+									url: url + '/gongyingshang/addwuliao',
+									data:data_json,	
+									async: false,
+									contentType: 'application/json;utf-8',
+									success: function(re) {
+										//console.log(re);
+										if (re.code == 0) {
+											parent.location.reload();
+											parent.layui.admin.events.closeThisTabs()
+										}
+									}
+								})
+							}
+							else{
+								alert(res.msg);
+							}
+						}
+					})
+				}
+
+				//一些事件监听
+				element.on('tab(projectContract)', function(data) {
+
+				});
+			});
+
+			function getdeleteImg(ii) {
+				ii.parentNode.parentNode.removeChild(ii.parentNode);
+			}
+
+			function getdelete(ii, id) {
+				if (id != -1) {
+					$.ajax({
+						type: "post",
+						url: url + '/yuancailiao/delete',
+						data: {
+							id: id,
+							table_name: 'Material_SupplyContract_Detail_T',
+							zdId: localStorage.getItem("station_id")
+						},
+						async: false,
+						success: function(re) {
+							console.log(re);
+						}
+					})
+				}
+				ii.parentNode.parentNode.parentNode.removeChild(ii.parentNode.parentNode);
+			}
+
+			function sj() {
+				//x上限，y下限     
+				var x = 100;
+				var y = 0;
+				var rand = parseInt(Math.random() * (x - y + 1) + y);
+				return rand;
+			}
+
+
+
+			function getAddyuancailia(material_Supplier_ID) {
+				var json = new Array();
+				$("#form_ycl .rg").each(function(i) {
+					var ul_list = $(this).html();
+					var sys_Material_ID = $(this).find("[name='sys_Material_ID']").val();
+					var orderAmount = $(this).find("[name='orderAmount']").val();
+					var price = $(this).find("[name='price']").val();
+					var ycl_id = $(this).find("[name='ycl_id']").val();
+					var img_list = new Array();
+					var img_item = $(this).find("[name='img_url']");
+					$(img_item).each(function(index, item) {
+						var ida = item.value;
+						img_list[index] = {
+							img_Url: ida,
+							material_SupplyContract_Detail_ID: ycl_id,
+							isValid: 1
+						}
+					})
+					json[i] = {
+						zdId: localStorage.getItem("station_id"),
+						sys_Material_ID: sys_Material_ID,
+						material_Supplier_ID: material_Supplier_ID,
+						orderAmount: orderAmount,
+						price: price,
+						img_list: img_list,
+						id: ycl_id
+					}
+				})
+				return json;
+			}
+
+			/** 表单序列化成json字符串的方法  */
+
+			function form2JsonString(formId) {
+				var fields = $("#" + formId).serializeArray();
+				var o = {};
+				jQuery.each(fields, function(i, fields) {
+					if (o[this.name]) {
+						/*
+						表单中可能有多个相同标签，比如有多个label，
+						那么你在json对象o中插入第一个label后，还要继续插入，
+						那么这时候o[label]在o中就已经存在，所以你要把o[label]做嵌套数组处理
+						*/
+						//如果o[label]不是嵌套在数组中
+						if (!o[this.name].push) {
+							o[this.name] = [o[this.name]]; // 将o[label]初始为嵌套数组，如o={a,[a,b,c]}
+						}
+						o[this.name].push(this.value || ''); // 将值插入o[label]
+					} else {
+						o[this.name] = this.value || ''; // 第一次在o中插入o[label]
+					}
+				});
+				return JSON.stringify(o);
+			}
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,38 @@
+#bd div .duration{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+#bd div .duration #bdstartTime{
+  /* margin-left: 6px !important; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#bd div .duration input{
+  margin-left: 8px !important;
+}
+#bd div .duration .fgx{
+  display: none;
+}
+#bd .querydiv{
+  display: flex;
+  flex-direction: column;
+  padding-top: 0px !important;
+}
+#bd .querydiv .subbtn{
+  margin-left: 8px;
+  margin-top: 8px;
+}
+#bd{
+  overflow: hidden;
+}
+#bd .layui-form {
+  width: 800px;
+}
+.cover-table_div{
+  width: 100%;
+  overflow: scroll;
+}
+.kucun_bottom .xxk {
+  margin-right: 10px;
+}

@@ -1,0 +1,178 @@
+<!doctype html>
+<html class="no-js"  style="background-color: #f2f2f2;">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>车辆调度-重交沥青搅拌站智慧生产管控系统</title>
+		<link rel="stylesheet" type="text/css" href="../../assets/layui/css/layui.css?12" />
+		<!-- <link rel="stylesheet" type="text/css" href="../../assets/css/common.css?12" /> -->
+		<link href="http://vjs.zencdn.net/5.19/video-js.min.css" rel="stylesheet">
+		<script src="http://vjs.zencdn.net/5.19/video.min.js"></script>
+		<script src="https://unpkg.com/flv.js/dist/flv.min.js"></script>
+    <script src="https://unpkg.com/videojs-flvjs/dist/videojs-flvjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.12.2/videojs-contrib-hls.js"></script>
+	<style>
+		.container{
+			box-sizing: border-box;
+    padding-right: 30px;
+			padding-left: 30px ;
+			width:100%;
+			margin:0;
+			
+		}
+		.monitor-box{
+			/*width: 364px;
+    		height:  22.1rem;*/
+    		/*margin-right: 80px;*/
+    		/*margin-top: 30px;*/
+    	/* 	margin-left:0 !important;
+    		    width: 24.86rem;
+    height: 24.1rem; */
+    		
+		}
+		
+		.monitor-box {
+			float: left;
+			
+		}
+		.monitor-cont-vidio{
+		/*	height:392px;*/
+			width: 100%;
+			margin-bottom: 10px;
+			margin-left: 6%;
+		}
+		.monitor-cont-vidio-fenxiang{
+			/*height:392px;*/
+			text-align: center;
+			float: left;
+    		width: 33.33%;
+			margin: 0 auto;
+			
+			margin-top: 10px;
+		}
+		.videotopbu{
+/*			display: none;margin-left: -25px;width: auto;margin-top:0;margin: 0 auto;*/
+			width: auto;margin-top:0;margin: 0 auto;
+		}
+		
+		.monitor-cont{
+			width: 95%;
+		}
+		/*.monitor-box{
+			width: 100%;
+			height: 100%;
+		}*/
+		.layui-layout-admin .layui-body{
+			bottom: 0;
+		}
+		/* .xgplayer-skin-default{
+			background:none !important;
+		} */
+	</style>
+	
+	</head>
+
+	<body id="body">
+		<div class="clearfix">
+
+			<div class="container monitor" >
+				
+				<div class="videotopbu" >
+					<div class="monitor-cont fl"  id="vone" >
+						<div class="monitor-cont-vidio"  id="monitorvideo" >
+							
+						</div>				
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="display: none;" class="monitor-info fr" style="width: 259px;height: 277px;    margin-top: 30px;
+				position: absolute;right: -550px;">
+				<img src="../../assets/images/sytx.png" />
+			</div>
+		<script src="../../assets/js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+			<script src="../../assets/layui/layui.all.js"></script>
+		<script src="../../assets/js/common.js"></script>
+		<script src="../../assets/js/server.js"></script>
+		<script src="../../assets/js/common1.js"></script>
+		<script src="../../assets/js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../assets/js/api.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../assets/js/hls.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function(){
+				videoMonitorvideo();
+			})
+			var station = localStorage.getItem("station");
+			$('#carList>li').bind('click',function(){
+				
+				if($(this).hasClass('active')){
+					$(this).removeClass('active');
+					$(this).children('.inner-ul').removeClass('active')
+					$(this).children('.jiao').removeClass('active')
+				}else{
+					$('#carList>li').removeClass('active');
+					$(this).children('.jiao').addClass('active')
+					$(this).addClass('active');
+					$(this).children('.inner-ul').addClass('active')
+				}
+				//切换显示屏
+				
+			
+				
+				var text = $(this).text();
+				if(station=="璧山站"){
+					bisanzhandian(text);
+				}else if(station=="两江站"){
+					cqlqzhandian(text);
+				}else if(station=="双石站"){
+					shuangshizhandian(text);
+				}else {
+					zhutuozhandian(text);
+				}
+				
+			});
+			$('.inner-ul li').bind('click',function(){
+				$(this).parents('.inner-ul').addClass('active');
+//				alert(11111)
+			})
+			function videoMonitorvideo(){
+				$("#monitorvideo").html('');
+				 // var div = document.getElementById('body');
+				 //        console.log(div.style.fontSize);
+				  var deviceWidth = document.documentElement.clientWidth;
+				 // var playwidth=405;
+				 // var playheight=392;
+				 // if(deviceWidth<1500){
+				 // 	playwidth=302;
+				 // 	playheight=293;
+				 // }
+				 var playwidth=(deviceWidth-180)*0.95*0.27;
+				 var playheight=playwidth/288*280; 
+				$.get(url+video_api_url,{zhandian:station,model_name:"综合展示-视频监控",type:"pc"},function(res){
+					for(var i=0;i<res.length;i++){
+						var playerid="player"+i;
+						var html="";
+						// id='+playerid+'
+						html+='<div class="monitor-cont-vidio-fenxiang" >';
+						html+='<div class="monitor-box" >';
+						html+='<video id='+playerid+' controls></video>'
+						html+='</div>';
+						html+='</div>';
+						$("#monitorvideo").append(html);
+						
+						setVideoFlvJsPlayer(playerid,res[i].url,playwidth,playheight);
+					}
+				})
+			}
+			
+			
+//li单选实现
+
+
+		</script>
+	</body>
+
+</html>
